@@ -1,0 +1,4 @@
+../../../2_common/ahb_private_agt/ahb_interface.sv
+../../../2_common/apb_private_agt/apb_interface.sv
+../../../xt_demo/6_top/1_tb_top/ahb_apb_bridge_pkg.sv
+../../../xt_demo/6_top/1_tb_top/test_top.sv

@@ -1,0 +1,46 @@
+
+.PHONY : default help clean comp sim verdi cov gen_run run
+
+default: help
+
+help:
+	@bash help.sh 
+
+get_filelist:
+	@bash ${GET_FILELIST} &
+
+gen_run:
+	@bash ${GEN_RUN_FILE} ${CFG_ALL}
+
+comp:
+	@bash ${RUN_COMPILE_FILE}
+
+sim:
+	@bash ${RUN_SIM_FILE} 
+
+run:gen_run comp sim
+
+wave:
+	@bash ${RUN_WAVE_FILE} &
+
+report:
+	@bash run_report.sh &
+
+cov:
+	urg -full64 -parallel -maxjobs 10 -dir ${PROJ_WORK_PATH}/cov/*.simv.vdb -report ${PROJ_WORK_PATH}/cov/urgReport -dbname ${PROJ_WORK_PATH}/cov/merge_cov/merge &
+
+regr:
+	@bash regression.sh & 
+
+report_cov:
+	firefox ${PROJ_WORK_PATH}/cov/urgReport/dashborad.html &
+
+report_cov_dve:
+	dve -full64 -dir ${PROJ_WORK_PATH}/cov*simv.vdb -logdir ${PROJ_WORK_PATH}/cov &
+
+report_regr:
+	@bash run_report.sh &
+
+clean:
+	@bash clean.sh ${PROJ_WORK_PATH} 
+

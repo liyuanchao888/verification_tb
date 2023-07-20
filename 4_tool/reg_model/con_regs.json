@@ -1,0 +1,1494 @@
+{
+  "name": "con",
+  "description": "Register bank for conv",
+  "baseAddress": 0,
+
+  "registers": [
+
+    {
+      "name": "reg_num_frames",
+      "description": "CONV frames",
+      "addressOffset": 0,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "ext",
+          "description": "CONV frames",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_num_blocks",
+      "description": "CONV blocks",
+      "addressOffset": 4,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "ext",
+          "description": "CONV blocks",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_num_layers",
+      "description": "CONV layers",
+      "addressOffset": 8,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "ext",
+          "description": "CONV layers",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_num_filters",
+      "description": "CONV filters",
+      "addressOffset": 12,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "ext",
+          "description": "CONV filters",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_num_channels",
+      "description": "CONV channels",
+      "addressOffset": 16,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "ext",
+          "description": "CONV channels",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_num_data",
+      "description": "CONV data",
+      "addressOffset": 20,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "ext",
+          "description": "CONV data",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_num_lines",
+      "description": "CONV num lines",
+      "addressOffset": 24,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "ext",
+          "description": "CONV num lines",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_num_rows",
+      "description": "CONV rows",
+      "addressOffset": 28,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "ext",
+          "description": "CONV rows",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_start",
+      "description": "CONV start",
+      "addressOffset": 32,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "value_ext",
+          "description": "CONV start",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_k",
+      "description": "CONV k",
+      "addressOffset": 36,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "value_ext",
+          "description": "CONV k",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_pooling",
+      "description": "CONV pool",
+      "addressOffset": 40,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "en_value_ext",
+          "description": "CONV pool",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_counter_frame",
+      "description": "CONV counter frame",
+      "addressOffset": 44,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "value_ext",
+          "description": "CONV counter frame",
+          "bitOffset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_counter_block",
+      "description": "CONV block value",
+      "addressOffset": 48,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "value_ext",
+          "description": "CONV block value",
+          "bitOffset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_counter_layer",
+      "description": "CONV counter layer",
+      "addressOffset": 52,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "value_ext",
+          "description": "CONV counter layer",
+          "bitOffset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_counter_filter",
+      "description": "CONV counter filter",
+      "addressOffset": 56,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "value_ext",
+          "description": "CONV counter filter",
+          "bitOffset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_counter_channel",
+      "description": "CONV counter channel",
+      "addressOffset": 60,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "value_ext",
+          "description": "CONV counter channel",
+          "bitOffset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_channel_finish",
+      "description": "CONV channel finish",
+      "addressOffset": 64,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "value_ext",
+          "description": "CONV channel finish",
+          "bitOffset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_pool_frame_width",
+      "description": "CONV pool frame width",
+      "addressOffset": 512,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "_ext",
+          "description": "CONV pool frame width",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_pool_frame_height",
+      "description": "CONV pool frame height",
+      "addressOffset": 516,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "_ext",
+          "description": "CONV pool frame height",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_crop_start_x",
+      "description": "CONV crop start x",
+      "addressOffset": 520,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "_ext",
+          "description": "CONV crop start x",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_crop_start_y",
+      "description": "CONV crop start y",
+      "addressOffset": 524,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "_ext",
+          "description": "CONV crop start y",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_crop_end_x",
+      "description": "CONV crop end x",
+      "addressOffset": 528,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "_ext",
+          "description": "CONV crop end x",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_crop_end_y",
+      "description": "CONV crop end y",
+      "addressOffset": 532,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "_ext",
+          "description": "CONV crop end y",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_crop",
+      "description": "CONV crop enable",
+      "addressOffset": 536,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "enable_ext",
+          "description": "CONV crop enable",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_sw",
+      "description": "CONV sw rset",
+      "addressOffset": 540,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "rset_ext",
+          "description": "CONV sw rset",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_padding",
+      "description": "CONV padding",
+      "addressOffset": 544,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "padding_ext",
+          "description": "CONV padding",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_block",
+      "description": "CONV block status",
+      "addressOffset": 548,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "status_ext",
+          "description": "CONV block status",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_bn",
+      "description": "CONV bn enable",
+      "addressOffset": 552,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "enable_ext",
+          "description": "CONV bn enable",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_bias",
+      "description": "CONV bias enable",
+      "addressOffset": 556,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "enable_ext",
+          "description": "CONV bias enable",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_relu",
+      "description": "CONV relu enable",
+      "addressOffset": 560,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "enable_ext",
+          "description": "CONV relu enable",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_coeff",
+      "description": "CONV coeff num leak",
+      "addressOffset": 564,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "num_leak_ext",
+          "description": "CONV coeff num leak",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+
+    {
+      "name": "reg_k_select",
+      "description": "CONV k select",
+      "addressOffset": 568,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "ext",
+          "description": "CONV k select",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "reg_bn_shortcut_enable",
+      "description": "bn_shortcut",
+      "addressOffset": 572,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "ext",
+          "description": "bn_shortcut",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "reg_pool_shortcut_enable",
+      "description": "pool_shortcut",
+      "addressOffset": 576,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "ext",
+          "description": "pool_shortcut",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "reg_bn_add_shortcut_enable",
+      "description": "bn_add",
+      "addressOffset": 580,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "ext",
+          "description": "bn_add",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "reg_pool_add_shortcut_enable",
+      "description": "pool_add",
+      "addressOffset": 584,
+      "access": "READ_WRITE",
+      "fields": [
+        {
+          "name": "ext",
+          "description": "pool_add",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "description": "input counter",
+      "addressOffset": 588,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "input_cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "output",
+      "description": "output counter",
+      "addressOffset": 592,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "output_cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "sif0",
+      "description": "sif signals",
+      "addressOffset": 596,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "coef_rdy",
+          "description": "rdy",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "coef_vld",
+          "description": "vld",
+          "bitOffset": 1,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "coef_rdy_ff",
+          "description": "rdy",
+          "bitOffset": 2,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "coef_vld_ff",
+          "description": "vld",
+          "bitOffset": 3,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "cache_rdy",
+          "description": "rdy",
+          "bitOffset": 4,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "cache_vld",
+          "description": "vld",
+          "bitOffset": 5,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_rdy_cache",
+          "description": "rdy",
+          "bitOffset": 6,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_vld_cache",
+          "description": "vld",
+          "bitOffset": 7,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_out_conv_rdy",
+          "description": "rdy",
+          "bitOffset": 8,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_out_conv_valid",
+          "description": "vld",
+          "bitOffset": 9,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_out_conv_rdy_temp",
+          "description": "rdy",
+          "bitOffset": 10,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_out_conv_valid_temp",
+          "description": "vld",
+          "bitOffset": 11,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_out_conv_rdy_ff_temp",
+          "description": "rdy",
+          "bitOffset": 12,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_out_conv_valid_ff_temp",
+          "description": "vld",
+          "bitOffset": 13,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_out_conv_rdy_ff",
+          "description": "rdy",
+          "bitOffset": 14,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_out_conv_valid_ff",
+          "description": "vld",
+          "bitOffset": 15,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_out_conv_rdy_2D_final",
+          "description": "rdy",
+          "bitOffset": 16,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_out_conv_valid_2D",
+          "description": "vld",
+          "bitOffset": 17,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_out_conv_rdy_2D",
+          "description": "rdy",
+          "bitOffset": 18,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_conv_valid",
+          "description": "vld",
+          "bitOffset": 21,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_conv_rdy",
+          "description": "rdy",
+          "bitOffset": 22,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "data_conv_valid_final",
+          "description": "vld",
+          "bitOffset": 23,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "up_rdy_conv",
+          "description": "rdy",
+          "bitOffset": 24,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "up_vld_conv",
+          "description": "vld",
+          "bitOffset": 25,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_rdy_conv",
+          "description": "rdy",
+          "bitOffset": 26,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_vld_conv",
+          "description": "vld",
+          "bitOffset": 27,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "bias_rdy",
+          "description": "rdy",
+          "bitOffset": 28,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "bias_vld",
+          "description": "vld",
+          "bitOffset": 29,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "bias_rdy_ff",
+          "description": "rdy",
+          "bitOffset": 30,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "bias_vld_ff",
+          "description": "vld",
+          "bitOffset": 31,
+          "reset": 0,
+          "bitWidth": 1
+        }
+      ]
+    },
+    {
+      "name": "sif1",
+      "description": "sif1 signals",
+      "addressOffset": 600,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "dn_rdy_conv_ff",
+          "description": "rdy",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_vld_conv_ff",
+          "description": "vld",
+          "bitOffset": 1,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_rdy_bias",
+          "description": "rdy",
+          "bitOffset": 2,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_vld_bias",
+          "description": "vld",
+          "bitOffset": 3,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_rdy_bn",
+          "description": "rdy",
+          "bitOffset": 12,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_vld_bn",
+          "description": "vld",
+          "bitOffset": 13,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_rdy_pool",
+          "description": "rdy",
+          "bitOffset": 14,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_vld_pool",
+          "description": "vld",
+          "bitOffset": 15,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_rdy",
+          "description": "rdy",
+          "bitOffset": 16,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_vld",
+          "description": "vld",
+          "bitOffset": 17,
+          "reset": 0,
+          "bitWidth": 1
+        }
+      ]
+    },
+    {
+      "name": "in_cache_input",
+      "description": "input counter",
+      "addressOffset": 604,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "input_cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "in_cache_output",
+      "description": "output counter",
+      "addressOffset": 608,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "output_cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "in_cache_line",
+      "description": "input counter",
+      "addressOffset": 612,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "in_cache_row",
+      "description": "input counter",
+      "addressOffset": 616,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "line_buffer_input",
+      "description": "input counter",
+      "addressOffset": 620,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "line_buffer_output",
+      "description": "input counter",
+      "addressOffset": 624,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "line_buffer_line",
+      "description": "input counter",
+      "addressOffset": 628,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "line_buffer_row",
+      "description": "input counter",
+      "addressOffset": 632,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "in_matrix_input",
+      "description": "input counter",
+      "addressOffset": 636,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "in_matrix_output",
+      "description": "input counter",
+      "addressOffset": 640,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "in_matrix_line",
+      "description": "input counter",
+      "addressOffset": 644,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "in_matrix_row",
+      "description": "input counter",
+      "addressOffset": 648,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "out_buffer_input",
+      "description": "input counter",
+      "addressOffset": 652,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "out_buffer_output",
+      "description": "input counter",
+      "addressOffset": 656,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "in_cache",
+      "description": "state",
+      "addressOffset": 660,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "coef_data_ctrl_cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 2
+        },
+        {
+          "name": "state_machine",
+          "description": "state machine",
+          "bitOffset": 2,
+          "reset": 0,
+          "bitWidth": 2
+        },
+        {
+          "name": "reg_channel_finish",
+          "description": "reg channel finish",
+          "bitOffset": 4,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "pixel_buf_cnt",
+          "description": "counter",
+          "bitOffset": 5,
+          "reset": 0,
+          "bitWidth": 5
+        },
+        {
+          "name": "pixel_cnt",
+          "description": "counter",
+          "bitOffset": 10,
+          "reset": 0,
+          "bitWidth": 8
+        }
+      ]
+    },
+    {
+      "name": "channel",
+      "description": "channel state",
+      "addressOffset": 664,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "counter",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "bias_input",
+      "description": "bias state",
+      "addressOffset": 668,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "bias_output",
+      "description": "bias state",
+      "addressOffset": 672,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "pooling_input",
+      "description": "pooling input",
+      "addressOffset": 684,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "pooling_output",
+      "description": "pooling output ",
+      "addressOffset": 688,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "in_cache_wr",
+      "description": "write address ",
+      "addressOffset": 692,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "idx",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "in_cache_rd",
+      "description": "read address ",
+      "addressOffset": 696,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "idx",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "coef_i",
+      "description": "read address ",
+      "addressOffset": 700,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "coef_o",
+      "description": "read address ",
+      "addressOffset": 704,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "in_coef",
+      "description": "read address ",
+      "addressOffset": 708,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "counter",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "coef_finish",
+      "description": "read address ",
+      "addressOffset": 712,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "counter",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "coef",
+      "description": "read address ",
+      "addressOffset": 716,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "update_status",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 2
+        },
+        {
+          "name": "finish",
+          "description": "cnt",
+          "bitOffset": 2,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_data_coef",
+          "description": "cnt",
+          "bitOffset": 3,
+          "reset": 0,
+          "bitWidth": 16
+        },
+        {
+          "name": "dn_vld_coef",
+          "description": "cnt",
+          "bitOffset": 19,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "dn_rdy_coef",
+          "description": "cnt",
+          "bitOffset": 20,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "conv_finish",
+          "description": "cnt",
+          "bitOffset": 21,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "not_start",
+          "description": "cnt",
+          "bitOffset": 22,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "update_coef",
+          "description": "cnt",
+          "bitOffset": 23,
+          "reset": 0,
+          "bitWidth": 1
+        },
+        {
+          "name": "ddr_read_finish",
+          "description": "cnt",
+          "bitOffset": 24,
+          "reset": 0,
+          "bitWidth": 1
+        }
+      ]
+    },
+    {
+      "name": "coef_filter",
+      "description": "read address ",
+      "addressOffset": 720,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "counter",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "fifo_0_in",
+      "description": "read address ",
+      "addressOffset": 724,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "fifo_1_in",
+      "description": "read address ",
+      "addressOffset": 728,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "cnt",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "buffer",
+      "description": "read address ",
+      "addressOffset": 732,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "wr",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 3
+        }
+      ]
+    },
+    {
+      "name": "line_buffer_i",
+      "description": "read address ",
+      "addressOffset": 736,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "counter",
+          "description": "counter",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "line_buffer_o",
+      "description": "read address ",
+      "addressOffset": 740,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "counter",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    },
+    {
+      "name": "matrix_o",
+      "description": "read address ",
+      "addressOffset": 744,
+      "access": "READ_ONLY",
+      "fields": [
+        {
+          "name": "counter",
+          "description": "cnt",
+          "bitOffset": 0,
+          "reset": 0,
+          "bitWidth": 32
+        }
+      ]
+    }
+  ]
+}
