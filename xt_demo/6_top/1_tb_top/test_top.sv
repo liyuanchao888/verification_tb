@@ -16,6 +16,8 @@ import uvm_pkg::*;
 //endmodule
 
 //testbench Top
+import uvm_pkg :: *;
+`include "uvm_macros.svh"
 module test_top();
     reg clk  ;
     reg rst_n;

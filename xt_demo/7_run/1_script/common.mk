@@ -1,5 +1,5 @@
 
-.PHONY : default help clean comp sim verdi cov gen_run run
+.PHONY : default help clean comp sim verdi cov gen_run run tc regr
 
 default: help
 
@@ -16,7 +16,7 @@ comp:
 	@bash ${RUN_COMPILE_FILE}
 
 sim:
-	@bash ${RUN_SIM_FILE} 
+	@bash ${RUN_SIM_FILE} ${tc} 
 
 run:gen_run comp sim
 
@@ -26,11 +26,15 @@ wave:
 report:
 	@bash run_report.sh &
 
+tc:
+	@find ${TB_PATH}/6_top/2_tc -name "*.sv" -o -name "*.v" > ${TC_TEST_LIST}
+	@cat ${TC_TEST_LIST}
+
 cov:
 	urg -full64 -parallel -maxjobs 10 -dir ${PROJ_WORK_PATH}/cov/*.simv.vdb -report ${PROJ_WORK_PATH}/cov/urgReport -dbname ${PROJ_WORK_PATH}/cov/merge_cov/merge &
 
 regr:
-	@bash regression.sh & 
+	@bash ${RUN_REGR_FILE} & 
 
 report_cov:
 	firefox ${PROJ_WORK_PATH}/cov/urgReport/dashborad.html &
@@ -42,5 +46,5 @@ report_regr:
 	@bash run_report.sh &
 
 clean:
-	@bash clean.sh ${PROJ_WORK_PATH} 
+	@bash clean.sh ${opt} 
 

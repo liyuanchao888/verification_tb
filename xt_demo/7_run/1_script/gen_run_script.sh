@@ -24,34 +24,34 @@ fi
 #get_para: content_file , content_start_tag , content_end_tag , instead file name , instead tag  
 function get_para()
 {
-#	cp -rf ${1} ${GEN_TMP_FILE}  
 	empty_line_num=1 
 	start_line_num=`sed -n -e '/'${2}'/=' ${1}`
     end_line_num=`sed -n -e '/'${3}'/=' ${1}`
+    tag_line_num=`sed -n -e '/'${5}'/=' ${4}`
 	start_content_line=$((start_line_num+empty_line_num));
 	end_content_line=$((end_line_num-empty_line_num));
+	insert_content_line=$((tag_line_num-empty_line_num));
 
 	if [ ${start_content_line} -gt ${end_content_line} ];then
 		echo -e "--Warning : \nplease confirm between ${2} and ${3} are null content parameter in ${1} "
 	else
 		sed -n "${start_content_line},${end_content_line}p" ${1} > ${4}.tmp
-		sed -i '/'${5}'/r '${4}'.tmp' ${4}
+		sed -i ''${insert_content_line}' r '${4}'.tmp' ${4}
+#		sed -i '/'${5}'/r '${4}'.tmp' ${4}
 		rm -rf ${4}.tmp
 #		sed -i '/CMP_CMD_REPLACE_TAG/r com_cmd.tmp' ${4}
-#		opt_para=$(sed -n "${start_content_line},${end_content_line}p" ${1})
     fi
-#	sed -i '/'${5}'/d' ${4}
 #	echo " start_line_num is $start_content_line. end_line_num is $end_content_line " #debug
 #	return ${opt_para}
-#   rm ${GEN_TMP_FILE}
 }
 
 
 #-------------------- gen run script in workspace ---------------------
 #cp -rf $get_dutlist g_get_dutlist.tmp
-cp -rf 1_compile.sh ${RUN_COMPILE_FILE} 
-cp -rf 2_sim.sh     ${RUN_SIM_FILE}
-cp -rf wave_view.sh ${RUN_WAVE_FILE}
+cp -rf 1_compile.sh   ${RUN_COMPILE_FILE} 
+cp -rf 2_sim.sh       ${RUN_SIM_FILE}
+cp -rf wave_view.sh   ${RUN_WAVE_FILE}
+cp -rf regression.sh  ${RUN_REGR_FILE}
 
 #echo "--------gen_command cfg is $* ------" #debug
 for file_path in $* 

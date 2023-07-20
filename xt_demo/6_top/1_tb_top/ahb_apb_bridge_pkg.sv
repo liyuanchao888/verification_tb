@@ -23,11 +23,12 @@ package ahb_apb_bridge_pkg;
 	`include "../../../xt_demo/4_scb/ahb_apb_bridge_scoreboard.sv"
     `include "../../../xt_demo/5_env/ahb_apb_bridge_environment.sv"
 
-    `include "../../../xt_demo/6_top/2_tc/ahb_apb_bridge_base_test.sv"
-    `include "../../../xt_demo/6_top/2_tc/ahb_apb_bridge_burst_write_test.sv"
-    `include "../../../xt_demo/6_top/2_tc/ahb_apb_bridge_single_write_test.sv"
-    `include "../../../xt_demo/6_top/2_tc/ahb_apb_bridge_single_read_test.sv"
-    `include "../../../xt_demo/6_top/2_tc/ahb_apb_bridge_burst_read_test.sv"
-    `include "../../../xt_demo/6_top/2_tc/ahb_apb_bridge_random_test.sv"
+//    `include "../../../xt_demo/6_top/2_tc/tc.list"
+//    `include "../../../xt_demo/6_top/2_tc/ahb_apb_bridge_base_test.sv"
+//    `include "../../../xt_demo/6_top/2_tc/ahb_apb_bridge_burst_write_test.sv"
+//    `include "../../../xt_demo/6_top/2_tc/ahb_apb_bridge_single_write_test.sv"
+//    `include "../../../xt_demo/6_top/2_tc/ahb_apb_bridge_single_read_test.sv"
+//    `include "../../../xt_demo/6_top/2_tc/ahb_apb_bridge_burst_read_test.sv"
+//    `include "../../../xt_demo/6_top/2_tc/ahb_apb_bridge_random_test.sv"
 
 endpackage
