@@ -1,6 +1,6 @@
 #!/bin/bash
-##Usage: ./test_log.sh <TEST_NAME>
-report_file=../2_work/report.html
+##Usage: ./report_log.sh <TEST_NAME>
+report_file=${PROJ_WORK_PATH}/report.html
 TEST_NAME=$1
 
 if [ ! -e ../$TEST_NAME/testcase.log ];

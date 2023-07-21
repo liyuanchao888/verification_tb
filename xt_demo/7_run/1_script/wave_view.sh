@@ -4,7 +4,7 @@ WAVE_OPT="${WAVE_VIEW} \
     "
 #------- option from command line ---------
 
-WAVE_OPT="${WAVE_OPT} -l ${PROJ_WORK_PATH}/${tc}/${tc}_${tc_seed}.${WAVE_VIEW}.log "
+WAVE_OPT="${WAVE_OPT} -l ${PROJ_WORK_PATH}/${tc}/${tc}_${seed}.${WAVE_VIEW}.log "
 echo -e "wave review command is :\n ${WAVE_OPT}"
 eval ${WAVE_OPT}
 

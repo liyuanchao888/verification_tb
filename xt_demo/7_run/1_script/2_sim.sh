@@ -14,13 +14,13 @@ if [ $# == 0 ];then
     echo " run_sim.sh no self-define para from command line "
 else
     SIM_CMD_DEF=$*
-    SIM_OPT="${SIM_OPT} ${SIM_CMD_DEF} "
+#    SIM_OPT="${SIM_OPT} ${SIM_CMD_DEF} "
 fi
 
 #====== ADD part 1: vcs switch on-off configuration       =======
 #---- dump wave  -----
 if [ ${wave} = on ]; then
-    SIM_OPT="${SIM_OPT} +fsdbfile=${PROJ_WORK_PATH}/${tc}/${tc}_${tc_seed}.fsdb +vcs+flush+all "
+    SIM_OPT="${SIM_OPT} +fsdbfile=${PROJ_WORK_PATH}/${tc}/${tc}_${seed}.fsdb +vcs+flush+all "
 	if [ ${wave_cfg} = on ]; then
         SIM_OPT="${SIM_OPT} -ucli -i wave.tcl "
 	elif [ ${wave_cfg} != off ]; then
@@ -31,9 +31,9 @@ fi
 #---- code coverage  -----
 [ ${coverage} = on ] && SIM_OPT="${SIM_OPT} \
 	-cm line+cond+fsm+tgl+branch+assert \
-	-cm_name ${tc}_${tc_seed}_cov \
+	-cm_name ${tc}_${seed}_cov \
 	-cm_dir  ${PROJ_WORK_PATH}/cov/simv.vdb \
-	-cm_log  ${PROJ_WORK_PATH}/cov/${tc}_${tc_seed}_cm.log"
+	-cm_log  ${PROJ_WORK_PATH}/cov/${tc}_${seed}_cm.log"
 
 #---- performance analysis -----
 if [ ${profile} = on ]; then
@@ -54,13 +54,15 @@ elif [ ${xprop} != off ]; then
 fi
 
 #====== ADD part 2: self-define parameter to sim_command  =======
+    echo "----ext sim_para is ${sim_para}" >> ~/tmp
 if [ -n "${sim_para}" ]; then
+    echo "----- sim_para is ${sim_para}" >> ~/tmp
 	ACT_PARA=`echo ${sim_para} | sed 's/+/ +/g'`
     SIM_OPT="${SIM_OPT} ${ACT_PARA}"
 fi
 
-SIM_OPT="${SIM_OPT} -l ${PROJ_WORK_PATH}/${tc}/${tc}_${tc_seed}.log "
+SIM_OPT="${SIM_OPT} -l ${PROJ_WORK_PATH}/${tc}/${tc}_${seed}.log "
 echo "simulation command is ${SIM_OPT}"
 eval ${SIM_OPT}
-echo "TC log is ${PROJ_WORK_PATH}/${tc}/${tc}_${tc_seed}.log"
+echo "TC log is ${PROJ_WORK_PATH}/${tc}/${tc}_${seed}.log"
 

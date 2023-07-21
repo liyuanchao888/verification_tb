@@ -51,7 +51,6 @@ function get_para()
 cp -rf 1_compile.sh   ${RUN_COMPILE_FILE} 
 cp -rf 2_sim.sh       ${RUN_SIM_FILE}
 cp -rf wave_view.sh   ${RUN_WAVE_FILE}
-cp -rf regression.sh  ${RUN_REGR_FILE}
 
 #echo "--------gen_command cfg is $* ------" #debug
 for file_path in $* 
@@ -61,11 +60,11 @@ do
     cfg_path=` find ${TB_PATH} -name ${file_name} `
     cfg_path_num=` find ${TB_PATH} -name ${file_name} | wc -l `
 #	echo "------ gen run script: import file cfg is ${file_name} ------" #debug
-    if [ $cfg_path_num -eq 0 ];then
+    if [ ${cfg_path_num} -eq 0 ];then
     	echo "---- Error : can't find cfg file ,please theck filepath & filename is correct."
     	exit
     else
-    	if [ $cfg_path_num -gt 1 ];then
+    	if [ ${cfg_path_num} -gt 1 ];then
     	    echo "---- Error : find more than one cfg file , rename it , confirm use the only one cfg"
     		echo "${cfg_path}"
     	    exit

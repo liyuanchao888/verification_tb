@@ -14,6 +14,7 @@ rm -rf ${1}/output
 rm -rf ${1}/ucli.key 
 rm -rf ${1}/vc_hdrs.h  verdi_config_file
 rm -rf ${1}/${tc}
+find ${1} -name "*.log" -o -name "*.fsdb" | xargs rm -rf
 }
 
 if [ ! -n "$1" ];then
