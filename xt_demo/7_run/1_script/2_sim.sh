@@ -54,9 +54,9 @@ elif [ ${xprop} != off ]; then
 fi
 
 #====== ADD part 2: self-define parameter to sim_command  =======
-    echo "----ext sim_para is ${sim_para}" >> ~/tmp
+
 if [ -n "${sim_para}" ]; then
-    echo "----- sim_para is ${sim_para}" >> ~/tmp
+#    echo -e "-----2_sim.sh sim_para is ${sim_para} tc=${tc}" >> ~/tmp
 	ACT_PARA=`echo ${sim_para} | sed 's/+/ +/g'`
     SIM_OPT="${SIM_OPT} ${ACT_PARA}"
 fi

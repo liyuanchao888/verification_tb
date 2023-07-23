@@ -33,32 +33,36 @@ fi
 while read line
 do
 	#	export TC_FILE_NAME=$(echo ${line} | awk -F "/" '{print $(NF-1)}')
-	echo -e " ------ File:${line} "
+#	echo -e " ------ File:${line} "
 	export tc=$(echo ${line} | awk '{print $(1)}')
 	regr_num=$(echo ${line} | awk '{print $(2)}')
 	sim_para_value=$(echo ${line} | awk '{print $(3)}')
-	sim_para_value="${sim_para_value} ${regr_def}"
-    echo -e " ---- sim parameter is ${sim_para_value} "
+	sim_para_value="${sim_para_value}${sim_para_all}"
+#    echo -e " ----regr sim parameter is ${sim_para_value} " >>~/tmp
     for i in `seq $regr_num`
 	do
 		export seed=$(date +%N)
 		if [ ${paral} = on ];then
-			tc_list +=" ${tc}"
-			seed_list +=" ${seed}"
-			sim_para_list +=" ${sim_para_value}"
+			tc_list+=" ${tc}"
+			seed_list+=" ${seed}"
+			sim_para_list+=" ${sim_para_value}"
 		else
-            echo -e " ---- regression is ${regr_tc_path} , run simulation ${RUN_SIM_FILE} ${tc} ${sim_para_value} ${seed} " >> ~/tmp
-			bash ${RUN_SIM_FILE} tc=${tc} sim_para=${sim_para_value} seed=${seed} >> ~/tmp
+#			echo -e " ---- regression is ${regr_tc_path} ,\n run simulation ${RUN_SIM_FILE} ${tc} sim_para=${sim_para} value=${sim_para_value} ${seed} "
+			if [ ! -n "${sim_para}" ];then
+				sim_para=${sim_para_value}
+			fi
+			bash ${RUN_SIM_FILE}
 		fi
-		sleep 0.2s
+		sleep 1s
 	done
 	echo -e "tc_name :${tc} \n"
 done < ${regr_tc_path}
 #
 ##=========== simulation with parallel ======
 if [ ${paral} = on ];then
-	parallel -j ${PARAL_NUM} --xapply --trim 1 "make sim tc={1} sim_para={2} seed={3}" ::: ${tc_list} ::: ${sim_para_list} ::: ${seed_list} 
+	parallel -j 2 --xapply --trim l "make sim tc={1} sim_para={2} seed={3}" ::: ${tc_list} ::: ${sim_para_list} ::: ${seed_list} 
 fi
+
 #
 #======= auto generate the report =======
 #sh ${RUN_REPORT_FILE} &
