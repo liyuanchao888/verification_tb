@@ -33,12 +33,10 @@ fi
 while read line
 do
 	#	export TC_FILE_NAME=$(echo ${line} | awk -F "/" '{print $(NF-1)}')
-#	echo -e " ------ File:${line} "
 	export tc=$(echo ${line} | awk '{print $(1)}')
 	regr_num=$(echo ${line} | awk '{print $(2)}')
 	sim_para_value=$(echo ${line} | awk '{print $(3)}')
 	sim_para_value="${sim_para_value}${sim_para_all}"
-#    echo -e " ----regr sim parameter is ${sim_para_value} " >>~/tmp
     for i in `seq $regr_num`
 	do
 		export seed=$(date +%N)
@@ -57,13 +55,15 @@ do
 	done
 	echo -e "tc_name :${tc} \n"
 done < ${regr_tc_path}
-#
+
+
 ##=========== simulation with parallel ======
 if [ ${paral} = on ];then
-	parallel -j 2 --xapply --trim l "make sim tc={1} sim_para={2} seed={3}" ::: ${tc_list} ::: ${sim_para_list} ::: ${seed_list} 
+#    echo -e "tc_name :${tc_list} , sim_para_list is ${sim_para_list} , seed_list is ${seed_list} \n" >~/regr_tmp
+	parallel -j ${paral_num} --xapply --trim l "make sim tc={1} sim_para={2} seed={3}" ::: ${tc_list} ::: ${sim_para_list} ::: ${seed_list} 
 fi
 
 #
 #======= auto generate the report =======
-#sh ${RUN_REPORT_FILE} &
+sh ${RUN_REPORT_FILE} &
 #firefox ${}

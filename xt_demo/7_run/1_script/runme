@@ -1,6 +1,0 @@
-rm -rf csrc simv* *.log
-vcs -full64 -lca -CFLAGS -L/usr/lib -L/lib \
-	-ntb_opts uvm-1.1 -timescale=1ns/1ns \
-    +v2k -sverilog ../../../1_dut/design.sv -f ../../6_top/1_tb_top/tb.list \
-	-top test_top -l compile.log
-./simv +UVM_TESTNAME=ahb_apb_bridge_base_test +UVM_VERBOSITY=UVM_MEDIUM -l sim.log

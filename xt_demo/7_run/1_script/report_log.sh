@@ -1,30 +1,47 @@
 #!/bin/bash
 ##Usage: ./report_log.sh <TEST_NAME>
 report_file=${PROJ_WORK_PATH}/report.html
-TEST_NAME=$1
-
-if [ ! -e ../$TEST_NAME/testcase.log ];
+tc_log=$1
+TC_FILE_NAME=$(echo ${tc_log} | awk -F "." '{print $(NF-1)}')
+TEST_NAME=${TC_FILE_NAME%_*}
+echo -e " log path ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} "
+if [ ! -e ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} ];
 then  STATE=NONE
-      RESULT="./NOT_RUN.html"
-      TIME=0
-elif [ $(cat ../$TEST_NAME/testcase.log | grep -c "UVM Report Summary") -eq 0 ]; then
+    echo "<h1> TEST NOT RUN! </h1>" >${PROJ_WORK_PATH}/$TEST_NAME/NOT_RUN.html
+	RESULT="${PROJ_WORK_PATH}/$TEST_NAME/NOT_RUN.html"
+    CPU_TIME=0
+elif [ $(cat ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} | grep -c "UVM Report Summary") -eq 0 ]; then
     STATE=RUNNING
-    RESULT="../$TEST_NAME/testcase.log"
-    TIME=NOT_FINISH    
-elif [ $(cat ../$TEST_NAME/testcase.log | grep -c "testcase fail") -gt 0 ]; then
+    RESULT="${PROJ_WORK_PATH}/$TEST_NAME/${tc_log}"
+    CPU_TIME=NOT_FINISH    
+elif [ $(cat ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} | grep -c "testcase fail") -gt 0 ]; then
     STATE=FAILED
-    RESULT="../$TEST_NAME/testcase.log"
-    TIME=$(cat ../$TEST_NAME/testcase.log | tail -n -10 |head -n -9 )
-elif [ $(cat ../$TEST_NAME/testcase.log | grep -c "testcase pass") -gt 0 ]; then
+    RESULT="${PROJ_WORK_PATH}/$TEST_NAME/${tc_log}"
+    START_TIME=$(cat ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} | grep -n "Compiler version" | awk -F ";" '{print $NF}' )
+    CPU_TIME=$(cat ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} | grep -n "CPU Time: " | awk -F ";" '{print $1}' | awk -F ":" '{print $NF}' )
+    sim_line=`sed -n -e '/V C S   S i m/=' ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log}`
+    SIM_TIME=`sed -n -e ''$((sim_line+1))'p' ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} | awk -F ":" '{print $NF}' `
+elif [ $(cat ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} | grep -c "testcase pass") -gt 0 ]; then
     STATE=PASSED
-    RESULT="../$TEST_NAME/testcase.log"
-    TIME=$(cat ../$TEST_NAME/testcase.log | tail -n -10 |head -n -9 )
+    RESULT="${PROJ_WORK_PATH}/$TEST_NAME/${tc_log}"
+    START_TIME=$(cat ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} | grep -n "Compiler version" | awk -F ";" '{print $NF}' )
+    CPU_TIME=$(cat ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} | grep -n "CPU Time: " | awk -F ";" '{print $1}' | awk -F ":" '{print $NF}' )
+    sim_line=`sed -n -e '/V C S   S i m/=' ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log}`
+    SIM_TIME=`sed -n -e ''$((sim_line+1))'p' ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} | awk -F ":" '{print $NF}' `
+else
+    STATE=UNKNOW
+    RESULT="${PROJ_WORK_PATH}/$TEST_NAME/${tc_log}"
+    START_TIME=$(cat ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} | grep -n "Compiler version" | awk -F ";" '{print $NF}' )
+    CPU_TIME=$(cat ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} | grep -n "CPU Time: " | awk -F ";" '{print $1}' | awk -F ":" '{print $NF}' )
+    sim_line=`sed -n -e '/V C S   S i m/=' ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log}`
+    SIM_TIME=`sed -n -e ''$((sim_line+1))'p' ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} | awk -F ":" '{print $NF}' `
 fi
 
+echo -e "\n\n report_log.sh  start_time :${START_TIME}  CPU_TIME : ${CPU_TIME}  SIM_TIME :${SIM_TIME}"
 
 if [ -e $report_file ];
 then
-   echo "<script>   addEle(\"$TEST_NAME\",\"$STATE\",\"$TIME\",'<a href=\"$RESULT\">TESTCASE LOG</a>')  </script>" >> $report_file
+   echo "<script>   addEle(\"$TEST_NAME\",\"$STATE\",\"$CPU_TIME\",\"$SIM_TIME\",'<a href=\"$RESULT\">TESTCASE LOG</a>')  </script>" >> $report_file
 else
    echo ''' 
 <head>
@@ -133,16 +150,18 @@ else
                     <option value="RUNNING">RUNNING</option>
                     <option value="FAILED">FAILED</option>
                     <option value="NONE">NONE</option>
+                    <option value="UNKNOW">UNKNOW</option>
                 </select>
             </div>
-            <div>TIME</div>
+            <div>CPU_TIME</div>
+            <div>SIM_TIME</div>
             <div>LOG</div>
         </li>
 
     </ul>
     <script>
         var tables=document.querySelector("ul");
-        function addEle(test,state,time,log) {
+        function addEle(test,state,cpu_time,sim_time,log) {
             var li=document.createElement("li");
             var isFailed= state=="FAILED"?"red":"black";
             li.innerHTML=`
@@ -150,7 +169,8 @@ else
                     <div>${tables.children.length++}</div>
                     <div>${test}</div>
                     <div class="${isFailed}">${state}</div>
-                    <div>${time}</div>
+                    <div>${cpu_time}</div>
+                    <div>${sim_time}</div>
                     <div>${log}</div>
                 </div>`;
             tables.appendChild(li);
@@ -185,6 +205,9 @@ else
                 case "FAILED":
                     isShow("FAILED",infoBoxs)
                     break;
+                case "UNKNOW":
+                    isShow("UNKNOW",infoBoxs)
+                    break;
                 case "NONE":
                     isShow("NONE",infoBoxs)
                     break;
@@ -197,5 +220,5 @@ else
 
 
 ''' > $report_file
-echo "<script>   addEle(\"$TEST_NAME\",\"$STATE\",\"$TIME\",'<a href=\"$RESULT\">TESTCASE LOG</a>')  </script>" >> $report_file
+echo "<script>   addEle(\"$TEST_NAME\",\"$STATE\",\"$CPU_TIME\",\"$SIM_TIME\",'<a href=\"$RESULT\">TESTCASE LOG</a>')  </script>" >> $report_file
 fi

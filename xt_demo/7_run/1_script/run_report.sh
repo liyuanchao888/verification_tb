@@ -1,23 +1,28 @@
 #!/usr/bin/bash
-find ../ -name "test_cfg.txt">report_tc_list
-
-if [ -f "../2_work/report.html" ]; then
-    echo "del last ../2_work/report.html"
-	rm -rf ../2_work/report.html
+if [ ! -d "${PROJ_WORK_PATH}" ]; then
+    echo "no workspace: ${PROJ_WORK_PATH}"
+	exit
+fi
+if [ -f "${PROJ_WORK_PATH}/report.html" ]; then
+    echo "del last ${PROJ_WORK_PATH}/report.html"
+	rm -rf ${PROJ_WORK_PATH}/report.html
 fi
 
-echo "#!/usr/bin/bash" >report_tmp.sh
+echo "#!/usr/bin/bash" >${PROJ_WORK_PATH}/report_tmp.sh
+#find ../ -name "test_cfg.txt">report_tc_list
+find ${PROJ_WORK_PATH} -maxdepth 2 -name "*.log" ! -name "compile.log" > ${PROJ_WORK_PATH}/report_tc_list
 
 while read line
 do
-	TC_FILE_NAME=$(echo ${line} | awk -F "/" '{print $(NF-1)}')
-	echo "./report_log.sh ${TC_FILE_NAME}" >>report_tmp.sh
-	echo "File:${line}"
-	echo "tc_name :${TC_FILE_NAME}"
-done < report_tc_list
+	tc_log=$(basename "${line}")
+#	TC_FILE_NAME=$(echo ${tc_log} | awk -F "." '{print $(NF-1)}')
+#	TC_NAME=${TC_FILE_NAME%_*}
+    echo -e "${TB_PATH}/7_run/1_script/report_log.sh ${tc_log}" >>${PROJ_WORK_PATH}/report_tmp.sh
+	echo -e "tc_log_name :${tc_log}"
+done < ${PROJ_WORK_PATH}/report_tc_list
 
-sh ./report_tmp.sh
-rm report_tc_list
-rm report_tmp.sh
+sh ${PROJ_WORK_PATH}/report_tmp.sh
+#rm ${PROJ_WORK_PATH}/report_tc_list
+#rm ${PROJ_WORK_PATH}/report_tmp.sh
 
-firefox ../2_work/report.html
+firefox ${PROJ_WORK_PATH}/report.html

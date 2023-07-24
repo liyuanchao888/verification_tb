@@ -12,22 +12,22 @@ get_filelist:
 gen_run:
 	@bash ${GEN_RUN_FILE} ${CFG_ALL}
 
-comp:gen_run
+comp:
 	@bash ${RUN_COMPILE_FILE}
 
-sim:gen_run
+sim:
 	@bash ${RUN_SIM_FILE}
 
 run:gen_run comp sim
 
-wave:gen_run
+wave:
 	@bash ${RUN_WAVE_FILE}
 
 regr:gen_run
 	@bash ${RUN_REGR_FILE}
 
 report:
-	@bash run_report.sh
+	@bash ${RUN_REPORT_FILE}
 
 tc:
 	@find ${TB_PATH}/6_top/2_tc -name "*.sv" -o -name "*.v" > ${TC_TEST_LIST}
