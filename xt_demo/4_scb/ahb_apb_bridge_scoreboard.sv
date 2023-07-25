@@ -206,4 +206,44 @@ class ahb_apb_bridge_scoreboard extends uvm_scoreboard;
 
 
     endfunction
-endclass
+
+    virtual function void pass_display();
+        $display("      ====================  testcase pass!!  =======================");
+        $display("                                                                    ");
+        $display("      PPPPPPPPPPP       AAAAAAA       SSSSSSSSSS     SSSSSSSSSS   !!");
+        $display("      PPPPPPPPPPPP     AAAAAAAAA     SSSSSSSSSSSS   SSSSSSSSSSSS  !!");
+        $display("      PPP     PPPP    AAAAA AAAAA   SSSSSSSSSSSSS  SSSSSSSSSSSSS  !!");
+        $display("      PPP     PPPP   AAAAA   AAAAA  SSSSS          SSSSS          !!");
+        $display("      PPP     PPPP   AAAA     AAAA  SSSSS          SSSSS          !!");
+        $display("      PPPPPPPPPPPP   AAAAAAAAAAAAA   SSSSSSSSSSS    SSSSSSSSSSS   !!");
+        $display("      PPPPPPPPPPP    AAAAAAAAAAAAA    SSSSSSSSSSS    SSSSSSSSSSS  !!");
+        $display("      PPPP           AAAA     AAAA         SSSSSS         SSSSSS  !!");
+        $display("      PPPP           AAAA     AAAA         SSSSSS         SSSSSS  !!");
+        $display("      PPPP           AAAA     AAAA  SSSSSSSSSSSSS  SSSSSSSSSSSSS  !!");
+        $display("      PPPP           AAAA     AAAA  SSSSSSSSSSSS   SSSSSSSSSSSS   !!");
+        $display("      PPPP           AAAA     AAAA   SSSSSSSSSS     SSSSSSSSSS    !!");
+        $display("                                                                    ");
+        $display("      ==============================================================");
+    endfunction
+
+    virtual function void fail_display();
+        $display("      ====================  testcase fail!!  =======================");
+        $display("                                                                    ");
+        $display("      FFFFFFFFFFF      AAAAAAA         IIIII      LLLLL           !!");
+        $display("      FFFFFFFFFFF     AAAAAAAAA        IIIII      LLLLL           !!");
+        $display("      FFFF           AAAA   AAAA       IIIII      LLLLL           !!");
+        $display("      FFFF          AAAA     AAAA      IIIII      LLLLL           !!");
+        $display("      FFFFFFFFFFF   AAAA     AAAA      IIIII      LLLLL           !!");
+        $display("      FFFFFFFFFFF   AAAAAAAAAAAAA      IIIII      LLLLL           !!");
+        $display("      FFFF          AAAAAAAAAAAAA      IIIII      LLLLL           !!");
+        $display("      FFFF          AAAA     AAAA      IIIII      LLLLL           !!");
+        $display("      FFFF          AAAA     AAAA      IIIII      LLLLL           !!");
+        $display("      FFFF          AAAA     AAAA      IIIII      LLLLLLLLLLLLL   !!");
+        $display("      FFFF          AAAA     AAAA      IIIII      LLLLLLLLLLLLL   !!");
+        $display("      FFFF          AAAA     AAAA      IIIII      LLLLLLLLLLLLL   !!");
+        $display("                                                                    ");
+        $display("      ==============================================================");
+    endfunction
+
+	
+	endclass

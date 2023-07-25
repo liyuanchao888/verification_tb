@@ -39,4 +39,38 @@ class ahb_apb_bridge_environment extends uvm_env;
 
     endfunction
 
+
+    virtual function void report_phase(uvm_phase phase);
+        uvm_report_server m_server;
+        int error_num,fatal_num     ;
+        super.report_phase(phase);
+        `uvm_info(get_type_name(), $sformatf("====== env:report_phase:start ========\n  "), UVM_MEDIUM)
+      //  if (scoreboard_h.m_mismatches>0) begin     //compare fail
+      //      `uvm_error(get_type_name(), $sformatf("error!!!:Reporting %0d mismatched ,%0d matched ",scoreboard_h.m_mismatches ,m_scb.m_matches))
+      //  end else if(scoreboard_h.m_matches>0)begin //compare pass
+      //      `uvm_info(get_type_name(), $sformatf("Reporting %0d mismatched ,%0d matched ",scoreboard_h.m_mismatches ,m_scb.m_matches), UVM_MEDIUM)
+      //  end else begin                      //no data to compare
+      //      `uvm_error(get_type_name(), $sformatf("error!!!:no data to compare!"))
+      //  end
+        
+        //testcase pass or fail
+        m_server = get_report_server();
+        error_num  = m_server.get_severity_count(UVM_ERROR);
+        fatal_num  = m_server.get_severity_count(UVM_FATAL);
+        `uvm_info(get_type_name(), $sformatf("Testcase :%0d ERROR , %0d FATAL",error_num,fatal_num), UVM_MEDIUM)
+        if ((error_num != 0)||(fatal_num != 0)) begin     //compare fail
+            scoreboard_h.fail_display();
+        end else begin
+            scoreboard_h.pass_display();
+        end
+        `uvm_info(get_type_name(), $sformatf("====== env:report_phase:end   =========\n  "), UVM_MEDIUM)
+    endfunction
+
+
+
+
+
+
+
+
 endclass
