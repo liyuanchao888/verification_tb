@@ -1,6 +1,7 @@
 class apb_sequence extends uvm_sequence # (apb_sequence_item);
     `uvm_object_utils(apb_sequence)
 
+
     function new (string name = "apb_sequence");
 
         super.new(name);

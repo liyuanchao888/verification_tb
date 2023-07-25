@@ -1,13 +1,5 @@
-`ifndef ADDRESS_WIDTH
-    `define ADDRESS_WIDTH 32
-`endif
-`ifndef DATA_WIDTH
-    `define DATA_WIDTH 32
-`endif
-`ifndef NO_OF_SLAVES
-    `define NO_OF_SLAVES 8
-`endif
-
+`ifndef APB_INTERFACE__SV
+`define APB_INTERFACE__SV
 interface apb_interface (input logic clock);
 
     logic [`DATA_WIDTH-1:0]     PRDATA [`NO_OF_SLAVES-1:0];
@@ -50,3 +42,4 @@ interface apb_interface (input logic clock);
     modport APB_DRIVER  (clocking apb_driver_cb, input clock);
     modport APB_MONITOR (clocking apb_monitor_cb, input clock);
 endinterface
+`endif //APB_INTERFACE__SV

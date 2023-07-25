@@ -1,10 +1,6 @@
-`ifndef ADDRESS_WIDTH
-    `define ADDRESS_WIDTH 32
-`endif
-`ifndef DATA_WIDTH
-    `define DATA_WIDTH 32
-`endif
 
+`ifndef AHB_INTERFACE__SV
+`define AHB_INTERFACE__SV
 interface ahb_interface (input logic clock);
 
     logic                       HRESETn;
@@ -56,4 +52,4 @@ interface ahb_interface (input logic clock);
     modport AHB_MONITOR (clocking ahb_monitor_cb, input clock);
 
 endinterface
-
+`endif //AHB_INTERFACE__SV

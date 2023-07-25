@@ -1,7 +1,7 @@
 /tools/proj/verification_platform/xt_demo/6_top/2_tc/ahb_apb_bridge_burst_write_test.sv
-/tools/proj/verification_platform/xt_demo/6_top/2_tc/ahb_apb_bridge_burst_read_test.sv
-/tools/proj/verification_platform/xt_demo/6_top/2_tc/c_simple_test_rw.sv
-/tools/proj/verification_platform/xt_demo/6_top/2_tc/ahb_apb_bridge_random_test.sv
 /tools/proj/verification_platform/xt_demo/6_top/2_tc/ahb_apb_bridge_single_write_test.sv
 /tools/proj/verification_platform/xt_demo/6_top/2_tc/ahb_apb_bridge_single_read_test.sv
 /tools/proj/verification_platform/xt_demo/6_top/2_tc/ahb_apb_bridge_base_test.sv
+/tools/proj/verification_platform/xt_demo/6_top/2_tc/c_simple_test_rw.sv
+/tools/proj/verification_platform/xt_demo/6_top/2_tc/ahb_apb_bridge_burst_read_test.sv
+/tools/proj/verification_platform/xt_demo/6_top/2_tc/ahb_apb_bridge_random_test.sv

@@ -1,11 +1,4 @@
 
-`ifndef ADDRESS_WIDTH
-    `define ADDRESS_WIDTH 32
-`endif
-`ifndef DATA_WIDTH
-    `define DATA_WIDTH 32
-`endif
-
 class ahb_sequence_item extends uvm_sequence_item;
     `uvm_object_utils(ahb_sequence_item)
 
