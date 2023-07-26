@@ -36,7 +36,7 @@ do
 	export tc=$(echo ${line} | awk '{print $(1)}')
 	regr_num=$(echo ${line} | awk '{print $(2)}')
 	sim_para_value=$(echo ${line} | awk '{print $(3)}')
-	sim_para_value="${sim_para_value}${sim_para_all}"
+	sim_para_value="${sim_para_value}${opt}"
     for i in `seq $regr_num`
 	do
 		export seed=$(date +%N)
@@ -65,5 +65,5 @@ fi
 
 #
 #======= auto generate the report =======
-sh ${RUN_REPORT_FILE} &
+bash ${RUN_REPORT_FILE} &
 #firefox ${}

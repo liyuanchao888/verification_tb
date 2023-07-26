@@ -9,7 +9,12 @@ if [ ! -n "$1" ];then
 	echo " Error: no specify cfg file, at least specify the default cfg_para_base.ini"
     exit
 else
-    cfg_file=$*
+    cfg_all=$*
+	if [[ ${soc} = on ]];then
+	    cfg_file=`echo ${cfg_all} | sed 's/${CFG_PARA_SOC}/ /g'`
+	else
+	    cfg_file=`echo ${cfg_all} | sed 's/${CFG_PARA_IP}/ /g'`
+	fi
 	echo " specify cfg = ${cfg_file} to gen run script !!!"
 fi
 

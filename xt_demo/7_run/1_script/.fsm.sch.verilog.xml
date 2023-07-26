@@ -1,0 +1,8 @@
+<Command name="schRTLInfo"  delimiter="."  >
+<RTLBlock >
+<RTLInfo   name="current_state_0"  type="2"  fileName="/tools/proj/verification_platform/xt_demo/7_run/2_work/../../../1_dut/design.sv"  >
+    <Seg beginLine="142"  endLine="226"  />
+  </RTLInfo>
+<Instance name="test_top.DUT"  />
+</RTLBlock>
+</Command>

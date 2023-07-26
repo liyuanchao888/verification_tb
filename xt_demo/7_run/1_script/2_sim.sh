@@ -54,12 +54,11 @@ elif [ ${xprop} != off ]; then
 fi
 
 #====== ADD part 2: self-define parameter to sim_command  =======
-
-if [ -n "${sim_para}" ]; then
-#    echo -e "-----2_sim.sh sim_para is ${sim_para} tc=${tc}" >> ~/tmp
-	ACT_PARA=`echo ${sim_para} | sed 's/+/ +/g'`
+if [ -n "${opt}" ]; then
+	ACT_PARA=`echo ${opt} | sed 's/--/ /g'`
     SIM_OPT="${SIM_OPT} ${ACT_PARA}"
 fi
+#    echo -e "-----2_sim.sh sim_para is ${sim_para} tc=${tc}" >> ~/tmp
 
 SIM_OPT="${SIM_OPT} -l ${PROJ_WORK_PATH}/${tc}/${tc}_${seed}.log "
 echo "simulation command is ${SIM_OPT}"

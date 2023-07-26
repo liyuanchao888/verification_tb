@@ -4,7 +4,7 @@ report_file=${PROJ_WORK_PATH}/report.html
 tc_log=$1
 TC_FILE_NAME=$(echo ${tc_log} | awk -F "." '{print $(NF-1)}')
 TEST_NAME=${TC_FILE_NAME%_*}
-echo -e " log path ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} "
+#echo -e " log path ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} "
 if [ ! -e ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} ];
 then  STATE=NONE
     echo "<h1> TEST NOT RUN! </h1>" >${PROJ_WORK_PATH}/$TEST_NAME/NOT_RUN.html
@@ -37,7 +37,7 @@ else
     SIM_TIME=`sed -n -e ''$((sim_line+1))'p' ${PROJ_WORK_PATH}/$TEST_NAME/${tc_log} | awk -F ":" '{print $NF}' `
 fi
 
-echo -e "\n\n report_log.sh  start_time :${START_TIME}  CPU_TIME : ${CPU_TIME}  SIM_TIME :${SIM_TIME}"
+#echo -e "\n\n report_log.sh  start_time :${START_TIME}  CPU_TIME : ${CPU_TIME}  SIM_TIME :${SIM_TIME}"
 
 if [ -e $report_file ];
 then

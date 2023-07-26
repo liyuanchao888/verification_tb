@@ -28,7 +28,7 @@ fi
 #---- code coverage  -----
 [ ${assert} = on ] && CMP_OPT="${CMP_OPT} +define+ASSERT_ON "
 [ ${coverage} = on ] && CMP_OPT="${CMP_OPT} \
-	-cm_line+cond+fsm+tgl+branch+assert \
+	-cm line+cond+fsm+tgl+branch+assert \
 	-cm_tgl mda -cm_line contassign \
 	-cm_dir ${PROJ_WORK_PATH}/cov/simv.vdb \
 	+define+COVER_ON "
@@ -59,12 +59,11 @@ fi
 [ ${mem_ini} = random ] && CMP_OPT="${CMP_OPT} +vcs+inimem+random "
 
 #---- use lib when post simulation  -----
-if [ ${cell} = ${CELL_TSMC_LIB} ]; then
-	echo "cell is ${cell} , ${CELL_TSMC_LIB}"
+if [ ${cell} = on ]; then
 	if [ ${upf} = on ];then
-		CMP_OPT="${CMP_OPT} -f ${CELL_TSMC_LIB_PWR_PATH} "
+		CMP_OPT="${CMP_OPT} -f ${CELL_LIB_PWR_PATH} "
     else
-		CMP_OPT="${CMP_OPT} -f ${CELL_TSMC_LIB_PATH} "
+		CMP_OPT="${CMP_OPT} -f ${CELL_LIB_PATH} "
 	fi
 	if [ ${mem_ini} = zero ];then
 		CMP_OPT="${CMP_OPT} +define+TSMC_INITIALIZE_MEM_USING_DEFAUT_TASKS +define+TSMC_MEM_LOAD_0 "
