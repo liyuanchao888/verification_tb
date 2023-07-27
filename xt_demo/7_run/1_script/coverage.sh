@@ -15,9 +15,14 @@ fi
 
 
 #------- view coverage report file ----------
-if [[ -n "${report}" ]];then
-    if [ ${report} = "dve" ];then
+if [[ -n "${view}" ]];then
+    if [ ${view} = "dve" ];then
 	    COV_OPT="dve -full64 -cov -logdir ${PROJ_WORK_PATH}/cov "
+	elif [[ ${view} = "verdi" ]];then
+    	COV_OPT="verdi -cov -covdir  ${PROJ_WORK_PATH}/cov/merge_cov.vdb -workMode coverageAnalysis "
+	    COV_OPT="${COV_OPT} -guiConf ${PROJ_WORK_PATH}/cov/novas.conf "
+	    COV_OPT="${COV_OPT} -rcFile ${PROJ_WORK_PATH}/cov/novas.rc "
+	    COV_OPT="${COV_OPT} -logdir ${PROJ_WORK_PATH}/cov/ "
 	else
     	COV_OPT="firefox ${PROJ_WORK_PATH}/cov/urgReport/dashboard.html "
 	fi
