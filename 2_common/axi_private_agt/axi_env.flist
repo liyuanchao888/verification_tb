@@ -1,0 +1,16 @@
++incdir+./
+./define.svh
+./axi_config_objs.svh
+./axi_transaction.sv
+./axi_write_seq.sv
+./axi_write_sqr.sv
+./axi_read_seq.sv
+./axi_interface.sv
+./axi_m_driver.sv
+./axi_s_driver.sv
+./axi_m_monitor.sv
+./axi_s_monitor.sv
+./axi_master.sv
+./axi_slave.sv
+./axi_scoreboard.sv
+./axi_env.sv

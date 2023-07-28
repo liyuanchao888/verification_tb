@@ -1,20 +1,20 @@
-../../../xt_demo/6_top/1_tb_top/tb_define.svh
+../../6_top/1_tb_top/tb_define.svh
 #../../../2_common/ahb_private_agt/ahb_interface.sv
 #../../../2_common/apb_private_agt/apb_interface.sv
 
-../../../xt_demo/5_env/ahb_apb_bridge_env_config.sv
+../../5_env/ahb_apb_bridge_env_config.sv
 -F ../../../2_common/ahb_private_agt/file.list
 -F ../../../2_common/apb_private_agt/file.list
 
-../../../xt_demo/4_scb/ahb_apb_bridge_scoreboard.sv
-../../../xt_demo/5_env/ahb_apb_bridge_environment.sv
-../../../xt_demo/6_top/2_tc/ahb_apb_bridge_base_test.sv
-../../../xt_demo/6_top/2_tc/ahb_apb_bridge_burst_write_test.sv
-../../../xt_demo/6_top/2_tc/ahb_apb_bridge_single_write_test.sv
-../../../xt_demo/6_top/2_tc/ahb_apb_bridge_single_read_test.sv
-../../../xt_demo/6_top/2_tc/ahb_apb_bridge_burst_read_test.sv
-../../../xt_demo/6_top/2_tc/ahb_apb_bridge_random_test.sv
-../../../xt_demo/6_top/1_tb_top/cr_top_interface.sv
-../../../xt_demo/6_top/1_tb_top/tb_top.sv
-#../../../xt_demo/6_top/1_tb_top/dut_top.sv
-../../../xt_demo/6_top/1_tb_top/test_top.sv
+../../4_scb/ahb_apb_bridge_scoreboard.sv
+../../5_env/ahb_apb_bridge_environment.sv
+../../6_top/2_tc/ahb_apb_bridge_base_test.sv
+../../6_top/2_tc/ahb_apb_bridge_burst_write_test.sv
+../../6_top/2_tc/ahb_apb_bridge_single_write_test.sv
+../../6_top/2_tc/ahb_apb_bridge_single_read_test.sv
+../../6_top/2_tc/ahb_apb_bridge_burst_read_test.sv
+../../6_top/2_tc/ahb_apb_bridge_random_test.sv
+../../6_top/1_tb_top/cr_top_interface.sv
+../../6_top/1_tb_top/tb_top.sv
+#../../6_top/1_tb_top/dut_top.sv
+../../6_top/1_tb_top/test_top.sv

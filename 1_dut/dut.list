@@ -1,1 +1,2 @@
-${PROJ_WORK_PATH}/../../../1_dut/design.sv
+-F ${PROJ_WORK_PATH}/../../../1_dut/ahb_apb/dut_ahb_apb.flist
+

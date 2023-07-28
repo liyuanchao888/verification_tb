@@ -1,0 +1,2 @@
+${PROJ_WORK_PATH}/../../../1_dut/ahb_apb/dut_define.svh
+${PROJ_WORK_PATH}/../../../1_dut/ahb_apb/design.sv

@@ -1,0 +1,6 @@
+./ahb_apb_bridge_base_test.sv
+./ahb_apb_bridge_burst_write_test.sv
+./ahb_apb_bridge_single_write_test.sv
+./ahb_apb_bridge_single_read_test.sv
+./ahb_apb_bridge_burst_read_test.sv
+./ahb_apb_bridge_random_test.sv

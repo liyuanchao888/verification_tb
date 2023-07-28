@@ -1,0 +1,5 @@
++incdir+./
+-F ../axi_env.flist
+#./axi_package.svh
+./axi_tb_top.sv
+./axi_test.sv
