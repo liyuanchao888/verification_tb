@@ -1,0 +1,55 @@
+
+for(int i=0; i<TbNumaxi_if.slave_ifs;i++) begin
+    assign  axi_if.slave_if[i].awid       = slave[i].aw_id     ;
+    assign  axi_if.slave_if[i].awaddr     = slave[i].aw_addr   ;
+    assign  axi_if.slave_if[i].awlen      = slave[i].aw_len    ;
+    assign  axi_if.slave_if[i].awsize     = slave[i].aw_size   ;
+    assign  axi_if.slave_if[i].awburst    = slave[i].aw_burst  ;
+    assign  axi_if.slave_if[i].awlock     = slave[i].aw_lock   ;
+    assign  axi_if.slave_if[i].awcache    = slave[i].aw_cache  ;
+    assign  axi_if.slave_if[i].awprot     = slave[i].aw_prot   ;
+    assign  axi_if.slave_if[i].awqos      = slave[i].aw_qos    ;
+    assign  axi_if.slave_if[i].awregion   = slave[i].aw_region ;
+    assign  axi_if.slave_if[i].awatop     = slave[i].aw_atop   ;
+    assign  axi_if.slave_if[i].awuser     = slave[i].aw_user   ;
+    assign  axi_if.slave_if[i].awvalid    = slave[i].aw_valid  ;
+
+	assign  slave[i].aw_ready = axi_if.slave_if[i].awready     ;
+
+    assign  axi_if.slave_if[i].wdata      = slave[i].w_data    ;
+    assign  axi_if.slave_if[i].wstrb      = slave[i].w_strb    ;
+    assign  axi_if.slave_if[i].wlast      = slave[i].w_last    ;
+    assign  axi_if.slave_if[i].wuser      = slave[i].w_user    ;
+    assign  axi_if.slave_if[i].wvalid     = slave[i].w_valid   ;
+    assign  slave[i].w_ready = axi_if.slave_if[i].wready       ;
+
+    assign  slave[i].b_id    = axi_if.slave_if[i].bid          ;
+    assign  slave[i].b_resp  = axi_if.slave_if[i].bresp        ;
+    assign  slave[i].b_user  = axi_if.slave_if[i].buser        ;
+    assign  slave[i].b_valid = axi_if.slave_if[i].bvalid       ;
+    assign  axi_if.slave_if[i].bready     = slave[i].b_ready   ;
+	
+    assign  axi_if.slave_if[i].arid       = slave[i].ar_id     ;
+    assign  axi_if.slave_if[i].araddr     = slave[i].ar_addr   ;
+    assign  axi_if.slave_if[i].arlen      = slave[i].ar_len    ;
+    assign  axi_if.slave_if[i].arsize     = slave[i].ar_size   ;
+    assign  axi_if.slave_if[i].arburst    = slave[i].ar_burst  ;
+    assign  axi_if.slave_if[i].arlock     = slave[i].ar_lock   ;
+    assign  axi_if.slave_if[i].arcache    = slave[i].ar_cache  ;
+    assign  axi_if.slave_if[i].arprot     = slave[i].ar_prot   ;
+    assign  axi_if.slave_if[i].arqos      = slave[i].ar_qos    ;
+    assign  axi_if.slave_if[i].arregion   = slave[i].ar_region ;
+    assign  axi_if.slave_if[i].aruser     = slave[i].ar_user   ;
+    assign  axi_if.slave_if[i].arvalid    = slave[i].ar_valid  ;
+
+	assign  slave[i].ar_ready = axi_if.slave_if[i].arready     ;
+
+    assign  slave[i].r_id    =  axi_if.slave_if[i].rid           ;
+    assign  slave[i].r_data  =  axi_if.slave_if[i].rdata         ;
+    assign  slave[i].r_resp  =  axi_if.slave_if[i].rresp         ;
+    assign  slave[i].r_last  =  axi_if.slave_if[i].rlast         ;
+    assign  slave[i].r_user  =  axi_if.slave_if[i].ruser         ;
+    assign  slave[i].r_valid =  axi_if.slave_if[i].rvalid        ;
+    assign  axi_if.slave_if[i].rready    = slave[i].r_ready      ;
+
+end

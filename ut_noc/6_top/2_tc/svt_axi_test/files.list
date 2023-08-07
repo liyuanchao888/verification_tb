@@ -1,0 +1,8 @@
+./ts.base_test.sv
+./ts.directed_test.sv
+./ts.random_wr_rd_test.sv
+./ts.reorder_wr_rd_test.sv
+./ts.config_creator_test.sv
+./ts.directed_4kboundary_test.sv
+./ts.axi_unaligned_backdoor_write_read_test.sv
+./ts.axi_slave_mem_diff_data_width_response_test.sv

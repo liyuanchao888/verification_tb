@@ -1,0 +1,9 @@
+../../6_top/1_tb_top/tb_define.svh
+${PROJ_WORK_PATH}/../../6_top/2_tc/xbar_private_test/axi_synth_bench.sv
+${PROJ_WORK_PATH}/../../../1_dut/axi_noc/axi_chan_compare.sv
+${PROJ_WORK_PATH}/../../../1_dut/axi_noc/axi_dumper.sv
+${PROJ_WORK_PATH}/../../../1_dut/axi_noc/axi_sim_mem.sv
+../../6_top/1_tb_top/cr_top_interface.sv
+../../6_top/1_tb_top/tb_top.sv
+//../../6_top/1_tb_top/dut_top.sv
+../../6_top/1_tb_top/test_top.sv

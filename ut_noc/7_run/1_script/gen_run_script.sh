@@ -15,7 +15,7 @@ else
 	else
 	    cfg_file=`echo ${cfg_all} | sed 's#'${CFG_PARA_SOC}'# #g'`
 	fi
-	echo -e " specify cfg = ${cfg_file} to gen run script !!! \n"#debug
+#	echo -e " specify cfg = ${cfg_file} to gen run script !!! \n"#debug
 fi
 
 ## prevent the same cfg filename
@@ -63,35 +63,22 @@ do
     #------- find the only one configuration file ----------
 	file_name=$(basename "${file_path}")
 #   	echo "--- gen run file_path=${file_path} ,file_name=${file_name}!!!"
-    if [ "${file_name}" != "${file_path}" ];then #specify path
-		cfg_path=${file_path}
-		if [ -f "${file_path}" ];then
-			echo -e "${file_path} is exist "
-		else
-        	echo -e "[-Error] : directory or file no exist: ${file_path} "
-			exit
-		fi
-	else
-	    cfg_path=` find ${TB_PATH} -name ${file_name} `
-        cfg_path_num=` find ${TB_PATH} -name ${file_name} | wc -l `
-    	#	echo -e "\n ---- gen run script: cfg_path is ${cfg_path}------" #debug
-        if [ ${cfg_path_num} -eq 0 ];then
-    	    cfg_path=` find ${VP_PATH} -name ${file_name} `
-            cfg_path_num=` find ${VP_PATH} -name ${file_name} | wc -l `
-            if [ ${cfg_path_num} -eq 0 ];then
-        	    echo -e "[-Error] : can't find cfg file ${file_path} ,please check filepath & filename is correct."
-        	    exit
-    		fi
-        else
-        	if [ ${cfg_path_num} -gt 1 ];then
-        	    echo -e "[-Error] : find more than one cfg file , rename it , confirm use the only one cfg"
-        		echo -e " cfg file : ${cfg_path}"
-        	    exit
-        	else
-        		echo -e "\n ---- gen run script : import cfg = ${cfg_path} !!!"
-            fi
+    cfg_path=` find ${TB_PATH} -name ${file_name} `
+    cfg_path_num=` find ${TB_PATH} -name ${file_name} | wc -l `
+#	echo -e "\n ---- gen run script: cfg_path is ${cfg_path}------" #debug
+    if [ ${cfg_path_num} -eq 0 ];then
+    	echo -e "[-Error] : can't find cfg file ,please theck filepath & filename is correct."
+    	exit
+    else
+    	if [ ${cfg_path_num} -gt 1 ];then
+    	    echo -e "[-Error] : find more than one cfg file , rename it , confirm use the only one cfg"
+    		echo -e " cfg file : ${cfg_path}"
+    	    exit
+    	else
+    		echo -e "\n ---- gen run script : import cfg = ${cfg_path} !!!"
         fi
     fi
+
     get_para ${cfg_path} CMP_CMD_START  CMP_CMD_END  ${RUN_COMPILE_FILE} CMP_CMD_REPLACE_TAG 
     get_para ${cfg_path} SIM_CMD_START  SIM_CMD_END  ${RUN_SIM_FILE}     SIM_CMD_REPLACE_TAG 
     get_para ${cfg_path} WAVE_CMD_START WAVE_CMD_END ${RUN_WAVE_FILE}    WAVE_CMD_REPLACE_TAG 
