@@ -1,5 +1,6 @@
 -F ./common_cells/src/common_cells.flist
 ./axi_pkg.sv
+./dut_define.svh
 ./axi_intf.sv
 ./axi_atop_filter.sv
 ./axi_burst_splitter.sv

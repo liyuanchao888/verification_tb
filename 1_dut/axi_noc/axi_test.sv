@@ -2549,6 +2549,7 @@ endpackage
 // atomic transactions with read response are injected into the corresponding log file of the read
 module axi_chan_logger #(
   parameter time TestTime     = 8ns,          // Time after clock, where sampling happens
+  parameter string LoggerDir  = "./axi_log", // name of the logger
   parameter string LoggerName = "axi_logger", // name of the logger
   parameter type aw_chan_t    = logic,        // axi AW type
   parameter type  w_chan_t    = logic,        // axi  W type
@@ -2602,7 +2603,7 @@ module axi_chan_logger #(
       // AW channel
       if (aw_valid_i && aw_ready_i) begin
         aw_queue.push_back(aw_chan_i);
-        log_file = $sformatf("./axi_log/%s/write.log", LoggerName);
+        log_file = $sformatf("%s/%s/write.log",LoggerDir,LoggerName);
         fd = $fopen(log_file, "a");
         if (fd) begin
           log_str = $sformatf("%0t> ID: %h AW on channel: LEN: %d, ATOP: %b",
@@ -2631,7 +2632,7 @@ module axi_chan_logger #(
           ar_beat.atop   = aw_chan_i.atop;
           ar_beat.user   = aw_chan_i.user;
           ar_queues[aw_chan_i.id].push_back(ar_beat);
-          log_file = $sformatf("./axi_log/%s/read_%0h.log", LoggerName, aw_chan_i.id);
+          log_file = $sformatf("%s/%s/read_%0h.log",LoggerDir, LoggerName, aw_chan_i.id);
           fd = $fopen(log_file, "a");
           if (fd) begin
             log_str = $sformatf("%0t> ID: %h AR on channel: LEN: %d injected ATOP: %b",
@@ -2651,7 +2652,7 @@ module axi_chan_logger #(
       end
       // AR channel
       if (ar_valid_i && ar_ready_i) begin
-        log_file = $sformatf("./axi_log/%s/read_%0h.log", LoggerName, ar_chan_i.id);
+        log_file = $sformatf("%s/%s/read_%0h.log", LoggerDir,LoggerName, ar_chan_i.id);
         fd = $fopen(log_file, "a");
         if (fd) begin
           log_str = $sformatf("%0t> ID: %h AR on channel: LEN: %d",
@@ -2698,11 +2699,11 @@ module axi_chan_logger #(
     end
 
     // make the log dirs
-    log_name = $sformatf("mkdir -p ./axi_log/%s/", LoggerName);
+    log_name = $sformatf("mkdir -p %s/%s/",LoggerDir, LoggerName);
     $system(log_name);
 
     // open log files
-    log_name = $sformatf("./axi_log/%s/write.log", LoggerName);
+    log_name = $sformatf("%s/%s/write.log", LoggerDir,LoggerName);
     fd = $fopen(log_name, "w");
     if (fd) begin
       $display("File was opened successfully : %0d", fd);
@@ -2711,7 +2712,7 @@ module axi_chan_logger #(
     end else
       $display("File was NOT opened successfully : %0d", fd);
     for (int unsigned i = 0; i < NoIds; i++) begin
-      log_name = $sformatf("./axi_log/%s/read_%0h.log", LoggerName, i);
+      log_name = $sformatf("%s/%s/read_%0h.log",LoggerDir, LoggerName, i);
       fd = $fopen(log_name, "w");
       if (fd) begin
         $display("File was opened successfully : %0d", fd);
@@ -2734,7 +2735,7 @@ module axi_chan_logger #(
         log_string = $sformatf("%0t> ID: %h W %d of %d, LAST: %b ATOP: %b",
                         $time, aw_beat.id, no_w_beat, aw_beat.len, w_beat.last, aw_beat.atop);
 
-        log_name = $sformatf("./axi_log/%s/write.log", LoggerName);
+        log_name = $sformatf("%s/%s/write.log",LoggerDir, LoggerName);
         fd = $fopen(log_name, "a");
         if (fd) begin
           $fdisplay(fd, log_string);
@@ -2757,7 +2758,7 @@ module axi_chan_logger #(
         b_beat = b_queue.pop_front();
         log_string = $sformatf("%0t> ID: %h B recieved",
                         $time, b_beat.id);
-        log_name = $sformatf("./axi_log/%s/write.log", LoggerName);
+        log_name = $sformatf("%s/%s/write.log", LoggerDir,LoggerName);
         fd = $fopen(log_name, "a");
         if (fd) begin
           $fdisplay(fd, log_string);
@@ -2771,7 +2772,7 @@ module axi_chan_logger #(
           ar_beat = ar_queues[i][0];
           r_beat  = r_queues[i].pop_front();
 
-          log_name = $sformatf("./axi_log/%s/read_%0h.log", LoggerName, i);
+          log_name = $sformatf("%s/%s/read_%0h.log",LoggerDir, LoggerName, i);
           fd = $fopen(log_name, "a");
           if (fd) begin
             log_string = $sformatf("%0t> ID: %h R %d of %d, LAST: %b ATOP: %b",
