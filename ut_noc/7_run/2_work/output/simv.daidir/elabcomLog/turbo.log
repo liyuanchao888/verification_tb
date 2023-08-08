@@ -1,5 +1,0 @@
-Command Line: /tools/synopsys/vcs-R-2020.12-SP1/linux64/bin/elabcom -logdir /tools/proj/verification_platform/ut_noc/7_run/2_work/output/simv.daidir/elabcomLog -simvdaidir /tools/proj/verification_platform/ut_noc/7_run/2_work/output/simv.daidir -lib /tools/proj/verification_platform/ut_noc/7_run/2_work/output/simv.daidir/work -saveLevel -elab /tools/proj/verification_platform/ut_noc/7_run/2_work/output/simv.daidir/kdb -simflow -simdir /tools/proj/verification_platform/ut_noc/7_run/2_work/output/simv.daidir/kdb_libs -topfile /tools/proj/verification_platform/ut_noc/7_run/2_work/output/simv.daidir/.elabcomTopFile -pkgfile /tools/proj/verification_platform/ut_noc/7_run/2_work/output/simv.daidir/.elabcomPkgFile -ssz -ssv -ssy -Lf work +disable_message+C00380+C00381 +disable_message+C00388+C00389
-uname(Linux centos7 3.10.0-1160.90.1.el7.x86_64 #1 SMP Thu May 4 15:21:22 UTC 2023 x86_64)
-[INFO] error/warning message 'C00388' has been suppressed.
-[INFO] error/warning message 'C00389' has been suppressed.
-au time 16.780106 2.633764 1.216127 delta 254795776 254795776 total 362385408 362385408
