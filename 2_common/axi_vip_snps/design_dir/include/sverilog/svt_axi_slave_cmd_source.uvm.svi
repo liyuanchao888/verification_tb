@@ -1,0 +1,12 @@
+
+`ifndef GUARD_SVT_AXI_SLAVE_CMD_SOURCE_UVM_SVI
+`define GUARD_SVT_AXI_SLAVE_CMD_SOURCE_UVM_SVI
+
+`include `SVT_SOURCE_MAP_MODEL_CMD_INCLUDE_SVI(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_cmd_source.uvm)
+`include `SVT_SOURCE_MAP_AGENT_INCLUDE_SVI(amba_svt,axi_slave_agent_svt,R-2020.12,svt_axi_slave_agent_source)
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_slave_svt,R-2020.12,svt_axi_slave_cmd.uvm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_slave_svt,R-2020.12,svt_axi_slave_cmd_assistant.uvm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_slave_svt,R-2020.12,svt_axi_slave_monitor_cmd.uvm)
+
+`endif //GUARD_SVT_AXI_SLAVE_CMD_SOURCE_UVM_SVI

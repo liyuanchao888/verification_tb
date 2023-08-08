@@ -1,0 +1,15 @@
+
+`ifndef GUARD_SVT_AXI_SLAVE_SOURCE_VMM_SVI
+`define GUARD_SVT_AXI_SLAVE_SOURCE_VMM_SVI
+
+`include "svt_axi_component_source.vmm.svi"
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_slave_svt,R-2020.12,svt_axi_base_slave_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_slave_svt,R-2020.12,svt_axi_slave_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_slave_svt,R-2020.12,svt_axi_ic_slave_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_slave_svt,R-2020.12,svt_axi_slave_monitor.vmm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_slave_svt,R-2020.12,svt_axi_slave.vmm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_slave_svt,R-2020.12,svt_axi_slave_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_slave_svt,R-2020.12,svt_axi_slave_monitor_common)
+
+`endif //GUARD_SVT_AXI_SLAVE_SOURCE_VMM_SVI

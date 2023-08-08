@@ -1,0 +1,16 @@
+
+`ifndef GUARD_SVT_AXI_SYSTEM_MONITOR_SOURCE_VMM_SVI
+`define GUARD_SVT_AXI_SYSTEM_MONITOR_SOURCE_VMM_SVI
+
+`include "svt_axi_component_source.vmm.svi"
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_monitor_svt,R-2020.12,svt_axi_system_monitor_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_monitor_svt,R-2020.12,svt_axi_system_monitor.vmm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_monitor_svt,R-2020.12,svt_axi_system_monitor_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_monitor_svt,R-2020.12,svt_axi_system_monitor_transaction_xml_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_monitor_svt,R-2020.12,svt_axi_system_monitor_def_cov_data_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_monitor_svt,R-2020.12,svt_axi_system_monitor_def_cov_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_monitor_svt,R-2020.12,svt_axi_system_monitor_ext_cov_definitions)  
+  
+
+`endif //GUARD_SVT_AXI_MASTER_SOURCE_VMM_SVI

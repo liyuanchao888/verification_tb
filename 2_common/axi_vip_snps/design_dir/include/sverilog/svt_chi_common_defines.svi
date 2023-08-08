@@ -1,0 +1,2842 @@
+//--------------------------------------------------------------------------
+// COPYRIGHT (C) 2013-2020 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//--------------------------------------------------------------------------
+
+`ifndef GUARD_SVT_CHI_COMMON_DEFINES_SVI
+`define GUARD_SVT_CHI_COMMON_DEFINES_SVI
+
+
+`ifdef SVT_AMBA_INCLUDE_CHI_IN_AMBA_SYS_ENV
+  `ifdef SVT_AMBA_MULTI_CHIP_SYSTEM_MONITOR_ENABLE
+    `define SVT_AMBA_MULTI_CHIP_SYSTEM_MONITOR_INTERNAL_ENABLE
+  `endif
+`endif
+
+
+`ifdef SVT_AMBA_MULTI_CHIP_SYSTEM_MONITOR_INTERNAL_ENABLE
+  `define _SVT_AMBA_INT_SVDOC_MUL_SYSMON "or multi_chip_system_monitor_enable=1"
+  `define _SVT_AMBA_INT_SVDOC_CHI_SYSMON_OR_MUL_SYSMON "system_monitor_enable or multi_chip_system_monitor_enable"
+  `define _SVT_AMBA_INT_CHI_SYSMON_OR_MUL_SYSMON (system_monitor_enable|multi_chip_system_monitor_enable)
+`else
+  `define _SVT_AMBA_INT_SVDOC_CHI_SYSMON_OR_MUL_SYSMON system_monitor_enable 
+  `define _SVT_AMBA_INT_CHI_SYSMON_OR_MUL_SYSMON       system_monitor_enable 
+`endif
+
+
+/** Node types */
+`define SVT_CHI_RN 0
+`define SVT_CHI_SN 1
+`define SVT_CHI_HN 2
+
+/** CHI Versions */
+`define SVT_CHI_VERSION_3_0 3
+`define SVT_CHI_VERSION_5_0 5
+
+/** Default value of CHI Extensions enable attribute */
+`ifndef SVT_CHI_NODE_CFG_DEFAULT_CHI_SPEC_REVISION
+  `define SVT_CHI_NODE_CFG_DEFAULT_CHI_SPEC_REVISION ISSUE_A
+`endif
+`ifndef SVT_CHI_IC_CFG_DEFAULT_CHI_SPEC_REVISION
+  `define SVT_CHI_IC_CFG_DEFAULT_CHI_SPEC_REVISION ISSUE_A
+`endif
+
+/**Default value of  node configuration attribute enable_mpam */
+`ifndef SVT_CHI_NODE_CFG_DEFAULT_ENABLE_MPAM
+  `define SVT_CHI_NODE_CFG_DEFAULT_ENABLE_MPAM 0
+`endif
+
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+ `ifndef SVT_CHI_NODE_CFG_DEFAULT_CLEANSHAREDPERSISTSEP_XACT_ENABLE
+  `define SVT_CHI_NODE_CFG_DEFAULT_CLEANSHAREDPERSISTSEP_XACT_ENABLE 0
+ `endif
+`endif
+
+/** Default_value of node configuration attribute nderr_resp_policy. */
+`ifndef SVT_CHI_NODE_CFG_DEFAULT_NDERR_RESP_POLICY 
+  `define SVT_CHI_NODE_CFG_DEFAULT_NDERR_RESP_POLICY CHI_E_SPEC_BEHAVIOR
+`endif
+
+/** Default value of node configuration attribute partial_cache_line_states_enable. */
+`ifndef SVT_CHI_NODE_CFG_PARTIAL_CACHE_STATES_ENABLE
+  `define SVT_CHI_NODE_CFG_PARTIAL_CACHE_STATES_ENABLE 0
+`endif
+
+/** Default value of node configuration attribute reset_type. */
+`ifndef SVT_CHI_NODE_CFG_DEFAULT_RESET_TYPE
+  `define SVT_CHI_NODE_CFG_DEFAULT_RESET_TYPE EXCLUDE_UNSTARTED_XACT
+`endif
+
+/** Default value of node configuration attribute interface_parity_check_type */
+`ifndef SVT_CHI_NODE_CFG_DEFAULT_IF_PARITY
+  `define SVT_CHI_NODE_CFG_DEFAULT_IF_PARITY UNSUPPORTED
+`endif
+
+/** Default value of CHI Node Configuration attribute async_input_banned_output_race_link_active_states_timeout */
+`ifndef SVT_CHI_NODE_CFG_DEFAULT_ASYNC_INPUT_BANNED_OUTPUT_RACE_LINK_ACTIVE_STATES_TIMEOUT
+  `define SVT_CHI_NODE_CFG_DEFAULT_ASYNC_INPUT_BANNED_OUTPUT_RACE_LINK_ACTIVE_STATES_TIMEOUT 0
+`endif
+
+/** Default value of CHI Node Configuration attribute is_link_active_state_machine_in_async_input_race_state_expected */
+`ifndef SVT_CHI_NODE_CFG_DEFAULT_IS_LINK_ACTIVE_STATE_MACHINE_IN_ASYNC_INPUT_RACE_STATE_EXPECTED
+  `define SVT_CHI_NODE_CFG_DEFAULT_IS_LINK_ACTIVE_STATE_MACHINE_IN_ASYNC_INPUT_RACE_STATE_EXPECTED 1
+`endif
+
+/** Default value of CHI Node Configuration attribute is_link_active_state_machine_in_banned_output_race_state_expected */
+`ifndef SVT_CHI_NODE_CFG_DEFAULT_IS_LINK_ACTIVE_STATE_MACHINE_IN_BANNED_OUTPUT_RACE_STATE_EXPECTED
+  `define SVT_CHI_NODE_CFG_DEFAULT_IS_LINK_ACTIVE_STATE_MACHINE_IN_BANNED_OUTPUT_RACE_STATE_EXPECTED 1
+`endif
+
+/** Default value of CHI Node Configuration attribute stop_snp_lcrd_xmission_when_txla_not_in_run_state */
+`ifndef SVT_CHI_NODE_CFG_DEFAULT_STOP_SNP_LCRD_XMISSION_WHEN_TXLA_NOT_IN_RUN_STATE
+  `define SVT_CHI_NODE_CFG_DEFAULT_STOP_SNP_LCRD_XMISSION_WHEN_TXLA_NOT_IN_RUN_STATE 0
+`endif
+
+/** Interface types */
+`define SVT_CHI_INTERFACE_RN_F 0
+`define SVT_CHI_INTERFACE_RN_I 1
+`define SVT_CHI_INTERFACE_RN_D 2
+`define SVT_CHI_INTERFACE_SN_F 3
+`define SVT_CHI_INTERFACE_SN_I 4
+`define SVT_CHI_INTERFACE_HN_F 5
+`define SVT_CHI_INTERFACE_HN_I 6
+`define SVT_CHI_INTERFACE_IC_SN_F 7
+`define SVT_CHI_INTERFACE_IC_SN_I 8
+
+/** Atomic xact propagation to slave policy */
+`define SVT_CHI_HN_ALWAYS_FORWARD_AS_READ_AND_WRITE 0
+`define SVT_CHI_HN_ALWAYS_FORWARD_ATOMICS 1
+`define SVT_CHI_HN_FORWARD_AS_ATOMICS_OR_AS_READ_AND_WRITE 2
+
+/** Spec revisions */
+`define SVT_CHI_SPEC_REV_ISSUE_A 0
+`define SVT_CHI_SPEC_REV_ISSUE_B 1
+`define SVT_CHI_SPEC_REV_ISSUE_C 2
+`define SVT_CHI_SPEC_REV_ISSUE_D 3
+`define SVT_CHI_SPEC_REV_ISSUE_E 4
+
+/** Data formats */
+`define SVT_CHI_STANDARD_DATA_FORMAT 0
+`define SVT_CHI_HYBRID_DATA_FORMAT 1
+
+/** Inactive value defines */
+`define SVT_CHI_INACTIVE_LOW_VAL 0
+`define SVT_CHI_INACTIVE_HIGH_VAL 1
+`define SVT_CHI_INACTIVE_PREV_VAL 2
+`define SVT_CHI_INACTIVE_X_VAL 3
+`define SVT_CHI_INACTIVE_Z_VAL 4
+`define SVT_CHI_INACTIVE_RAND_VAL 5
+
+/** DAT Flit format defines */
+`define SVT_CHI_DAT_FLIT_FORMAT_128BIT 0
+`define SVT_CHI_DAT_FLIT_FORMAT_256BIT 1
+`define SVT_CHI_DAT_FLIT_FORMAT_512BIT 2
+
+/** Different Flit data widths */
+`define SVT_CHI_FLIT_DATA_WIDTH_128BIT 128
+`define SVT_CHI_FLIT_DATA_WIDTH_256BIT 256
+`define SVT_CHI_FLIT_DATA_WIDTH_512BIT 512
+
+/** Different rsvdc widths */
+`define SVT_CHI_FLIT_RSVDC_WIDTH_0BIT 0
+`define SVT_CHI_FLIT_RSVDC_WIDTH_4BIT 4
+`define SVT_CHI_FLIT_RSVDC_WIDTH_8BIT 8
+`define SVT_CHI_FLIT_RSVDC_WIDTH_12BIT 12
+`define SVT_CHI_FLIT_RSVDC_WIDTH_16BIT 16
+`define SVT_CHI_FLIT_RSVDC_WIDTH_24BIT 24
+`define SVT_CHI_FLIT_RSVDC_WIDTH_32BIT 32
+
+/** Generic defines */
+`define SVT_CHI_CACHE_LINE_SIZE 64
+`define SVT_CHI_LOG_BASE_2_CACHE_LINE_SIZE 6
+`define SVT_CHI_CACHE_LINE_SIZE_IN_BYTES 8
+
+/** Maximum number of HNs */
+`ifndef SVT_CHI_MAX_NUM_HNS
+  `define SVT_CHI_MAX_NUM_HNS 40
+`endif
+
+`ifdef SVT_AMBA_MULTI_CHIP_SYSTEM_MONITOR_INTERNAL_ENABLE
+  /** Maximum number of CXRA agents */
+  `ifndef SVT_CHI_MAX_NUM_EXTERN_CHIP_RA
+    `define SVT_CHI_MAX_NUM_EXTERN_CHIP_RA 40
+  `endif
+  
+  /** Maximum number of CXHA agents */
+  `ifndef SVT_CHI_MAX_NUM_EXTERN_CHIP_HA
+    `define SVT_CHI_MAX_NUM_EXTERN_CHIP_HA 40
+  `endif
+`endif
+
+/** Maximum number of cache lines */
+`ifndef SVT_CHI_MAX_NUM_CACHE_LINES
+  `define SVT_CHI_MAX_NUM_CACHE_LINES 1024
+`endif
+
+/** Maximum number of outstanding transactions */
+`ifndef SVT_CHI_MAX_NUM_OUTSTANDING_XACT
+  `ifdef SVT_CHI_ISSUE_D_ENABLE
+    `define SVT_CHI_MAX_NUM_OUTSTANDING_XACT 1024
+  `else
+    `define SVT_CHI_MAX_NUM_OUTSTANDING_XACT 256
+  `endif
+`endif
+
+/** Maximum number of outstanding snoop transactions */
+`ifndef SVT_CHI_MAX_NUM_OUTSTANDING_SNOOP_XACT
+  `ifdef SVT_CHI_ISSUE_D_ENABLE
+    `define SVT_CHI_MAX_NUM_OUTSTANDING_SNOOP_XACT 1024
+  `else
+    `define SVT_CHI_MAX_NUM_OUTSTANDING_SNOOP_XACT 256
+  `endif
+`endif
+
+/** Default maximum number of outstanding transactions */
+`define SVT_CHI_DEF_MAX_NUM_OUTSTANDING_XACT 4
+
+/** Default maximum number of outstanding transactions */
+`define SVT_CHI_DEF_MAX_NUM_OUTSTANDING_SNOOP_XACT 4
+
+/** Spec permitted maximum number of outstanding transactions upto ISSUE_C*/
+`define SVT_CHI_SPEC_PERMITTED_MAX_NUM_OUTSTANDING_XACT_UPTO_ISSUE_C 256
+
+/** Spec permitted maximum number of outstanding transactions for ISSUE_D*/
+`define SVT_CHI_SPEC_PERMITTED_MAX_NUM_OUTSTANDING_XACT_FOR_ISSUE_D 1024
+
+/** Spec permitted maximum number of outstanding snoop transactions upto ISSUE_C*/
+`define SVT_CHI_SPEC_PERMITTED_MAX_NUM_OUTSTANDING_SNP_XACT_UPTO_ISSUE_C 256
+
+/** Spec permitted maximum number of outstanding snoop transactions for ISSUE_D*/
+`define SVT_CHI_SPEC_PERMITTED_MAX_NUM_OUTSTANDING_SNP_XACT_FOR_ISSUE_D 1024
+
+/** Maximum value for DAT flit reordering depth  */
+`ifndef SVT_CHI_MAX_DAT_FLIT_REORDERING_DEPTH
+  `define SVT_CHI_MAX_DAT_FLIT_REORDERING_DEPTH 256
+`endif
+
+/** Maximum number of L-Credits to be transmitted in Deactivate state. */
+`ifndef SVT_CHI_MAX_NUM_LCREDITS_XMITTED_IN_DEACTIVATE_STATE
+  `define SVT_CHI_MAX_NUM_LCREDITS_XMITTED_IN_DEACTIVATE_STATE 0 
+`endif
+
+/** Reasonable value for XACT DAT VC access fail count. This should be
+ *  >=1 and <= `SVT_CHI_MAX_XACT_DAT_VC_ACCESS_FAIL_MAX_COUNT */
+`ifndef SVT_CHI_REASONABLE_XACT_DAT_VC_ACCESS_FAIL_MAX_COUNT
+  `define SVT_CHI_REASONABLE_XACT_DAT_VC_ACCESS_FAIL_MAX_COUNT 20
+`endif
+
+/** Maximum value for XACT DAT VC access fail count. This should be 
+ *  >= `SVT_CHI_REASONABLE_XACT_DAT_VC_ACCESS_FAIL_MAX_COUNT  and 
+ *  >= 1.
+ */
+`ifndef SVT_CHI_MAX_XACT_DAT_VC_ACCESS_FAIL_MAX_COUNT
+  `define SVT_CHI_MAX_XACT_DAT_VC_ACCESS_FAIL_MAX_COUNT 100
+`endif
+
+/** Maximum value for RSP flit reordering depth  */
+`ifndef SVT_CHI_MAX_RSP_FLIT_REORDERING_DEPTH
+  `define SVT_CHI_MAX_RSP_FLIT_REORDERING_DEPTH 256
+`endif
+
+/** Reasonable value for XACT RSP VC access fail count. This should be
+ *  >=1 and <= `SVT_CHI_MAX_XACT_RSP_VC_ACCESS_FAIL_MAX_COUNT */
+`ifndef SVT_CHI_REASONABLE_XACT_RSP_VC_ACCESS_FAIL_MAX_COUNT
+  `define SVT_CHI_REASONABLE_XACT_RSP_VC_ACCESS_FAIL_MAX_COUNT 20
+`endif
+
+/** Maximum value for XACT RSP VC access fail count. This should be 
+ *  >= `SVT_CHI_REASONABLE_XACT_RSP_VC_ACCESS_FAIL_MAX_COUNT  and 
+ *  >= 1.
+ */
+`ifndef SVT_CHI_MAX_XACT_RSP_VC_ACCESS_FAIL_MAX_COUNT
+  `define SVT_CHI_MAX_XACT_RSP_VC_ACCESS_FAIL_MAX_COUNT 100
+`endif
+
+
+/** Maximum value for TXREQFLITPEND_DELAY */
+`ifndef SVT_CHI_MAX_TXREQFLITPEND_DELAY
+ `define SVT_CHI_MAX_TXREQFLITPEND_DELAY 16 
+`endif
+
+/** Maximum value for TXREQFLITV_DELAY */
+`ifndef SVT_CHI_MAX_TXREQFLITV_DELAY
+ `define SVT_CHI_MAX_TXREQFLITV_DELAY 16 
+`endif
+
+/** Maximum value for TXSNPFLITV_DELAY */
+`ifndef SVT_CHI_MAX_TXSNPFLITV_DELAY
+ `define SVT_CHI_MAX_TXSNPFLITV_DELAY 16 
+`endif
+
+/** Maximum value for TXDATFLITPEND_DELAY */
+`ifndef SVT_CHI_MAX_TXDATFLITPEND_DELAY
+ `define SVT_CHI_MAX_TXDATFLITPEND_DELAY 16 
+`endif
+
+/** Maximum value for TXDATFLITV_DELAY */
+`ifndef SVT_CHI_MAX_TXDATFLITV_DELAY
+ `define SVT_CHI_MAX_TXDATFLITV_DELAY 16 
+`endif
+
+/** Maximum value for TXRSPFLITPEND_DELAY */
+`ifndef SVT_CHI_MAX_TXRSPFLITPEND_DELAY
+ `define SVT_CHI_MAX_TXRSPFLITPEND_DELAY 16 
+`endif
+
+/** Maximum value for TXRSPFLITV_DELAY */
+`ifndef SVT_CHI_MAX_TXRSPFLITV_DELAY
+ `define SVT_CHI_MAX_TXRSPFLITV_DELAY 16 
+`endif
+
+/** Maximum value for RXDATLCRDV_DELAY */
+`ifndef SVT_CHI_MAX_RXDATLCRDV_DELAY
+ `define SVT_CHI_MAX_RXDATLCRDV_DELAY 16 
+`endif
+
+/** Maximum value for RXSNPLCRDV_DELAY */
+`ifndef SVT_CHI_MAX_RXSNPLCRDV_DELAY
+ `define SVT_CHI_MAX_RXSNPLCRDV_DELAY 16 
+`endif
+
+/** Maximum value for RXRSPLCRDV_DELAY */
+`ifndef SVT_CHI_MAX_RXRSPLCRDV_DELAY
+ `define SVT_CHI_MAX_RXRSPLCRDV_DELAY 16 
+`endif
+
+/** Maximum value for req_to_retryack_flit_delay */
+`ifndef SVT_CHI_MAX_REQTORETRYACK_DELAY
+ `define SVT_CHI_MAX_REQTORETRYACK_DELAY 16
+`endif
+
+/** Maximum value for req_to_pcrdgrant_flit_delay */
+`ifndef SVT_CHI_MAX_REQTOPCREDITGRANT_DELAY
+ `define SVT_CHI_MAX_REQTOPCREDITGRANT_DELAY 16
+`endif
+
+/** Maximum value for req_to_dbid_flit_delay */
+`ifndef SVT_CHI_MAX_REQTODBID_DELAY
+ `define SVT_CHI_MAX_REQTODBID_DELAY 16
+`endif
+
+/** Maximum value for req_to_dbidrespord_flit_delay */
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+  `ifndef SVT_CHI_MAX_REQTODBIDRESPORD_DELAY
+   `define SVT_CHI_MAX_REQTODBIDRESPORD_DELAY 16
+  `endif
+  `ifndef SVT_CHI_MAX_COMPTODBIDRESPORD_DELAY
+    `define SVT_CHI_MAX_COMPTODBIDRESPORD_DELAY 16
+  `endif
+  `ifndef SVT_CHI_MAX_DBIDRESPORDTOCOMP_DELAY
+    `define SVT_CHI_MAX_DBIDRESPORDTOCOMP_DELAY 16
+  `endif
+  `ifndef SVT_CHI_MAX_REQTOSTASHDONE_DELAY 
+    `define SVT_CHI_MAX_REQTOSTASHDONE_DELAY 16
+  `endif
+  `ifndef SVT_CHI_MAX_REQTOCOMPSTASHDONE_DELAY 
+    `define SVT_CHI_MAX_REQTOCOMPSTASHDONE_DELAY 16
+  `endif
+  `ifndef SVT_CHI_MAX_COMPTOSTASHDONE_DELAY
+    `define SVT_CHI_MAX_COMPTOSTASHDONE_DELAY 16
+  `endif
+  `ifndef SVT_CHI_MAX_STASHDONETOCOMP_DELAY
+    `define SVT_CHI_MAX_STASHDONETOCOMP_DELAY 16
+  `endif
+`endif
+
+/** Maximum value for req_to_compdbid_flit_delay */
+`ifndef SVT_CHI_MAX_REQTOCOMPDBID_DELAY
+ `define SVT_CHI_MAX_REQTOCOMPDBID_DELAY 16
+`endif
+
+/** Maximum value for req_to_comp_flit_delay */
+`ifndef SVT_CHI_MAX_REQTOCOMP_DELAY
+ `define SVT_CHI_MAX_REQTOCOMP_DELAY 16
+`endif
+
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+  /** Maximum value of req_to_comppersist_flit_delay */
+  `ifndef SVT_CHI_MAX_REQTOCOMPPERSIST_DELAY
+    `define SVT_CHI_MAX_REQTOCOMPPERSIST_DELAY 16
+  `endif
+  
+  /** Maximum value of req_to_persist_flit_delay */
+  `ifndef SVT_CHI_MAX_REQTOPERSIST_DELAY
+    `define SVT_CHI_MAX_REQTOPERSIST_DELAY 16
+  `endif
+`endif //issue_d_enable
+
+/** Maximum value for req_to_compdata_flit_delay */
+`ifndef SVT_CHI_MAX_REQTOCOMPDATA_DELAY
+ `define SVT_CHI_MAX_REQTOCOMPDATA_DELAY 16
+`endif
+
+/** Maximum value for comp_to_dbid_flit_delay */
+`ifndef SVT_CHI_MAX_COMPTODBID_DELAY
+ `define SVT_CHI_MAX_COMPTODBID_DELAY 16
+`endif
+
+/** Maximum value for dbid_to_comp_flit_delay */
+`ifndef SVT_CHI_MAX_DBIDTOCOMP_DELAY
+ `define SVT_CHI_MAX_DBIDTOCOMP_DELAY 16
+`endif
+
+/** Maximum value for retryack_to_pcreditgrant_flit_delay */
+`ifndef SVT_CHI_MAX_RETRYACKTOPCREDITGRANT_DELAY
+ `define SVT_CHI_MAX_RETRYACKTOPCREDITGRANT_DELAY 16
+`endif
+
+/** Maximum value for pcreditgrant_to_retryack_flit_delay */
+`ifndef SVT_CHI_MAX_PCREDITGRANTTORETRYACK_DELAY
+ `define SVT_CHI_MAX_PCREDITGRANTTORETRYACK_DELAY 16
+`endif
+
+/** Mininum value for TXREQFLITPEND_DELAY */
+`ifndef SVT_CHI_MIN_TXREQFLITPEND_DELAY
+ `define SVT_CHI_MIN_TXREQFLITPEND_DELAY 0
+`endif
+
+/** Mininum value for TXREQFLITV_DELAY */
+`ifndef SVT_CHI_MIN_TXREQFLITV_DELAY
+ `define SVT_CHI_MIN_TXREQFLITV_DELAY 1
+`endif
+
+/** Mininum value for TXSNPFLITV_DELAY */
+`ifndef SVT_CHI_MIN_TXSNPFLITV_DELAY
+ `define SVT_CHI_MIN_TXSNPFLITV_DELAY 1
+`endif
+
+/** Mininum value for TXDATFLITPEND_DELAY */
+`ifndef SVT_CHI_MIN_TXDATFLITPEND_DELAY
+ `define SVT_CHI_MIN_TXDATFLITPEND_DELAY 0
+`endif
+
+/** Mininum value for TXDATFLITV_DELAY */
+`ifndef SVT_CHI_MIN_TXDATFLITV_DELAY
+ `define SVT_CHI_MIN_TXDATFLITV_DELAY 1
+`endif
+
+/** Mininum value for TXRSPFLITPEND_DELAY */
+`ifndef SVT_CHI_MIN_TXRSPFLITPEND_DELAY
+ `define SVT_CHI_MIN_TXRSPFLITPEND_DELAY 0
+`endif
+
+/** Mininum value for TXRSPFLITV_DELAY */
+`ifndef SVT_CHI_MIN_TXRSPFLITV_DELAY
+ `define SVT_CHI_MIN_TXRSPFLITV_DELAY 1
+`endif
+
+/** Mininum value for RXDATLCRDV_DELAY */
+`ifndef SVT_CHI_MIN_RXDATLCRDV_DELAY
+ `define SVT_CHI_MIN_RXDATLCRDV_DELAY 0 
+`endif
+
+/** Mininum value for RXSNPLCRDV_DELAY */
+`ifndef SVT_CHI_MIN_RXSNPLCRDV_DELAY
+ `define SVT_CHI_MIN_RXSNPLCRDV_DELAY 1
+`endif
+
+/** Mininum value for RXRSPLCRDV_DELAY */
+`ifndef SVT_CHI_MIN_RXRSPLCRDV_DELAY
+ `define SVT_CHI_MIN_RXRSPLCRDV_DELAY 1
+`endif
+
+/** Minimum value for req_to_retryack_flit_delay */
+`ifndef SVT_CHI_MIN_REQTORETRYACK_DELAY
+ `define SVT_CHI_MIN_REQTORETRYACK_DELAY 0
+`endif
+
+/** Minimum value for req_to_pcrdgrant_flit_delay */
+`ifndef SVT_CHI_MIN_REQTOPCREDITGRANT_DELAY
+ `define SVT_CHI_MIN_REQTOPCREDITGRANT_DELAY 0
+`endif
+
+/** Minimum value for req_to_dbid_flit_delay */
+`ifndef SVT_CHI_MIN_REQTODBID_DELAY 
+ `define SVT_CHI_MIN_REQTODBID_DELAY 0
+`endif
+
+/** Minimum value for req_to_dbidrespord_flit_delay */
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+  `ifndef SVT_CHI_MIN_REQTODBIDRESPORD_DELAY 
+    `define SVT_CHI_MIN_REQTODBIDRESPORD_DELAY 0
+  `endif
+  `ifndef SVT_CHI_MIN_COMPTODBIDRESPORD_DELAY
+    `define SVT_CHI_MIN_COMPTODBIDRESPORD_DELAY 0
+  `endif
+  `ifndef SVT_CHI_MIN_DBIDRESPORDTOCOMP_DELAY
+    `define SVT_CHI_MIN_DBIDRESPORDTOCOMP_DELAY 0
+  `endif
+  `ifndef SVT_CHI_MIN_REQTOSTASHDONE_DELAY 
+    `define SVT_CHI_MIN_REQTOSTASHDONE_DELAY 0
+  `endif
+  `ifndef SVT_CHI_MIN_REQTOCOMPSTASHDONE_DELAY 
+    `define SVT_CHI_MIN_REQTOCOMPSTASHDONE_DELAY 0
+  `endif
+  `ifndef SVT_CHI_MIN_COMPTOSTASHDONE_DELAY
+    `define SVT_CHI_MIN_COMPTOSTASHDONE_DELAY 0
+  `endif
+  `ifndef SVT_CHI_MIN_STASHDONETOCOMP_DELAY
+    `define SVT_CHI_MIN_STASHDONETOCOMP_DELAY 0
+  `endif
+`endif
+
+/** Minimum value for req_to_compdbid_flit_delay */
+`ifndef SVT_CHI_MIN_REQTOCOMPDBID_DELAY 
+ `define SVT_CHI_MIN_REQTOCOMPDBID_DELAY 0
+`endif
+
+/** Minimum value for req_to_comp_flit_delay */
+`ifndef SVT_CHI_MIN_REQTOCOMP_DELAY 
+ `define SVT_CHI_MIN_REQTOCOMP_DELAY 0
+`endif
+
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+  /** Minimum value of req_to_comppersist_flit_delay */
+  `ifndef SVT_CHI_MIN_REQTOCOMPPERSIST_DELAY
+    `define SVT_CHI_MIN_REQTOCOMPPERSIST_DELAY 0
+  `endif
+  
+  /** Minimum value of req_to_persist_flit_delay */
+  `ifndef SVT_CHI_MIN_REQTOPERSIST_DELAY
+    `define SVT_CHI_MIN_REQTOPERSIST_DELAY 0
+  `endif
+`endif //issue_d_enable
+
+/** Minimum value for req_to_compdata_flit_delay */
+`ifndef SVT_CHI_MIN_REQTOCOMPDATA_DELAY 
+ `define SVT_CHI_MIN_REQTOCOMPDATA_DELAY 0
+`endif
+
+/** Minimum value for comp_to_dbid_flit_delay */
+`ifndef SVT_CHI_MIN_COMPTODBID_DELAY 
+ `define SVT_CHI_MIN_COMPTODBID_DELAY 0
+`endif
+
+/** Minimum value for dbid_to_comp_flit_delay */
+`ifndef SVT_CHI_MIN_DBIDTOCOMP_DELAY 
+ `define SVT_CHI_MIN_DBIDTOCOMP_DELAY 0
+`endif
+
+/** Minimum value for retryack_to_pcreditgrant_flit_delay */
+`ifndef SVT_CHI_MIN_RETRYACKTOPCREDITGRANT_DELAY
+ `define SVT_CHI_MIN_RETRYACKTOPCREDITGRANT_DELAY 0
+`endif
+
+/** Minimum value for pcreditgrant_to_retryack_flit_delay */
+`ifndef SVT_CHI_MIN_PCREDITGRANTTORETRYACK_DELAY
+ `define SVT_CHI_MIN_PCREDITGRANTTORETRYACK_DELAY 0
+`endif
+
+/** Width of QoS field */
+`define SVT_CHI_QOS_WIDTH 4
+
+/** Maximum value of QoS field */
+`define SVT_CHI_MAX_QOS_VALUE (1<<`SVT_CHI_QOS_WIDTH)
+
+/** Width of Node ID fields */
+// This is made redefinable for backward compatibility aspects
+// Refer to related comments in svt_chi_port_defines.svi
+`ifndef SVT_CHI_NODE_ID_WIDTH
+  `define SVT_CHI_NODE_ID_WIDTH `SVT_CHI_MAX_NODE_ID_WIDTH
+`endif
+
+
+/** Width of Target ID field */
+`define SVT_CHI_TGT_ID_WIDTH `SVT_CHI_NODE_ID_WIDTH
+
+/** Width of Source ID field */
+`define SVT_CHI_SRC_ID_WIDTH `SVT_CHI_NODE_ID_WIDTH
+
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+/** Width of Return NID field */
+`define SVT_CHI_RETURN_NID_WIDTH `SVT_CHI_NODE_ID_WIDTH
+
+/** Width of Forward NID field */
+`define SVT_CHI_FORWARD_NID_WIDTH `SVT_CHI_NODE_ID_WIDTH
+
+/** Width of Home NID field */
+`define SVT_CHI_HOME_NID_WIDTH `SVT_CHI_NODE_ID_WIDTH
+
+/** Width of Stash NID field */
+`define SVT_CHI_STASH_NID_WIDTH `SVT_CHI_NODE_ID_WIDTH
+
+`endif
+
+/** Width of Transaction ID field */
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+   `define SVT_CHI_TXN_ID_WIDTH 12
+`elsif SVT_CHI_ISSUE_D_ENABLE
+   `define SVT_CHI_TXN_ID_WIDTH 10
+`else
+   `define SVT_CHI_TXN_ID_WIDTH 8
+`endif
+
+/** Spec permitted maximum TxnID value upto ISSUE_C*/
+`define SVT_CHI_SPEC_PERMITTED_MAX_TXNID_VALUE_UPTO_ISSUE_C 255
+
+/** Spec permitted maximum TxnID value for ISSUE_D*/
+`define SVT_CHI_SPEC_PERMITTED_MAX_TXNID_VALUE_FOR_ISSUE_D 1023
+
+/** Spec permitted maximum TxnID value for ISSUE_E*/
+`define SVT_CHI_SPEC_PERMITTED_MAX_TXNID_VALUE_FOR_ISSUE_E 4095
+
+/** Spec permitted maximum DBID value upto ISSUE_C*/
+`define SVT_CHI_SPEC_PERMITTED_MAX_DBID_VALUE_UPTO_ISSUE_C 255
+
+/** Spec permitted maximum DBID value for ISSUE_D*/
+`define SVT_CHI_SPEC_PERMITTED_MAX_DBID_VALUE_FOR_ISSUE_D 1023
+
+/** Spec permitted maximum DBID value for ISSUE_E*/
+`define SVT_CHI_SPEC_PERMITTED_MAX_DBID_VALUE_FOR_ISSUE_E 4095
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+   /** Width of Return Transaction ID field */
+   `define SVT_CHI_RETURN_TXN_ID_WIDTH 12
+   
+   /** Width of Forward Transaction ID field */
+   `define SVT_CHI_FORWARD_TXN_ID_WIDTH 12
+ 
+`elsif SVT_CHI_ISSUE_D_ENABLE
+   /** Width of Return Transaction ID field */
+   `define SVT_CHI_RETURN_TXN_ID_WIDTH 10
+   
+   /** Width of Forward Transaction ID field */
+   `define SVT_CHI_FORWARD_TXN_ID_WIDTH 10
+   
+`elsif SVT_CHI_ISSUE_B_ENABLE
+   /** Width of Return Transaction ID field */
+   `define SVT_CHI_RETURN_TXN_ID_WIDTH 8
+   
+   /** Width of Forward Transaction ID field */
+   `define SVT_CHI_FORWARD_TXN_ID_WIDTH 8
+`endif
+
+/** Width of VMID EXT field */
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+  `define SVT_CHI_VMID_EXT_WIDTH 8
+`endif
+
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+/** Width of MPAM fields-- applicable for CHI Issue D. User is not expected to change values of these macros. */
+   // MPAM_PARTID field width
+  `define SVT_CHI_MAX_MPAM_PARTID_WIDTH 9
+  // MPAM PerfMonGroup field width
+  `define SVT_CHI_MAX_MPAM_PERFMONGROUP_WIDTH 1
+  //MPAM NS field width
+  `define SVT_CHI_MPAM_NS_WIDTH 1
+
+/** Width of CBUSY field-- applicable for CHI Issue D */
+  `define SVT_CHI_CBUSY_WIDTH 3
+  `define SVT_CHI_MAX_CBUSY_VALUE 7
+`endif
+
+/** Width of PGroupID field*/
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+   `define SVT_CHI_PGROUPID_WIDTH 8
+`elsif SVT_CHI_ISSUE_D_ENABLE
+   `define SVT_CHI_PGROUPID_WIDTH 5
+`endif
+
+/** Width of SLCRepHint fields-- applicable for CHI Issue D */
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+  `define SVT_CHI_SLC_REPLACEMENT_HINT_WIDTH 7
+  `define SVT_CHI_SLCREPLACEMENTHINT_REPLACEMENT_FIELD_WIDTH 3
+  `define SVT_CHI_SLCREPLACEMENTHINT_RESERVED_FIELD_WIDTH 3
+  `define SVT_CHI_MAX_SLCREPLACEMENTHINT_RESERVED_FIELD_WIDTH 7
+`endif
+
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+/** Width of GROUPIDEXT fields-- applicable for CHI Issue E */
+  `define SVT_CHI_GROUPIDEXT_WIDTH 3
+/** Width of TAGOP fields-- applicable for CHI Issue E */
+  `define SVT_CHI_TAGOP_WIDTH 2
+/** Width of TAGGROUPID fields-- applicable for CHI Issue E */
+  `define SVT_CHI_TAGGROUPID_WIDTH 8
+/** Number of bits per Tag value-- applicable for CHI Issue E */
+  `define SVT_CHI_NUM_BITS_IN_TAG 4
+/** Number of data bytes per Tag value-- applicable for CHI Issue E */
+  `define SVT_CHI_NUM_DATA_BYTES_PER_TAG 16
+/** Width of STASHGROUPID fields-- applicable for CHI Issue E */
+  `define SVT_CHI_STASHGROUPID_WIDTH 8
+`endif
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+  `define SVT_CHI_DVM_RANGE_WIDTH 1
+  `define SVT_CHI_DVM_NUM_WIDTH 5
+  `define SVT_CHI_DVM_SCALE_WIDTH 2
+  `define SVT_CHI_DVM_TTL_WIDTH 2
+  `define SVT_CHI_DVM_TG_WIDTH 2
+`endif
+
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+`define SVT_CHI_VMID_WIDTH 16
+`define SVT_CHI_ASID_WIDTH 16
+`else
+`define SVT_CHI_VMID_WIDTH 8
+`define SVT_CHI_ASID_WIDTH 16
+`endif
+
+/** Width of Size field */
+`define SVT_CHI_SIZE_WIDTH 3
+
+`define SVT_CHI_MAX_VA_WIDTH ((`SVT_CHI_MAX_ADDR_WIDTH == 44)?49:((`SVT_CHI_MAX_ADDR_WIDTH == 45)?51:53)) 
+`define SVT_CHI_MAX_PA_WIDTH `SVT_CHI_MAX_ADDR_WIDTH
+
+/** Top address bit max valid value for 3 SN-F striping */
+`ifndef SVT_CHI_3_SN_F_STRIPING_TOP_ADDR_BIT_MAX_VALUE
+  `define SVT_CHI_3_SN_F_STRIPING_TOP_ADDR_BIT_MAX_VALUE 43
+`endif
+/** Top address bit min valid value for 3 SN-F striping */
+`ifndef SVT_CHI_3_SN_F_STRIPING_TOP_ADDR_BIT_MIN_VALUE
+  `define SVT_CHI_3_SN_F_STRIPING_TOP_ADDR_BIT_MIN_VALUE 28
+`endif
+
+/** Top address bit max valid value for 6 SN-F striping */
+`ifndef SVT_CHI_6_SN_F_STRIPING_TOP_ADDR_BIT_MAX_VALUE
+  `define SVT_CHI_6_SN_F_STRIPING_TOP_ADDR_BIT_0_MAX_VALUE 33
+  `define SVT_CHI_6_SN_F_STRIPING_TOP_ADDR_BIT_1_MAX_VALUE 37
+  `define SVT_CHI_6_SN_F_STRIPING_TOP_ADDR_BIT_2_MAX_VALUE 39
+`endif
+/** Top address bit min valid value for 6 SN-F striping */
+`ifndef SVT_CHI_6_SN_F_STRIPING_TOP_ADDR_BIT_MIN_VALUE
+  `define SVT_CHI_6_SN_F_STRIPING_TOP_ADDR_BIT_0_MIN_VALUE 28
+  `define SVT_CHI_6_SN_F_STRIPING_TOP_ADDR_BIT_1_MIN_VALUE 31
+  `define SVT_CHI_6_SN_F_STRIPING_TOP_ADDR_BIT_2_MIN_VALUE 33
+`endif
+
+/** Width of order field */
+`define SVT_CHI_ORDER_WIDTH 2
+
+/** Width of P Credit type field */
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_P_CRD_TYPE_WIDTH 4
+`else
+ `define SVT_CHI_P_CRD_TYPE_WIDTH 2
+`endif
+
+/** Width of Response field */
+`define SVT_CHI_RESP_WIDTH 3
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+/** Width of Resp field in the TagMatch response */
+`define SVT_CHI_TAG_MATCH_RESP_WIDTH 3
+
+`define SVT_CHI_NUM_BITS_IN_TAG 4
+
+`define SVT_CHI_NUM_DATA_BYTES_PER_TAG 16
+`endif
+
+/** Width of Mem Attr field */
+`define SVT_CHI_MEM_ATTR_WIDTH 4
+
+/** Width of Snp Attr field */
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_SNP_ATTR_WIDTH 1
+`else
+ `define SVT_CHI_SNP_ATTR_WIDTH 2
+`endif
+
+/** Width of LPID field of a Message Request */
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_LPID_WIDTH 5
+`else
+ `define SVT_CHI_LPID_WIDTH 3
+`endif
+
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_TRACE_TAG_WIDTH 1
+`endif
+
+
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+  `define SVT_CHI_DATA_SOURCE_WIDTH 4
+  `define SVT_CHI_DAT_FLIT_FWDSTATE_DATAPULL_DATASOURCE_WIDTH 4
+`else
+  `define SVT_CHI_DATA_SOURCE_WIDTH 3
+  `define SVT_CHI_DAT_FLIT_FWDSTATE_DATAPULL_DATASOURCE_WIDTH 3
+`endif
+
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+  `define SVT_DATA_PULL_WIDTH 3
+
+  `define SVT_CHI_FWD_STATE_WIDTH 3
+`endif
+
+/** Width of Stash related fields */
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_STASH_LPID_WIDTH 5
+ `define SVT_CHI_DATA_PULL_WIDTH 3
+`endif
+
+/** Width of REQ RSVDC field */
+`define SVT_CHI_REQ_RSVDC_WIDTH ((`SVT_CHI_REQ_FLIT_MAX_RSVDC_WIDTH ==0 )?1:`SVT_CHI_REQ_FLIT_MAX_RSVDC_WIDTH)
+/** Width of DAT RSVDC field */
+`define SVT_CHI_DAT_RSVDC_WIDTH ((`SVT_CHI_DAT_FLIT_MAX_RSVDC_WIDTH ==0 )?1:`SVT_CHI_DAT_FLIT_MAX_RSVDC_WIDTH)
+
+/** Width of ResErr field */
+`define SVT_CHI_RESP_ERR_STATUS_WIDTH 2
+
+/** Width of DBID field */
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+  `define SVT_CHI_DBID_WIDTH 12
+`elsif SVT_CHI_ISSUE_D_ENABLE
+  `define SVT_CHI_DBID_WIDTH 10
+`else
+  `define SVT_CHI_DBID_WIDTH 8
+`endif
+
+/** Width of CCID field */
+`define SVT_CHI_CCID_WIDTH 2
+
+/** Width of Data ID field */
+`define SVT_CHI_DATA_ID_WIDTH 2
+
+/** Width of transaction data field */
+`define SVT_CHI_MAX_DATA_WIDTH 512
+
+/** Width of atomic operation data field */
+`define SVT_CHI_MAX_ATOMIC_DATA_WIDTH 128
+`define SVT_CHI_MAX_ATOMIC_LD_ST_DATA_WIDTH 64
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+`define SVT_CHI_MAX_ATOMIC_TAG_WIDTH 4
+`endif
+
+/** Width of transaction byte enable field */
+`define SVT_CHI_MAX_BE_WIDTH 64 // (`SVT_CHI_MAX_DATA_WIDTH/8)
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+  `define SVT_CHI_MAX_TAG_WIDTH (`SVT_CHI_MAX_DATA_WIDTH/32) //16bit
+  `define SVT_CHI_MAX_TAG_UPDATE_WIDTH (`SVT_CHI_MAX_DATA_WIDTH/128) //4bit
+`endif
+
+/** Width of atomic operation byte enable field */
+`define SVT_CHI_MAX_ATOMIC_BE_WIDTH 16
+`define SVT_CHI_MAX_ATOMIC_LD_ST_BE_WIDTH 8
+
+/** Macros defining width of Poison field at transaction level */
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+  `define SVT_CHI_MAX_POISON_WIDTH (`SVT_CHI_MAX_DATA_WIDTH/64) //8bit
+  `define SVT_CHI_MAX_ATOMIC_POISON_WIDTH 2
+  `define SVT_CHI_MAX_ATOMIC_LD_ST_POISON_WIDTH 1
+`endif
+
+/** Width of transaction DataCheck field */
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+  `ifndef SVT_CHI_DATACHECK_WIDTH
+    `define SVT_CHI_MAX_DATACHECK_WIDTH (`SVT_CHI_MAX_DATA_WIDTH/8)
+    `define SVT_CHI_MAX_ATOMIC_DATACHECK_WIDTH 16
+    `define SVT_CHI_MAX_ATOMIC_LD_ST_DATACHECK_WIDTH 8
+  `endif
+`endif
+
+/** DVM Operation type related defines */
+`define SVT_CHI_DVMOP_TYPE_TLB_INVALIDATE 3'b000 
+`define SVT_CHI_DVMOP_TYPE_BRANCH_PREDICTOR_INVALIDATE 3'b001 
+`define SVT_CHI_DVMOP_TYPE_PHY_INS_CACHE_INVALIDATE 3'b010 
+`define SVT_CHI_DVMOP_TYPE_VIRTUAL_INS_CACHE_INVALIDATE 3'b011
+`define SVT_CHI_DVMOP_TYPE_SYNC 3'b100 
+
+/** DVM Message type related defines */
+`define SVT_CHI_DVM_MSG_TYPE_WIDTH 3
+`define SVT_CHI_DVM_MSG_TYPE_BITVEC_SLICE 13:11
+`define SVT_CHI_DVM_MSG_TYPE_SYNC `SVT_CHI_DVM_MSG_TYPE_WIDTH'b100
+`define SVT_CHI_DVM_PART_NUM_BIT 3
+`define SVT_CHI_DVM_VA_VALID_BIT 4
+/** Defines for different data sizes in bytes, also used by data_size_enum */
+`define SVT_CHI_DATA_SIZE_1BYTE `SVT_CHI_SIZE_WIDTH'b000
+`define SVT_CHI_DATA_SIZE_2BYTE `SVT_CHI_SIZE_WIDTH'b001
+`define SVT_CHI_DATA_SIZE_4BYTE `SVT_CHI_SIZE_WIDTH'b010
+`define SVT_CHI_DATA_SIZE_8BYTE `SVT_CHI_SIZE_WIDTH'b011
+`define SVT_CHI_DATA_SIZE_16BYTE `SVT_CHI_SIZE_WIDTH'b100
+`define SVT_CHI_DATA_SIZE_32BYTE `SVT_CHI_SIZE_WIDTH'b101
+`define SVT_CHI_DATA_SIZE_64BYTE `SVT_CHI_SIZE_WIDTH'b110
+
+/** Defines for different order types, also used by order_type_enum */
+`define SVT_CHI_NO_ORDERING_REQUIRED `SVT_CHI_ORDER_WIDTH'b00
+`define SVT_CHI_REQUEST_ACCEPTED `SVT_CHI_ORDER_WIDTH'b01
+`define SVT_CHI_REQ_ORDERING_REQUIRED `SVT_CHI_ORDER_WIDTH'b10
+`define SVT_CHI_REQ_EP_ORDERING_REQUIRED `SVT_CHI_ORDER_WIDTH'b11
+
+/** Defines for different P Credit types, also used by p_crd_type_enum */
+`define SVT_CHI_P_CRD_TYPE0 `SVT_CHI_P_CRD_TYPE_WIDTH'd0
+`define SVT_CHI_P_CRD_TYPE1 `SVT_CHI_P_CRD_TYPE_WIDTH'd1
+`define SVT_CHI_P_CRD_TYPE2 `SVT_CHI_P_CRD_TYPE_WIDTH'd2
+`define SVT_CHI_P_CRD_TYPE3 `SVT_CHI_P_CRD_TYPE_WIDTH'd3
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+`define SVT_CHI_P_CRD_TYPE4 `SVT_CHI_P_CRD_TYPE_WIDTH'd4
+`define SVT_CHI_P_CRD_TYPE5 `SVT_CHI_P_CRD_TYPE_WIDTH'd5
+`define SVT_CHI_P_CRD_TYPE6 `SVT_CHI_P_CRD_TYPE_WIDTH'd6
+`define SVT_CHI_P_CRD_TYPE7 `SVT_CHI_P_CRD_TYPE_WIDTH'd7
+`define SVT_CHI_P_CRD_TYPE8 `SVT_CHI_P_CRD_TYPE_WIDTH'd8
+`define SVT_CHI_P_CRD_TYPE9 `SVT_CHI_P_CRD_TYPE_WIDTH'd9
+`define SVT_CHI_P_CRD_TYPE10 `SVT_CHI_P_CRD_TYPE_WIDTH'd10
+`define SVT_CHI_P_CRD_TYPE11 `SVT_CHI_P_CRD_TYPE_WIDTH'd11
+`define SVT_CHI_P_CRD_TYPE12 `SVT_CHI_P_CRD_TYPE_WIDTH'd12
+`define SVT_CHI_P_CRD_TYPE13 `SVT_CHI_P_CRD_TYPE_WIDTH'd13
+`define SVT_CHI_P_CRD_TYPE14 `SVT_CHI_P_CRD_TYPE_WIDTH'd14
+`define SVT_CHI_P_CRD_TYPE15 `SVT_CHI_P_CRD_TYPE_WIDTH'd15
+`endif
+
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+`define SVT_CHI_NUM_P_CRD_TYPES 16
+`else
+`define SVT_CHI_NUM_P_CRD_TYPES 4
+`endif
+
+/** Defines for Memory types, also used by mem_attr_mem_type_enum */
+`define SVT_CHI_MEM_TYPE_NORMAL 0
+`define SVT_CHI_MEM_TYPE_DEVICE 1
+
+/** Defines for Snoop domain, also used by snoop_domain_type_enum */
+`define SVT_CHI_SNP_DOMAIN_INNER 0
+`define SVT_CHI_SNP_DOMAIN_OUTER 1
+
+/** Defines used by system_domain_type_enum */
+`define SVT_CHI_DOMAIN_TYPE_NONSNOOPABLE 0
+`define SVT_CHI_DOMAIN_TYPE_INNERSNOOPABLE 1
+`define SVT_CHI_DOMAIN_TYPE_OUTERSNOOPABLE 2
+`define SVT_CHI_DOMAIN_TYPE_SNOOPABLE 3
+
+/** Defines used by delay reference events */
+`define SVT_CHI_PREV_TXREQFLITPEND_VALID_REF 0
+`define SVT_CHI_TXREQFLITPEND_VALID_REF 1
+`define SVT_CHI_RXRSPFLITV_VALID_REF  2
+`define SVT_CHI_PREV_TXDATFLITV_VALID_REF 3
+`define SVT_CHI_TXDATFLITPEND_VALID_REF 4
+`define SVT_CHI_PREV_RXDATFLITV_VALID_REF 5
+`define SVT_CHI_TXRSPFLITPEND_VALID_REF 6
+`define SVT_CHI_RXSNPFLITV_VALID_REF 7
+`define SVT_CHI_TXSNPFLITPEND_VALID_REF 8
+`define SVT_CHI_TXREQFLITV_FOR_DBID_VALID_REF 9
+`define SVT_CHI_TXREQFLITV_FOR_COMP_VALID_REF 10 
+`define SVT_CHI_TXREQFLITV_FOR_COMPDBID_VALID_REF 11
+`define SVT_CHI_TXREQFLITV_FOR_COMPDATA_VALID_REF 12
+`define SVT_CHI_TXRSPFLITV_FOR_COMPTODBID_VALID_REF 12
+`define SVT_CHI_TXRSPFLITV_FOR_DBIDTOCOMP_VALID_REF 12
+`define SVT_CHI_REQFLITV_FOR_RETRYACK_VALID_REF 13
+`define SVT_CHI_REQFLITV_FOR_PCREDITGRANT_VALID_REF 14
+`define SVT_CHI_RSPFLITV_FOR_RETRYACK_TO_PCREDITGRANT_VALID_REF 15
+`define SVT_CHI_RSPFLITV_FOR_PCREDITGRANT_TO_RETRYACK_VALID_REF 16
+`define SVT_CHI_TXREQFLITV_FOR_COMPPERSIST_VALID_REF 17
+`define SVT_CHI_TXREQFLITV_FOR_PERSIST_VALID_REF 18
+`define SVT_CHI_TXREQFLITV_FOR_DBIDRESPORD_VALID_REF 19
+`define SVT_CHI_TXRSPFLITV_FOR_COMPTODBIDRESPORD_VALID_REF 20
+`define SVT_CHI_TXRSPFLITV_FOR_DBIDRESPORDTOCOMP_VALID_REF 21
+`define SVT_CHI_TXREQFLITV_FOR_STASHDONE_VALID_REF 22 
+`define SVT_CHI_TXREQFLITV_FOR_COMPSTASHDONE_VALID_REF 23 
+`define SVT_CHI_TXRSPFLITV_FOR_COMPTOSTASHDONE_VALID_REF 24
+`define SVT_CHI_TXRSPFLITV_FOR_STASHDONETOCOMP_VALID_REF 25
+
+/** Defines used for read data interleaving in CHI ICN full slave */
+`define SVT_CHI_MAX_READ_DATA_INTERLEAVE_SIZE  2
+`define SVT_CHI_MAX_RD_INTERLEAVE_DEPTH  256
+`define SVT_CHI_TRANSACTION_INTERLEAVE_RANDOM_BLOCK 1
+
+/** Defines for response error types, also used by resp_err_type_enum */
+`define SVT_CHI_RESP_ERR_STATUS_NORMAL_OKAY `SVT_CHI_RESP_ERR_STATUS_WIDTH'b00
+`define SVT_CHI_RESP_ERR_STATUS_EXCLUSIVE_OKAY `SVT_CHI_RESP_ERR_STATUS_WIDTH'b01
+`define SVT_CHI_RESP_ERR_STATUS_DATA_ERROR `SVT_CHI_RESP_ERR_STATUS_WIDTH'b10
+`define SVT_CHI_RESP_ERR_STATUS_NON_DATA_ERROR `SVT_CHI_RESP_ERR_STATUS_WIDTH'b11
+
+/** Defines for Cache state types, also used by cache_state_enum */
+`define SVT_CHI_CACHE_STATE_I 0
+`define SVT_CHI_CACHE_STATE_SC 1
+`define SVT_CHI_CACHE_STATE_SD 2
+`define SVT_CHI_CACHE_STATE_UC 3
+`define SVT_CHI_CACHE_STATE_UD 4
+`define SVT_CHI_CACHE_STATE_UCE 5
+`define SVT_CHI_CACHE_STATE_UDP 6
+
+/** Defines for nderr_resp_policy_enum */
+`define SVT_CHI_D_OR_EARLIER_SPEC_BEHAVIOR 0
+`define SVT_CHI_E_SPEC_BEHAVIOR 1
+
+/** Defines for CCID values, also used by ccid_enum */
+`define SVT_CHI_CCID_DATA_127_DOWN_TO_0 `SVT_CHI_CCID_WIDTH'b00
+`define SVT_CHI_CCID_DATA_255_DOWN_TO_128 `SVT_CHI_CCID_WIDTH'b01
+`define SVT_CHI_CCID_DATA_383_DOWN_TO_256 `SVT_CHI_CCID_WIDTH'b10
+`define SVT_CHI_CCID_DATA_511_DOWN_TO_384 `SVT_CHI_CCID_WIDTH'b11
+
+/** Defines FLIT types, also used by flit_type_enum */
+`define SVT_CHI_REQ_FLIT 0
+`define SVT_CHI_RSP_FLIT 1
+`define SVT_CHI_SNP_FLIT 2
+`define SVT_CHI_DAT_FLIT 3
+
+/** 
+ * Width macros of Opcode fields for different FLIT types 
+ * are defined in svt_chi_port_defines.svi file.
+ * Opcodes used for Request VC FLIT, Request message types.
+ */
+`define SVT_CHI_REQ_VC_FLIT_OP_REQLINKFLIT `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h0
+`define SVT_CHI_REQ_VC_FLIT_OP_READSHARED `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h01
+`define SVT_CHI_REQ_VC_FLIT_OP_READCLEAN `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h02
+`define SVT_CHI_REQ_VC_FLIT_OP_READONCE `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h03
+`define SVT_CHI_REQ_VC_FLIT_OP_READNOSNP `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h04
+`define SVT_CHI_REQ_VC_FLIT_OP_PCRDRETURN `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h05
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_REQ_VC_FLIT_OP_READSPEC `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h06
+`endif
+`define SVT_CHI_REQ_VC_FLIT_OP_READUNIQUE `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h07
+`define SVT_CHI_REQ_VC_FLIT_OP_CLEANSHARED `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h08
+`define SVT_CHI_REQ_VC_FLIT_OP_CLEANINVALID `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h09
+`define SVT_CHI_REQ_VC_FLIT_OP_MAKEINVALID `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h0A
+`define SVT_CHI_REQ_VC_FLIT_OP_CLEANUNIQUE `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h0B
+`define SVT_CHI_REQ_VC_FLIT_OP_MAKEUNIQUE `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h0C
+`define SVT_CHI_REQ_VC_FLIT_OP_EVICT `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h0D
+`define SVT_CHI_REQ_VC_FLIT_OP_EOBARRIER `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h0E
+`define SVT_CHI_REQ_VC_FLIT_OP_ECBARRIER `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h0F
+`ifdef SVT_CHI_ISSUE_C_ENABLE
+ `define SVT_CHI_REQ_VC_FLIT_OP_READNOSNPSEP `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h11
+`endif
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+ `define SVT_CHI_REQ_VC_FLIT_OP_CLEANSHAREDPERSISTSEP `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h13
+`endif
+`define SVT_CHI_REQ_VC_FLIT_OP_DVMOP `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h14
+`define SVT_CHI_REQ_VC_FLIT_OP_WRITEEVICTFULL `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h15
+`define SVT_CHI_REQ_VC_FLIT_OP_WRITECLEANPTL `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h16
+`define SVT_CHI_REQ_VC_FLIT_OP_WRITECLEANFULL `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h17
+`define SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEPTL `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h18
+`define SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEFULL `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h19
+`define SVT_CHI_REQ_VC_FLIT_OP_WRITEBACKPTL `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h1A
+`define SVT_CHI_REQ_VC_FLIT_OP_WRITEBACKFULL `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h1B
+`define SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPPTL `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h1C
+`define SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPFULL `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h1D
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEFULLSTASH `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h20
+ `define SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEPTLSTASH `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h21
+ `define SVT_CHI_REQ_VC_FLIT_OP_STASHONCESHARED `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h22
+ `define SVT_CHI_REQ_VC_FLIT_OP_STASHONCEUNIQUE `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h23
+ `define SVT_CHI_REQ_VC_FLIT_OP_READONCECLEANINVALID `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h24
+ `define SVT_CHI_REQ_VC_FLIT_OP_READONCEMAKEINVALID `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h25
+ `define SVT_CHI_REQ_VC_FLIT_OP_READNOTSHAREDDIRTY `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h26
+ `define SVT_CHI_REQ_VC_FLIT_OP_CLEANSHAREDPERSIST `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h27
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_ADD `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h28
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_CLR `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h29
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_EOR `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h2A
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_SET `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h2B
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_SMAX `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h2C
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_SMIN `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h2D
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_UMAX `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h2E
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_UMIN `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h2F
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_ADD `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h30
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_CLR `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h31
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_EOR `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h32
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_SET `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h33
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_SMAX `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h34
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_SMIN `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h35
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_UMAX `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h36
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_UMIN `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h37
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICSWAP `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h38
+ `define SVT_CHI_REQ_VC_FLIT_OP_ATOMICCOMPARE `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h39
+ `define SVT_CHI_REQ_VC_FLIT_OP_PREFETCHTGT `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h3A
+`endif
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+  `define SVT_CHI_REQ_VC_FLIT_OP_MAKEREADUNIQUE             `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h41
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITEEVICTOREVICT          `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h42
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEZERO            `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h43
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPZERO             `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h44
+  `define SVT_CHI_REQ_VC_FLIT_OP_STASHONCESEPSHARED         `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h47
+  `define SVT_CHI_REQ_VC_FLIT_OP_STASHONCESEPUNIQUE         `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h48
+  `define SVT_CHI_REQ_VC_FLIT_OP_READPREFERUNIQUE           `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h4C
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPFULL_CLEANSHARED  `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h50
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPFULL_CLEANINVALID `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h51
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPFULL_CLEANSHAREDPERSISTSEP      `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h52
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEFULL_CLEANSHARED `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h54
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP     `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h56
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITEBACKFULL_CLEANSHARED   `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h58
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITEBACKFULL_CLEANINVALID  `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h59
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITEBACKFULL_CLEANSHAREDPERSISTSEP       `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h5A
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITECLEANFULL_CLEANSHARED  `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h5C
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITECLEANFULL_CLEANSHAREDPERSISTSEP      `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h5E
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPPTL_CLEANSHARED   `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h60
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPPTL_CLEANINVALID  `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h61
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPPTL_CLEANSHAREDPERSISTSEP       `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h62
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEPTL_CLEANSHARED  `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h64
+  `define SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP      `SVT_CHI_REQ_VC_FLIT_OP_WIDTH'h66
+`endif
+
+/** Opcodes used for Snoop VC FLIT, Snoop Request message types */
+`define SVT_CHI_SNP_VC_FLIT_OP_SNPLINKFLIT `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h0
+`define SVT_CHI_SNP_VC_FLIT_OP_SNPSHARED `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h1
+`define SVT_CHI_SNP_VC_FLIT_OP_SNPCLEAN `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h2
+`define SVT_CHI_SNP_VC_FLIT_OP_SNPONCE `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h3
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_SNP_VC_FLIT_OP_SNPNOTSHAREDDIRTY `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h4
+ `define SVT_CHI_SNP_VC_FLIT_OP_SNPUNIQUESTASH `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h5
+ `define SVT_CHI_SNP_VC_FLIT_OP_SNPMAKEINVALIDSTASH `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h6
+`endif
+`define SVT_CHI_SNP_VC_FLIT_OP_SNPUNIQUE `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h7
+`define SVT_CHI_SNP_VC_FLIT_OP_SNPCLEANSHARED `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h8
+`define SVT_CHI_SNP_VC_FLIT_OP_SNPCLEANINVALID `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h9
+`define SVT_CHI_SNP_VC_FLIT_OP_SNPMAKEINVALID `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'hA
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+`define SVT_CHI_SNP_VC_FLIT_OP_SNPSTASHUNIQUE `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'hB
+`define SVT_CHI_SNP_VC_FLIT_OP_SNPSTASHSHARED `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'hC
+`endif
+`define SVT_CHI_SNP_VC_FLIT_OP_SNPDVMOP `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'hD
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_SNP_VC_FLIT_OP_SNPSHAREDFWD `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h11
+ `define SVT_CHI_SNP_VC_FLIT_OP_SNPCLEANFWD `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h12
+ `define SVT_CHI_SNP_VC_FLIT_OP_SNPONCEFWD `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h13
+ `define SVT_CHI_SNP_VC_FLIT_OP_SNPNOTSHAREDDIRTYFWD `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h14
+ `define SVT_CHI_SNP_VC_FLIT_OP_SNPUNIQUEFWD `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h17
+`endif
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+ `define SVT_CHI_SNP_VC_FLIT_OP_SNPQUERY           `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h10
+ `define SVT_CHI_SNP_VC_FLIT_OP_SNPPREFERUNIQUE    `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h15
+ `define SVT_CHI_SNP_VC_FLIT_OP_SNPPREFERUNIQUEFWD `SVT_CHI_SNP_VC_FLIT_OP_WIDTH'h16
+`endif
+
+/** Opcodes used for Response VC FLIT */
+`define SVT_CHI_RSP_VC_FLIT_OP_RSPLINKFLIT `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'h0
+`define SVT_CHI_RSP_VC_FLIT_OP_SNPRESP `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'h1
+`define SVT_CHI_RSP_VC_FLIT_OP_COMPACK `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'h2
+`define SVT_CHI_RSP_VC_FLIT_OP_RETRYACK `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'h3
+`define SVT_CHI_RSP_VC_FLIT_OP_COMP `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'h4
+`define SVT_CHI_RSP_VC_FLIT_OP_COMPDBIDRESP `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'h5
+`define SVT_CHI_RSP_VC_FLIT_OP_DBIDRESP `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'h6
+`define SVT_CHI_RSP_VC_FLIT_OP_PCRDGRANT `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'h7
+`define SVT_CHI_RSP_VC_FLIT_OP_READRECEIPT `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'h8
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_RSP_VC_FLIT_OP_SNPRESPFWDED `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'h9
+`endif
+`ifdef SVT_CHI_ISSUE_C_ENABLE
+ `define SVT_CHI_RSP_VC_FLIT_OP_RESPSEPDATA `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'hB
+`endif
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+ `define SVT_CHI_RSP_VC_FLIT_OP_PERSIST `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'hC
+ `define SVT_CHI_RSP_VC_FLIT_OP_COMPPERSIST `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'hD
+`endif
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+ `define SVT_CHI_RSP_VC_FLIT_OP_TAGMATCH      `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'hA
+ `define SVT_CHI_RSP_VC_FLIT_OP_DBIDRESPORD   `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'hE
+ `define SVT_CHI_RSP_VC_FLIT_OP_STASHDONE     `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'h10
+ `define SVT_CHI_RSP_VC_FLIT_OP_COMPSTASHDONE `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'h11
+ `define SVT_CHI_RSP_VC_FLIT_OP_COMPCMO       `SVT_CHI_RSP_VC_FLIT_OP_WIDTH'h14
+`endif
+
+/** Opcodes used for Data VC FLIT */
+`define SVT_CHI_DAT_VC_FLIT_OP_DATLINKFLIT `SVT_CHI_DAT_VC_FLIT_OP_WIDTH'h0
+`define SVT_CHI_DAT_VC_FLIT_OP_SNPRESPDATA `SVT_CHI_DAT_VC_FLIT_OP_WIDTH'h1
+`define SVT_CHI_DAT_VC_FLIT_OP_COPYBACKWRDATA `SVT_CHI_DAT_VC_FLIT_OP_WIDTH'h2
+`define SVT_CHI_DAT_VC_FLIT_OP_NONCOPYBACKWRDATA `SVT_CHI_DAT_VC_FLIT_OP_WIDTH'h3
+`define SVT_CHI_DAT_VC_FLIT_OP_COMPDATA `SVT_CHI_DAT_VC_FLIT_OP_WIDTH'h4
+`define SVT_CHI_DAT_VC_FLIT_OP_SNPRESPDATAPTL `SVT_CHI_DAT_VC_FLIT_OP_WIDTH'h5
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_DAT_VC_FLIT_OP_SNPRESPDATAFWDED `SVT_CHI_DAT_VC_FLIT_OP_WIDTH'h6
+ `define SVT_CHI_DAT_VC_FLIT_OP_WRITEDATACANCEL `SVT_CHI_DAT_VC_FLIT_OP_WIDTH'h7
+`endif
+`ifdef SVT_CHI_ISSUE_C_ENABLE
+ `define SVT_CHI_DAT_VC_FLIT_OP_DATASEPRESP `SVT_CHI_DAT_VC_FLIT_OP_WIDTH'hB
+ `define SVT_CHI_DAT_VC_FLIT_OP_NCBWRDATACOMPACK `SVT_CHI_DAT_VC_FLIT_OP_WIDTH'hC
+`endif
+
+/** AMBA CHI Transaction TYPE: Used to define type for request messages: Aliased to Request VC FLIT Opcodes */
+`define SVT_CHI_XACT_TYPE_REQLINKFLIT `SVT_CHI_REQ_VC_FLIT_OP_REQLINKFLIT
+`define SVT_CHI_XACT_TYPE_READSHARED `SVT_CHI_REQ_VC_FLIT_OP_READSHARED
+`define SVT_CHI_XACT_TYPE_READCLEAN `SVT_CHI_REQ_VC_FLIT_OP_READCLEAN
+`define SVT_CHI_XACT_TYPE_READONCE `SVT_CHI_REQ_VC_FLIT_OP_READONCE
+`define SVT_CHI_XACT_TYPE_READNOSNP `SVT_CHI_REQ_VC_FLIT_OP_READNOSNP
+`define SVT_CHI_XACT_TYPE_PCRDRETURN `SVT_CHI_REQ_VC_FLIT_OP_PCRDRETURN
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_XACT_TYPE_READSPEC `SVT_CHI_REQ_VC_FLIT_OP_READSPEC
+`endif
+`define SVT_CHI_XACT_TYPE_READUNIQUE `SVT_CHI_REQ_VC_FLIT_OP_READUNIQUE
+`define SVT_CHI_XACT_TYPE_CLEANSHARED `SVT_CHI_REQ_VC_FLIT_OP_CLEANSHARED
+`define SVT_CHI_XACT_TYPE_CLEANINVALID `SVT_CHI_REQ_VC_FLIT_OP_CLEANINVALID
+`define SVT_CHI_XACT_TYPE_MAKEINVALID `SVT_CHI_REQ_VC_FLIT_OP_MAKEINVALID
+`define SVT_CHI_XACT_TYPE_CLEANUNIQUE `SVT_CHI_REQ_VC_FLIT_OP_CLEANUNIQUE
+`define SVT_CHI_XACT_TYPE_MAKEUNIQUE `SVT_CHI_REQ_VC_FLIT_OP_MAKEUNIQUE
+`define SVT_CHI_XACT_TYPE_EVICT `SVT_CHI_REQ_VC_FLIT_OP_EVICT
+`define SVT_CHI_XACT_TYPE_EOBARRIER `SVT_CHI_REQ_VC_FLIT_OP_EOBARRIER
+`define SVT_CHI_XACT_TYPE_ECBARRIER `SVT_CHI_REQ_VC_FLIT_OP_ECBARRIER
+`ifdef SVT_CHI_ISSUE_C_ENABLE
+ `define SVT_CHI_XACT_TYPE_READNOSNPSEP `SVT_CHI_REQ_VC_FLIT_OP_READNOSNPSEP
+`endif
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+ `define SVT_CHI_XACT_TYPE_CLEANSHAREDPERSISTSEP `SVT_CHI_REQ_VC_FLIT_OP_CLEANSHAREDPERSISTSEP
+`endif
+`define SVT_CHI_XACT_TYPE_DVMOP `SVT_CHI_REQ_VC_FLIT_OP_DVMOP
+`define SVT_CHI_XACT_TYPE_WRITEEVICTFULL `SVT_CHI_REQ_VC_FLIT_OP_WRITEEVICTFULL
+`define SVT_CHI_XACT_TYPE_WRITECLEANPTL `SVT_CHI_REQ_VC_FLIT_OP_WRITECLEANPTL
+`define SVT_CHI_XACT_TYPE_WRITECLEANFULL `SVT_CHI_REQ_VC_FLIT_OP_WRITECLEANFULL
+`define SVT_CHI_XACT_TYPE_WRITEUNIQUEPTL `SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEPTL
+`define SVT_CHI_XACT_TYPE_WRITEUNIQUEFULL `SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEFULL
+`define SVT_CHI_XACT_TYPE_WRITEBACKPTL `SVT_CHI_REQ_VC_FLIT_OP_WRITEBACKPTL
+`define SVT_CHI_XACT_TYPE_WRITEBACKFULL `SVT_CHI_REQ_VC_FLIT_OP_WRITEBACKFULL
+`define SVT_CHI_XACT_TYPE_WRITENOSNPPTL `SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPPTL
+`define SVT_CHI_XACT_TYPE_WRITENOSNPFULL `SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPFULL
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_XACT_TYPE_WRITEUNIQUEFULLSTASH `SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEFULLSTASH
+ `define SVT_CHI_XACT_TYPE_WRITEUNIQUEPTLSTASH `SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEPTLSTASH
+ `define SVT_CHI_XACT_TYPE_STASHONCEUNIQUE `SVT_CHI_REQ_VC_FLIT_OP_STASHONCEUNIQUE
+ `define SVT_CHI_XACT_TYPE_STASHONCESHARED `SVT_CHI_REQ_VC_FLIT_OP_STASHONCESHARED
+ `define SVT_CHI_XACT_TYPE_READONCECLEANINVALID `SVT_CHI_REQ_VC_FLIT_OP_READONCECLEANINVALID
+ `define SVT_CHI_XACT_TYPE_READONCEMAKEINVALID `SVT_CHI_REQ_VC_FLIT_OP_READONCEMAKEINVALID
+ `define SVT_CHI_XACT_TYPE_READNOTSHAREDDIRTY `SVT_CHI_REQ_VC_FLIT_OP_READNOTSHAREDDIRTY
+ `define SVT_CHI_XACT_TYPE_CLEANSHAREDPERSIST `SVT_CHI_REQ_VC_FLIT_OP_CLEANSHAREDPERSIST
+ `define SVT_CHI_XACT_TYPE_ATOMICSTORE_ADD `SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_ADD 
+ `define SVT_CHI_XACT_TYPE_ATOMICSTORE_CLR `SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_CLR 
+ `define SVT_CHI_XACT_TYPE_ATOMICSTORE_EOR `SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_EOR 
+ `define SVT_CHI_XACT_TYPE_ATOMICSTORE_SET `SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_SET 
+ `define SVT_CHI_XACT_TYPE_ATOMICSTORE_SMAX `SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_SMAX
+ `define SVT_CHI_XACT_TYPE_ATOMICSTORE_SMIN `SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_SMIN
+ `define SVT_CHI_XACT_TYPE_ATOMICSTORE_UMAX `SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_UMAX
+ `define SVT_CHI_XACT_TYPE_ATOMICSTORE_UMIN `SVT_CHI_REQ_VC_FLIT_OP_ATOMICSTORE_UMIN
+ `define SVT_CHI_XACT_TYPE_ATOMICLOAD_ADD `SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_ADD 
+ `define SVT_CHI_XACT_TYPE_ATOMICLOAD_CLR `SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_CLR 
+ `define SVT_CHI_XACT_TYPE_ATOMICLOAD_EOR `SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_EOR 
+ `define SVT_CHI_XACT_TYPE_ATOMICLOAD_SET `SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_SET 
+ `define SVT_CHI_XACT_TYPE_ATOMICLOAD_SMAX `SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_SMAX
+ `define SVT_CHI_XACT_TYPE_ATOMICLOAD_SMIN `SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_SMIN
+ `define SVT_CHI_XACT_TYPE_ATOMICLOAD_UMAX `SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_UMAX
+ `define SVT_CHI_XACT_TYPE_ATOMICLOAD_UMIN `SVT_CHI_REQ_VC_FLIT_OP_ATOMICLOAD_UMIN
+ `define SVT_CHI_XACT_TYPE_ATOMICSWAP `SVT_CHI_REQ_VC_FLIT_OP_ATOMICSWAP
+ `define SVT_CHI_XACT_TYPE_ATOMICCOMPARE `SVT_CHI_REQ_VC_FLIT_OP_ATOMICCOMPARE
+ `define SVT_CHI_XACT_TYPE_PREFETCHTGT `SVT_CHI_REQ_VC_FLIT_OP_PREFETCHTGT
+`endif
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+ `define SVT_CHI_XACT_TYPE_MAKEREADUNIQUE             `SVT_CHI_REQ_VC_FLIT_OP_MAKEREADUNIQUE
+ `define SVT_CHI_XACT_TYPE_WRITEEVICTOREVICT          `SVT_CHI_REQ_VC_FLIT_OP_WRITEEVICTOREVICT
+ `define SVT_CHI_XACT_TYPE_WRITEUNIQUEZERO            `SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEZERO
+ `define SVT_CHI_XACT_TYPE_WRITENOSNPZERO             `SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPZERO
+ `define SVT_CHI_XACT_TYPE_STASHONCESEPSHARED         `SVT_CHI_REQ_VC_FLIT_OP_STASHONCESEPSHARED
+ `define SVT_CHI_XACT_TYPE_STASHONCESEPUNIQUE         `SVT_CHI_REQ_VC_FLIT_OP_STASHONCESEPUNIQUE
+ `define SVT_CHI_XACT_TYPE_READPREFERUNIQUE           `SVT_CHI_REQ_VC_FLIT_OP_READPREFERUNIQUE
+ `define SVT_CHI_XACT_TYPE_WRITENOSNPFULL_CLEANSHARED  `SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPFULL_CLEANSHARED
+ `define SVT_CHI_XACT_TYPE_WRITENOSNPFULL_CLEANINVALID `SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPFULL_CLEANINVALID
+ `define SVT_CHI_XACT_TYPE_WRITENOSNPFULL_CLEANSHAREDPERSISTSEP      `SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPFULL_CLEANSHAREDPERSISTSEP
+ `define SVT_CHI_XACT_TYPE_WRITEUNIQUEFULL_CLEANSHARED `SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEFULL_CLEANSHARED
+ `define SVT_CHI_XACT_TYPE_WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP     `SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP
+ `define SVT_CHI_XACT_TYPE_WRITEBACKFULL_CLEANSHARED   `SVT_CHI_REQ_VC_FLIT_OP_WRITEBACKFULL_CLEANSHARED
+ `define SVT_CHI_XACT_TYPE_WRITEBACKFULL_CLEANINVALID  `SVT_CHI_REQ_VC_FLIT_OP_WRITEBACKFULL_CLEANINVALID
+ `define SVT_CHI_XACT_TYPE_WRITEBACKFULL_CLEANSHAREDPERSISTSEP       `SVT_CHI_REQ_VC_FLIT_OP_WRITEBACKFULL_CLEANSHAREDPERSISTSEP
+ `define SVT_CHI_XACT_TYPE_WRITECLEANFULL_CLEANSHARED  `SVT_CHI_REQ_VC_FLIT_OP_WRITECLEANFULL_CLEANSHARED
+ `define SVT_CHI_XACT_TYPE_WRITECLEANFULL_CLEANSHAREDPERSISTSEP      `SVT_CHI_REQ_VC_FLIT_OP_WRITECLEANFULL_CLEANSHAREDPERSISTSEP
+ `define SVT_CHI_XACT_TYPE_WRITENOSNPPTL_CLEANSHARED   `SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPPTL_CLEANSHARED
+ `define SVT_CHI_XACT_TYPE_WRITENOSNPPTL_CLEANINVALID  `SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPPTL_CLEANINVALID
+ `define SVT_CHI_XACT_TYPE_WRITENOSNPPTL_CLEANSHAREDPERSISTSEP       `SVT_CHI_REQ_VC_FLIT_OP_WRITENOSNPPTL_CLEANSHAREDPERSISTSEP
+ `define SVT_CHI_XACT_TYPE_WRITEUNIQUEPTL_CLEANSHARED  `SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEPTL_CLEANSHARED
+ `define SVT_CHI_XACT_TYPE_WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP      `SVT_CHI_REQ_VC_FLIT_OP_WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP
+`endif
+
+/** AMBA CHI SNOOP REQ_MSG TYPE: Used to define type for snoop request messages: Aliased to Snoop VC FLIT Opcodes */
+`define SVT_CHI_SNP_REQ_MSG_TYPE_SNPLINKFLIT `SVT_CHI_SNP_VC_FLIT_OP_SNPLINKFLIT
+`define SVT_CHI_SNP_REQ_MSG_TYPE_SNPSHARED `SVT_CHI_SNP_VC_FLIT_OP_SNPSHARED
+`define SVT_CHI_SNP_REQ_MSG_TYPE_SNPCLEAN `SVT_CHI_SNP_VC_FLIT_OP_SNPCLEAN
+`define SVT_CHI_SNP_REQ_MSG_TYPE_SNPONCE `SVT_CHI_SNP_VC_FLIT_OP_SNPONCE
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_SNP_REQ_MSG_TYPE_SNPNOTSHAREDDIRTY `SVT_CHI_SNP_VC_FLIT_OP_SNPNOTSHAREDDIRTY
+ `define SVT_CHI_SNP_REQ_MSG_TYPE_SNPUNIQUESTASH `SVT_CHI_SNP_VC_FLIT_OP_SNPUNIQUESTASH
+ `define SVT_CHI_SNP_REQ_MSG_TYPE_SNPMAKEINVALIDSTASH `SVT_CHI_SNP_VC_FLIT_OP_SNPMAKEINVALIDSTASH
+`endif
+`define SVT_CHI_SNP_REQ_MSG_TYPE_SNPUNIQUE `SVT_CHI_SNP_VC_FLIT_OP_SNPUNIQUE
+`define SVT_CHI_SNP_REQ_MSG_TYPE_SNPCLEANSHARED `SVT_CHI_SNP_VC_FLIT_OP_SNPCLEANSHARED
+`define SVT_CHI_SNP_REQ_MSG_TYPE_SNPCLEANINVALID `SVT_CHI_SNP_VC_FLIT_OP_SNPCLEANINVALID
+`define SVT_CHI_SNP_REQ_MSG_TYPE_SNPMAKEINVALID `SVT_CHI_SNP_VC_FLIT_OP_SNPMAKEINVALID
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_SNP_REQ_MSG_TYPE_SNPSTASHUNIQUE `SVT_CHI_SNP_VC_FLIT_OP_SNPSTASHUNIQUE
+ `define SVT_CHI_SNP_REQ_MSG_TYPE_SNPSTASHSHARED `SVT_CHI_SNP_VC_FLIT_OP_SNPSTASHSHARED
+`endif
+`define SVT_CHI_SNP_REQ_MSG_TYPE_SNPDVMOP `SVT_CHI_SNP_VC_FLIT_OP_SNPDVMOP
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_SNP_REQ_MSG_TYPE_SNPSHAREDFWD `SVT_CHI_SNP_VC_FLIT_OP_SNPSHAREDFWD
+ `define SVT_CHI_SNP_REQ_MSG_TYPE_SNPCLEANFWD `SVT_CHI_SNP_VC_FLIT_OP_SNPCLEANFWD
+ `define SVT_CHI_SNP_REQ_MSG_TYPE_SNPONCEFWD `SVT_CHI_SNP_VC_FLIT_OP_SNPONCEFWD
+ `define SVT_CHI_SNP_REQ_MSG_TYPE_SNPNOTSHAREDDIRTYFWD `SVT_CHI_SNP_VC_FLIT_OP_SNPNOTSHAREDDIRTYFWD
+ `define SVT_CHI_SNP_REQ_MSG_TYPE_SNPUNIQUEFWD `SVT_CHI_SNP_VC_FLIT_OP_SNPUNIQUEFWD
+`endif
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+ `define SVT_CHI_SNP_REQ_MSG_TYPE_SNPQUERY           `SVT_CHI_SNP_VC_FLIT_OP_SNPQUERY
+ `define SVT_CHI_SNP_REQ_MSG_TYPE_SNPPREFERUNIQUE    `SVT_CHI_SNP_VC_FLIT_OP_SNPPREFERUNIQUE
+ `define SVT_CHI_SNP_REQ_MSG_TYPE_SNPPREFERUNIQUEFWD `SVT_CHI_SNP_VC_FLIT_OP_SNPPREFERUNIQUEFWD
+`endif
+
+/** Used to define the kind of semantics used for a transation type */
+`define SVT_CHI_READ_TYPE_SEMANTIC 0
+`define SVT_CHI_WRITE_TYPE_SEMANTIC 1
+`define SVT_CHI_PCRDRETURN_TYPE_SEMANTIC 2
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+  `define SVT_CHI_ATOMIC_TYPE_SEMANTIC 3
+  `define SVT_CHI_PREFETCHTGT_TYPE_SEMANTIC 4
+`endif
+
+/** log_base_2 of cache line size (64) in CHI */
+`define SVT_CHI_LOG_BASE_2_CACHE_LINE_SIZE 6
+`define SVT_CHI_CACHE_LINE_SIZE 64
+
+/** Used to define the layer */
+`define SVT_CHI_PROTOCOL_LAYER 0
+`define SVT_CHI_LINK_LAYER 1
+
+/** Max flit buffer size for RX*** VC*/
+`ifndef SVT_CHI_MAX_FLIT_BUFFER_SIZE
+ `define SVT_CHI_MAX_FLIT_BUFFER_SIZE 16
+`endif
+
+/** Default flit buffer size for RX*** VC*/
+`ifndef SVT_CHI_REASONABLE_FLIT_BUFFER_SIZE
+ `define SVT_CHI_REASONABLE_FLIT_BUFFER_SIZE 16
+`endif
+
+/** Start value of medium range for l-credit value*/
+`ifndef SVT_CHI_DEFAULT_ADV_CURR_LCRD_MED_RANGE_START_VAL
+ `define SVT_CHI_DEFAULT_ADV_CURR_LCRD_MED_RANGE_START_VAL  ((`SVT_CHI_MAX_FLIT_BUFFER_SIZE/3)+1)
+`endif
+
+/** Start value of high range for l-credit value*/
+`ifndef SVT_CHI_DEFAULT_ADV_CURR_LCRD_HIGH_RANGE_START_VAL
+ `define SVT_CHI_DEFAULT_ADV_CURR_LCRD_HIGH_RANGE_START_VAL  ((((`SVT_CHI_MAX_FLIT_BUFFER_SIZE)*2)/3)+1)
+`endif
+
+/** Max value for the flitpend->flitv delay. Must not conflict with `SVT_CHI_MAX_TX***FLITV_DELAY */
+`ifndef SVT_CHI_MAX_TX_FLITPEND_FLITV_DELAY
+  `define SVT_CHI_MAX_TX_FLITPEND_FLITV_DELAY 16
+`endif
+
+/** Max value for the flit delay. Must not conflict with `SVT_CHI_MAX_TX***FLITPEND_DELAY */
+`ifndef SVT_CHI_MAX_TX_FLIT_DELAY
+  `define SVT_CHI_MAX_TX_FLIT_DELAY 16
+`endif
+
+/** Max value for the counter for Link Deactivation */
+`ifndef SVT_CHI_MAX_VAL_FOR_LINK_DEACTIVATION_TIME
+ `define SVT_CHI_MAX_VAL_FOR_LINK_DEACTIVATION_TIME 200
+`endif
+
+/** Max value for the RX VC credit transmission timeeout */
+`ifndef SVT_CHI_MAX_VAL_RX_VC_CREDIT_TRANSMISSION_TIMEOUT
+ `define SVT_CHI_MAX_VAL_RX_VC_CREDIT_TRANSMISSION_TIMEOUT 300
+`endif
+
+/** Max value for the TX Link Activation Timeout */
+`ifndef SVT_CHI_MAX_VAL_FOR_LINK_ACTIVATION_TIMEOUT
+  `define SVT_CHI_MAX_VAL_FOR_LINK_ACTIVATION_TIMEOUT 200
+`endif
+
+/** Max value for the TX Link Deactivation Timeout */
+`ifndef SVT_CHI_MAX_VAL_FOR_LINK_DEACTIVATION_TIMEOUT
+  `define SVT_CHI_MAX_VAL_FOR_LINK_DEACTIVATION_TIMEOUT 200
+`endif
+
+/** Max value for the Number of Request Order Streams.
+ *  This corresponds to CHI node configuration attribute
+ *  num_req_order_streams.
+ */
+`ifndef SVT_CHI_MAX_NUM_REQ_ORDER_STREAMS
+  `define SVT_CHI_MAX_NUM_REQ_ORDER_STREAMS 4
+`endif
+
+/** MIN_NUM_SPECULATIVE_TXSACTIVE_ASSERTION_CYCLES */
+`ifndef SVT_CHI_MIN_NUM_SPECULATIVE_TXSACTIVE_ASSERTION_CYCLES
+  `define SVT_CHI_MIN_NUM_SPECULATIVE_TXSACTIVE_ASSERTION_CYCLES 0
+`endif
+
+/** MAX_NUM_SPECULATIVE_TXSACTIVE_ASSERTION_CYCLES */
+`ifndef SVT_CHI_MAX_NUM_SPECULATIVE_TXSACTIVE_ASSERTION_CYCLES
+  `define SVT_CHI_MAX_NUM_SPECULATIVE_TXSACTIVE_ASSERTION_CYCLES 0
+`endif
+
+/** MIN_NUM_SPECULATIVE_TXSACTIVE_DEASSERTION_CYCLES */
+`ifndef SVT_CHI_MIN_NUM_SPECULATIVE_TXSACTIVE_DEASSERTION_CYCLES
+  `define SVT_CHI_MIN_NUM_SPECULATIVE_TXSACTIVE_DEASSERTION_CYCLES 0
+`endif
+
+/** MAX_NUM_SPECULATIVE_TXSACTIVE_DEASSERTION_CYCLES */
+`ifndef SVT_CHI_MAX_NUM_SPECULATIVE_TXSACTIVE_DEASSERTION_CYCLES
+  `define SVT_CHI_MAX_NUM_SPECULATIVE_TXSACTIVE_DEASSERTION_CYCLES 0
+`endif
+
+/** MIN_NUM_END_OF_XACT_TXSACTIVE_EXTENDED_ASSERTION_CYCLES */
+`ifndef SVT_CHI_MIN_NUM_END_OF_XACT_TXSACTIVE_EXTENDED_ASSERTION_CYCLES
+  `define SVT_CHI_MIN_NUM_END_OF_XACT_TXSACTIVE_EXTENDED_ASSERTION_CYCLES 0
+`endif
+
+/** MAX_NUM_END_OF_XACT_TXSACTIVE_EXTENDED_ASSERTION_CYCLES */
+`ifndef SVT_CHI_MAX_NUM_END_OF_XACT_TXSACTIVE_EXTENDED_ASSERTION_CYCLES
+  `define SVT_CHI_MAX_NUM_END_OF_XACT_TXSACTIVE_EXTENDED_ASSERTION_CYCLES 0
+`endif
+
+/** MAX_NUM_CLOCK_CYCLES_SPECULATIVE_SACTIVE_SIGNAL_ASSERTED */
+`ifndef SVT_CHI_MAX_NUM_CLOCK_CYCLES_SPECULATIVE_SACTIVE_SIGNAL_ASSERTED
+  `define SVT_CHI_MAX_NUM_CLOCK_CYCLES_SPECULATIVE_SACTIVE_SIGNAL_ASSERTED 0
+`endif
+
+/** Max value for the min_cycles_in_deactive property in the Link Service descriptor */
+`ifndef SVT_CHI_MAX_MIN_CYCLES_IN_DEACTIVE
+  `define SVT_CHI_MAX_MIN_CYCLES_IN_DEACTIVE 100
+`endif
+
+/** Min value of received REQ flit to LCRD delay */
+`ifndef SVT_CHI_MIN_REQ_FLIT_TO_LCRD_DELAY
+  `define SVT_CHI_MIN_REQ_FLIT_TO_LCRD_DELAY 0
+`endif
+
+/** Max value of received REQ flit to LCRD delay */
+`ifndef SVT_CHI_MAX_REQ_FLIT_TO_LCRD_DELAY
+  `define SVT_CHI_MAX_REQ_FLIT_TO_LCRD_DELAY 4
+`endif
+
+/** Min value of received DAT flit to LCRD delay */
+`ifndef SVT_CHI_MIN_DAT_FLIT_TO_LCRD_DELAY
+  `define SVT_CHI_MIN_DAT_FLIT_TO_LCRD_DELAY 0
+`endif
+
+/** Max value of received DAT flit to LCRD delay */
+`ifndef SVT_CHI_MAX_DAT_FLIT_TO_LCRD_DELAY
+  `define SVT_CHI_MAX_DAT_FLIT_TO_LCRD_DELAY 4
+`endif
+
+/** Min value of received RSP flit to LCRD delay */
+`ifndef SVT_CHI_MIN_RSP_FLIT_TO_LCRD_DELAY
+  `define SVT_CHI_MIN_RSP_FLIT_TO_LCRD_DELAY 0
+`endif
+
+/** Max value of received RSP flit to LCRD delay */
+`ifndef SVT_CHI_MAX_RSP_FLIT_TO_LCRD_DELAY
+  `define SVT_CHI_MAX_RSP_FLIT_TO_LCRD_DELAY 4
+`endif
+
+/** Min value of received SNP flit to LCRD delay */
+`ifndef SVT_CHI_MIN_SNP_FLIT_TO_LCRD_DELAY
+  `define SVT_CHI_MIN_SNP_FLIT_TO_LCRD_DELAY 0
+`endif
+
+/** Min delay value for the assertion of TXLINKACTIVEREQ */
+`ifndef SVT_CHI_TXLA_REQ_ASSERTION_MIN_DELAY
+  `define SVT_CHI_TXLA_REQ_ASSERTION_MIN_DELAY 0
+`endif
+
+/** Max delay value for the assertion of TXLINKACTIVEREQ */
+`ifndef SVT_CHI_TXLA_REQ_ASSERTION_MAX_DELAY
+  `define SVT_CHI_TXLA_REQ_ASSERTION_MAX_DELAY 250
+`endif
+
+/** Min delay value for the deassertion of TXLINKACTIVEREQ */
+`ifndef SVT_CHI_TXLA_REQ_DEASSERTION_MIN_DELAY
+  `define SVT_CHI_TXLA_REQ_DEASSERTION_MIN_DELAY 0
+`endif
+
+/** Max delay value for the deassertion of TXLINKACTIVEREQ */
+`ifndef SVT_CHI_TXLA_REQ_DEASSERTION_MAX_DELAY
+  `define SVT_CHI_TXLA_REQ_DEASSERTION_MAX_DELAY 250
+`endif
+
+/** Min delay value for the assertion of RXLINKACTIVEACk */
+`ifndef SVT_CHI_RXLA_ACK_ASSERTION_MIN_DELAY
+  `define SVT_CHI_RXLA_ACK_ASSERTION_MIN_DELAY 0
+`endif
+
+/** Max delay value for the assertion of RXLINKACTIVEACk */
+`ifndef SVT_CHI_RXLA_ACK_ASSERTION_MAX_DELAY
+  `define SVT_CHI_RXLA_ACK_ASSERTION_MAX_DELAY 250
+`endif
+
+/** Min delay value for the deassertion of RXLINKACTIVEACk */
+`ifndef SVT_CHI_RXLA_ACK_DEASSERTION_MIN_DELAY
+  `define SVT_CHI_RXLA_ACK_DEASSERTION_MIN_DELAY 0
+`endif
+
+/** Max delay value for the deassertion of RXLINKACTIVEACk */
+`ifndef SVT_CHI_RXLA_ACK_DEASSERTION_MAX_DELAY
+  `define SVT_CHI_RXLA_ACK_DEASSERTION_MAX_DELAY 250
+`endif
+
+/** Genaralized maximum delay count applicable for link activity */
+`ifndef SVT_CHI_LINK_ACTIVITY_MAX_DELAY_COUNT
+  `define SVT_CHI_LINK_ACTIVITY_MAX_DELAY_COUNT 15
+`endif
+
+/** To define bins in related coverage, Maximum number of back2back cycles protocol flitv is asserted in virtual channels */
+`ifndef SVT_CHI_COV_MAX_NUM_BACK2BACK_CYCLES_PROTOCOL_FLITV_ASSERTION
+  `define SVT_CHI_COV_MAX_NUM_BACK2BACK_CYCLES_PROTOCOL_FLITV_ASSERTION 5
+`endif
+
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+  /** To define bins in txn_id related coverage, Number of bins to be defined for TxnID from CHI-D or later.
+      The values of TxnID are equally grouped into this define number of bins. */
+  `ifndef SVT_CHI_D_COV_TXNID_BINS
+    `define SVT_CHI_D_COV_TXNID_BINS 5
+  `endif
+
+  /** To define bins in dbid related coverage, Number of bins to be defined for DBID from CHI-D or later.
+      The values of DBID are equally grouped into this define number of bins. */
+  `ifndef SVT_CHI_D_COV_DBID_BINS
+    `define SVT_CHI_D_COV_DBID_BINS 5
+  `endif
+
+  /** To define bins in mpam related coverage, Number of bins to be defined for mpam value and mpam_partid from CHI-D or later.
+      The mpam values are equally grouped into this define number of bins. */
+  `ifndef SVT_CHI_COV_MPAM_BINS
+    `define SVT_CHI_COV_MPAM_BINS 3
+  `endif
+`endif
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+  /** To define bins in txn_id related coverage, Number of bins to be defined for TxnID from CHI-E or later.
+      The values of TxnID are equally grouped into this define number of bins. */
+  `ifndef SVT_CHI_E_COV_TXNID_BINS
+    `define SVT_CHI_E_COV_TXNID_BINS 5
+  `endif
+
+  /** To define bins in dbid related coverage, Number of bins to be defined for DBID from CHI-E or later.
+      The values of DBID are equally grouped into this define number of bins. */
+  `ifndef SVT_CHI_E_COV_DBID_BINS
+    `define SVT_CHI_E_COV_DBID_BINS 5
+  `endif
+`endif
+
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+
+  /** Max delay value of SYSCOREQ signal to get asserted */
+  `ifndef SVT_CHI_SYSCOREQ_ASSERTION_MAX_DELAY
+    `define SVT_CHI_SYSCOREQ_ASSERTION_MAX_DELAY 100
+  `endif
+  
+  /** Max delay value of SYSCOREQ signal to get deasserted */
+  `ifndef SVT_CHI_SYSCOREQ_DEASSERTION_MAX_DELAY
+    `define SVT_CHI_SYSCOREQ_DEASSERTION_MAX_DELAY 100
+  `endif
+  
+  /** Max delay value of SYSCOACK signal to get asserted */
+  `ifndef SVT_CHI_SYSCOACK_ASSERTION_MAX_DELAY
+    `define SVT_CHI_SYSCOACK_ASSERTION_MAX_DELAY 100
+  `endif
+  
+  /** Max delay value of SYSCOACK signal to get deasserted */
+  `ifndef SVT_CHI_SYSCOACK_DEASSERTION_MAX_DELAY
+    `define SVT_CHI_SYSCOACK_DEASSERTION_MAX_DELAY 100
+  `endif
+
+`endif
+/** Max value of received SNP flit to LCRD delay */
+`ifndef SVT_CHI_MAX_SNP_FLIT_TO_LCRD_DELAY
+  `define SVT_CHI_MAX_SNP_FLIT_TO_LCRD_DELAY 4
+`endif
+
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+  /** Width of Reserved bits in STASHLPID fields of REQ flit-- applicable for CHI Issue B or later */
+  `define SVT_CHI_REQ_RESERVED_STASHLPID_WIDTH (`SVT_CHI_RETURN_TXN_ID_WIDTH-(`SVT_CHI_STASH_LPID_WIDTH+`SVT_CHI_STASHLPIDVALID_WIDTH))
+
+  /** Width of Reserved bits in STASHLPID fields of SNP flit-- applicable for CHI Issue B or later */
+  `define SVT_CHI_SNP_RESERVED_STASHLPID_WIDTH (`SVT_CHI_FORWARD_TXN_ID_WIDTH-(`SVT_CHI_STASH_LPID_WIDTH+`SVT_CHI_STASHLPIDVALID_WIDTH))
+`endif
+
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+  /** Width of Reserved bits in GROUPID fields of RSP flit -- applicable for CHI Issue D or later */
+  `define SVT_CHI_RSP_RESERVED_GROUPID_WIDTH (`SVT_CHI_DBID_WIDTH-`SVT_CHI_PGROUPID_WIDTH)
+
+  /** Width of Reserved bits in VMIDEXT fields of SNP flit -- applicable for CHI Issue D or later */
+  `define SVT_CHI_SNP_RESERVED_VMIDEXT_WIDTH (`SVT_CHI_FORWARD_TXN_ID_WIDTH-`SVT_CHI_VMID_EXT_WIDTH)
+
+  /** Width of Reserved bits in FWDSTATE/DATAPULL fields of DAT flit -- applicable for CHI Issue D or later */
+  `define SVT_CHI_DAT_RESERVED_FWDSTATE_DATAPULL_WIDTH  1
+  `define SVT_CHI_DAT_FWDSTATE_DATAPULL_WIDTH  3
+`endif
+
+`define SVT_CHI_NODE_INFO_PRINT_PREFIX(cfg) \
+$sformatf("{SYS_ID(%0d) NODE_ID(%0d)} ",\
+          (((cfg !=null) && (cfg.sys_cfg != null))?cfg.sys_cfg.system_id:-1),\
+          ((cfg != null)?cfg.node_id:-1))
+  
+`define SVT_CHI_PRINT_PREFIX(xact) \
+$sformatf("{SYS_ID(%0d) %0s OBJ_NUM(%0d) NODE_ID(%0d) %0sTYPE(%0s)%0s TXN_ID('d%0d) QOS('d%0d) ADDR(%0x) SIZE(%0s) NS(%0b) RETRY_ALLOWED(%0b)%0s%0s%0s%0s%0s%0s%0s%0s%0s%0s%0s ALLOCATE(%0b) SNPATTR('b%0b%0b)%0s%0s%0s%0s%0s%0s%0s%0s%0s%0s%0s%0s%0s%0s%0s%0s%0s%0s} ",\
+          ((xact != null && xact.cfg!= null && xact.cfg.sys_cfg != null)?xact.cfg.sys_cfg.system_id:-1),\
+          ((xact != null && xact.cfg!= null)?((xact.cfg.port_interleaving_enable==0)?"":($sformatf("INTRVED_GRP_OBJ_NUM(%0d)",xact.interleaved_group_object_num))):""),\
+          ((xact != null)?xact.object_num:-1),\
+          ((xact != null && xact.cfg!= null)?xact.cfg.node_id:-1),\
+          ((xact != null)?xact.source_target_info:""),\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?((xact.xact_type==svt_chi_transaction::DVMOP)?(xact.is_dvm_msg_type_sync()?" DVM_TYPE(SYNC)":" DVM_TYPE(NON-SYNC)"):""):""),\
+          ((xact != null)?xact.txn_id:0),\
+          ((xact != null)?xact.qos:0), \
+          ((xact != null)?xact.addr:0), \
+          ((xact != null)?xact.data_size.name:"null"),\
+          ((xact != null)?xact.is_non_secure_access:0),\
+          ((xact != null)?xact.is_dyn_p_crd:0),\
+          `ifdef SVT_CHI_ISSUE_B_ENABLE\
+          ((xact != null)?(xact.get_poison_str()):""),\
+          ((xact != null)?({" DATACHECK(",$sformatf("'h%0h", xact.datacheck),")"}):""),\
+          ((xact != null)?( \
+                           (( \
+                            xact.xact_type == svt_chi_transaction::WRITEUNIQUEFULLSTASH || xact.xact_type == svt_chi_transaction::WRITEUNIQUEPTLSTASH \
+                            || xact.xact_type == svt_chi_transaction::STASHONCESHARED || xact.xact_type == svt_chi_transaction::STASHONCEUNIQUE \
+                            `ifdef SVT_CHI_ISSUE_E_ENABLE \
+                            || xact.xact_type == svt_chi_transaction::STASHONCESEPSHARED || xact.xact_type == svt_chi_transaction::STASHONCESEPUNIQUE \
+                            `endif \
+                           ) \
+                          )? {$sformatf(" STASH_NID_VALID(%0b) STASH_NID(%0d) STASH_LPID_VALID(%0b) STASH_LPID(%0d)", xact.stash_nid_valid, xact.stash_nid, xact.stash_lpid_valid, xact.stash_lpid)}:"") \
+                          :""),\
+          `else\
+            "", \
+            "", \
+            "", \
+          `endif\
+          ((xact != null)?{" COMPACK(",$sformatf("%0b", xact.exp_comp_ack),")"}:""),\
+          ((xact != null && xact.cfg!= null)?(((xact.xact_type==svt_chi_transaction::READCLEAN)||(xact.xact_type==svt_chi_transaction::READNOSNP)|| \
+                            (xact.xact_type==svt_chi_transaction::READSHARED)||(xact.xact_type==svt_chi_transaction::CLEANUNIQUE)|| \
+                            (xact.xact_type==svt_chi_transaction::WRITENOSNPFULL)||(xact.xact_type==svt_chi_transaction::WRITENOSNPPTL) \
+                            `ifdef SVT_CHI_ISSUE_B_ENABLE \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_B)?(xact.xact_type==svt_chi_transaction::READNOTSHAREDDIRTY):"") \
+                            `endif \
+                            `ifdef SVT_CHI_ISSUE_E_ENABLE \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_E)?(xact.xact_type==svt_chi_transaction::READPREFERUNIQUE):"") \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_E)?(xact.xact_type==svt_chi_transaction::MAKEREADUNIQUE):"") \
+                            `endif \
+                           )?{" IS_EXCLUSIVE(",$sformatf("%0b", xact.is_exclusive),")"}:""):""),\
+          ((xact != null && xact.cfg!= null)?(((((xact.xact_type==svt_chi_transaction::READCLEAN)||(xact.xact_type==svt_chi_transaction::READNOSNP)|| \
+                             (xact.xact_type==svt_chi_transaction::READSHARED)||(xact.xact_type==svt_chi_transaction::CLEANUNIQUE)|| \
+                             (xact.xact_type==svt_chi_transaction::WRITENOSNPFULL)||(xact.xact_type==svt_chi_transaction::WRITENOSNPPTL) \
+                            `ifdef SVT_CHI_ISSUE_B_ENABLE \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_B)?(xact.xact_type==svt_chi_transaction::READNOTSHAREDDIRTY):"") \
+                            `endif \
+                            `ifdef SVT_CHI_ISSUE_E_ENABLE \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_E)?(xact.xact_type==svt_chi_transaction::READPREFERUNIQUE):"") \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_E)?(xact.xact_type==svt_chi_transaction::MAKEREADUNIQUE):"") \
+                            `endif \
+                            ) && \
+                            (xact.is_exclusive==1)) || xact.xact_type == svt_chi_transaction::DVMOP)?{" LPID(",$sformatf("%0d", xact.lpid),")"}:""):""),\
+          ((xact != null && xact.cfg!= null)?((((xact.xact_type==svt_chi_transaction::READCLEAN)||(xact.xact_type==svt_chi_transaction::READNOSNP)|| \
+                             (xact.xact_type==svt_chi_transaction::READSHARED)||(xact.xact_type==svt_chi_transaction::CLEANUNIQUE)|| \
+                             (xact.xact_type==svt_chi_transaction::WRITENOSNPFULL)||(xact.xact_type==svt_chi_transaction::WRITENOSNPPTL) \
+                            `ifdef SVT_CHI_ISSUE_B_ENABLE \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_B)?(xact.xact_type==svt_chi_transaction::READNOTSHAREDDIRTY):"") \
+                            `endif \
+                            `ifdef SVT_CHI_ISSUE_E_ENABLE \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_E)?(xact.xact_type==svt_chi_transaction::READPREFERUNIQUE):"") \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_E)?(xact.xact_type==svt_chi_transaction::MAKEREADUNIQUE):"") \
+                            `endif \
+                            ) &&  \
+                            (xact.is_exclusive==1))?{" EXCL_ACCESS_STATUS(",$sformatf("%0s", xact.excl_access_status.name()),")"}:""):""),\
+          ((xact != null && xact.cfg!= null)?((((xact.xact_type==svt_chi_transaction::READCLEAN)||(xact.xact_type==svt_chi_transaction::READNOSNP)|| \
+                             (xact.xact_type==svt_chi_transaction::READSHARED)||(xact.xact_type==svt_chi_transaction::CLEANUNIQUE)|| \
+                             (xact.xact_type==svt_chi_transaction::WRITENOSNPFULL)||(xact.xact_type==svt_chi_transaction::WRITENOSNPPTL) \
+                            `ifdef SVT_CHI_ISSUE_B_ENABLE \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_B)?(xact.xact_type==svt_chi_transaction::READNOTSHAREDDIRTY):"") \
+                            `endif \
+                            `ifdef SVT_CHI_ISSUE_E_ENABLE \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_E)?(xact.xact_type==svt_chi_transaction::READPREFERUNIQUE):"") \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_E)?(xact.xact_type==svt_chi_transaction::MAKEREADUNIQUE):"") \
+                            `endif \
+                            ) && \
+                            (xact.is_exclusive==1))?{" EXCL_MON_STATUS(",$sformatf("%0s", xact.excl_mon_status.name()),")"}:""):""),\
+          ((xact != null && xact.cfg!= null)?((((xact.xact_type==svt_chi_transaction::READCLEAN)||(xact.xact_type==svt_chi_transaction::READNOSNP)|| \
+                             (xact.xact_type==svt_chi_transaction::READSHARED)||(xact.xact_type==svt_chi_transaction::CLEANUNIQUE)|| \
+                             (xact.xact_type==svt_chi_transaction::WRITENOSNPFULL)||(xact.xact_type==svt_chi_transaction::WRITENOSNPPTL) \
+                            `ifdef SVT_CHI_ISSUE_B_ENABLE \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_B)?(xact.xact_type==svt_chi_transaction::READNOTSHAREDDIRTY):"") \
+                            `endif \
+                            `ifdef SVT_CHI_ISSUE_E_ENABLE \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_E)?(xact.xact_type==svt_chi_transaction::READPREFERUNIQUE):"") \
+                            || \
+                            ((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_E)?(xact.xact_type==svt_chi_transaction::MAKEREADUNIQUE):"") \
+                            `endif \
+                            ) && \
+                            (xact.is_exclusive==1) && (xact.excl_access_status != svt_chi_transaction::EXCL_ACCESS_INITIAL))?{" EXCL_XACT_DROP_COND(",$sformatf("%0s", xact.excl_xact_drop_cond.name()),")"}:""):""),\
+                            `ifdef SVT_CHI_ISSUE_B_ENABLE \
+          ((xact != null)?(((xact.xact_type==svt_chi_transaction::READONCE)||(xact.xact_type==svt_chi_transaction::READONCECLEANINVALID)||(xact.xact_type==svt_chi_transaction::READONCEMAKEINVALID)||(xact.xact_type==svt_chi_transaction::READNOSNP)||(xact.xact_type==svt_chi_transaction::WRITENOSNPFULL)||(xact.xact_type==svt_chi_transaction::WRITENOSNPPTL)||(xact.xact_type==svt_chi_transaction::WRITEUNIQUEFULL)||(xact.xact_type==svt_chi_transaction::WRITEUNIQUEPTL)||(xact.is_atomicop_xact() == 1))?{" ORDER(",xact.order_type.name(),")"}:""):""),\
+                            `else \
+          ((xact != null)?(((xact.xact_type==svt_chi_transaction::READONCE)||(xact.xact_type==svt_chi_transaction::READNOSNP)||(xact.xact_type==svt_chi_transaction::WRITENOSNPFULL)||(xact.xact_type==svt_chi_transaction::WRITENOSNPPTL)||(xact.xact_type==svt_chi_transaction::WRITEUNIQUEFULL)||(xact.xact_type==svt_chi_transaction::WRITEUNIQUEPTL))?{" ORDER(",xact.order_type.name(),")"}:""):""),\
+                            `endif \
+                            `ifdef SVT_CHI_ISSUE_E_ENABLE \
+          ((xact != null)?(((xact.xact_type==svt_chi_transaction::WRITEUNIQUEZERO) || (xact.xact_type==svt_chi_transaction::WRITENOSNPZERO) || (xact.xact_type==svt_chi_transaction::WRITENOSNPFULL_CLEANSHARED) || (xact.xact_type==svt_chi_transaction::WRITENOSNPFULL_CLEANINVALID) || (xact.xact_type==svt_chi_transaction::WRITENOSNPPTL_CLEANINVALID) || (xact.xact_type==svt_chi_transaction::WRITENOSNPPTL_CLEANINVALID) || (xact.xact_type==svt_chi_transaction::WRITEUNIQUEFULL_CLEANSHARED) || (xact.xact_type==svt_chi_transaction::WRITEUNIQUEPTL_CLEANSHARED))?{" ORDER(",xact.order_type.name(),")"}:""):""),\
+                            `else \
+                              "", \
+                            `endif \
+          ((xact != null)?xact.mem_attr_allocate_hint:0),\
+          ((xact != null)?xact.snp_attr_snp_domain_type:0),\
+          ((xact != null)?xact.snp_attr_is_snoopable:0),\
+          ((xact != null)?(((xact.xact_type==svt_chi_transaction::READNOSNP)||(xact.xact_type==svt_chi_transaction::CLEANSHARED)||(xact.xact_type==svt_chi_transaction::CLEANINVALID)||(xact.xact_type==svt_chi_transaction::MAKEINVALID)||(xact.xact_type==svt_chi_transaction::WRITENOSNPFULL)||(xact.xact_type==svt_chi_transaction::WRITENOSNPPTL))?{" CACHEABLE(",$sformatf("%0b", xact.mem_attr_is_cacheable),")"}:""):""),\
+          ((xact != null)?(((xact.xact_type==svt_chi_transaction::READNOSNP)||(xact.xact_type==svt_chi_transaction::WRITENOSNPFULL)||(xact.xact_type==svt_chi_transaction::WRITENOSNPPTL))?{" MEM_TYPE(",xact.mem_attr_mem_type.name,")"}:""):""),\
+          ((xact != null)?(((xact.xact_type==svt_chi_transaction::READNOSNP)||(xact.xact_type==svt_chi_transaction::WRITENOSNPFULL)||(xact.xact_type==svt_chi_transaction::WRITENOSNPPTL))?{" EWA(",$sformatf("%0b", xact.mem_attr_is_early_wr_ack_allowed),")"}:""):""),\
+          `ifdef SVT_CHI_ISSUE_E_ENABLE \
+          ((xact != null)?((xact.is_combined_writenosnpfull_cmo_xact() || xact.is_combined_writenosnpptl_cmo_xact())?($sformatf(" CACHEABLE\(%0b\) MEM_TYPE\(%0s\) EWA\(%0b\)", xact.mem_attr_is_cacheable, xact.mem_attr_mem_type, xact.mem_attr_is_early_wr_ack_allowed)):""):""),\
+          `else \
+            "", \
+          `endif \
+          `ifdef SVT_CHI_ISSUE_E_ENABLE \
+          ((xact != null)?(((xact.xact_type==svt_chi_transaction::WRITENOSNPFULL_CLEANSHAREDPERSISTSEP) || (xact.xact_type==svt_chi_transaction::WRITENOSNPPTL_CLEANSHAREDPERSISTSEP) || (xact.xact_type==svt_chi_transaction::WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP) || (xact.xact_type==svt_chi_transaction::WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP) || (xact.xact_type==svt_chi_transaction::WRITEBACKFULL_CLEANSHAREDPERSISTSEP) || (xact.xact_type==svt_chi_transaction::WRITECLEANFULL_CLEANSHAREDPERSISTSEP))?($sformatf(" PGROUP_ID\('d%0d\) DEEP\(%0b\)", xact.pgroup_id, xact.deep)):""):""),\
+          `else \
+            "", \
+          `endif \
+          `ifdef SVT_CHI_ISSUE_B_ENABLE \
+            ((xact != null)?((xact.is_atomicop_xact()==0)?(((xact.xact_type == svt_chi_transaction::CLEANSHARED)||(xact.xact_type == svt_chi_transaction::CLEANSHAREDPERSIST)||(xact.xact_type == svt_chi_transaction::CLEANINVALID)||(xact.xact_type == svt_chi_transaction::MAKEINVALID))?$sformatf(" MEM_TYPE\(%0s\)", xact.mem_attr_mem_type.name()):""):($sformatf(" CACHEABLE\(%0b\) MEM_TYPE\(%0s\) EWA \(%0b\) ENDIAN\(%0b\) SNOOPME\(%0b\)",xact.mem_attr_is_cacheable, xact.mem_attr_mem_type.name(), xact.mem_attr_is_early_wr_ack_allowed, xact.endian,xact.snoopme))):""),\
+            `ifdef SVT_CHI_ISSUE_D_ENABLE\
+            ((xact != null)?(xact.xact_type == svt_chi_transaction::CLEANSHAREDPERSISTSEP) ? ($sformatf(" PGROUP_ID\(%0x\) MEM_TYPE\(%0s\) is_comp_received\(%0d\) is_persist_received\(%0d\) is_comppersist_received\(%0d\)",xact.pgroup_id, xact.mem_attr_mem_type.name(),xact.is_comp_received, xact.is_persist_received, xact.is_comppersist_received)):(""):""),\
+            `else\
+              "", \
+          `endif\
+          `else \
+            "",\
+            "", \
+          `endif \
+          `ifdef SVT_CHI_ISSUE_E_ENABLE \
+          ((xact != null)?((xact.cfg.dvm_version_support >= svt_chi_node_configuration::DVM_v8_4 && xact.xact_type==svt_chi_transaction::DVMOP && xact.addr[13:11] == 3'b000)?($sformatf(" IS_TLBI_INVALIDATE_BY_VA_OR_IPA(%0b)", xact.addr[4])):""):""),\
+          `else \
+            "", \
+          `endif \
+          `ifdef SVT_CHI_ISSUE_E_ENABLE \
+          ((xact != null)?((xact.cfg.dvm_version_support >= svt_chi_node_configuration::DVM_v8_4 && xact.xact_type==svt_chi_transaction::DVMOP && xact.addr[13:11] == 3'b000 && xact.addr[4] == 1)?($sformatf(" IS_RANGE_BASED_TLBI(%0b)", xact.dvm_range)):""):""),\
+          `else \
+            "", \
+          `endif \
+          `ifdef SVT_CHI_ISSUE_E_ENABLE \
+          ((xact != null)?((xact.xact_type == svt_chi_transaction::WRITEEVICTOREVICT)?($sformatf(" IS_LIKELY_SHARED\(%0b\) IS_COMP_RECEIVED\(%0b\) IS_DBID_RECEIVED\(%0b\) ",xact.is_likely_shared, xact.is_comp_received, xact.is_dbid_received)):""):""),\
+          ((xact != null)?($sformatf(" REQUEST_TAGOP\(%0s\)", xact.req_tag_op)):""),\
+          ((xact != null)?($sformatf(" DO_DWT\(%0b\)", xact.do_dwt)):""),\
+          ((xact != null && (xact.is_atomicop_xact() == 0) && xact.data_status != svt_chi_transaction::INITIAL)?($sformatf(" DATA_TAGOP\(%0s\)", xact.data_tag_op.name())):""),\
+          ((xact != null && (xact.is_atomicop_xact() == 1) && xact.atomic_write_data_status != svt_chi_transaction::INITIAL)?($sformatf(" ATOMIC_WRITE_DATA_TAGOP\(%0s\)", xact.atomic_write_data_tag_op.name())):""),\
+          ((xact != null && (xact.is_atomicop_xact() == 1) && xact.atomic_returned_initial_data_status != svt_chi_transaction::INITIAL)?($sformatf(" ATOMIC_READ_DATA_TAGOP\(%0s\)", xact.atomic_read_data_tag_op.name())):""),\
+          `else \
+            "", \
+            "", \
+            "", \
+            "", \
+            "", \
+            "", \
+          `endif \
+          ((xact != null)?((xact.get_begin_time()==-1)?"":($sformatf(" START_TIME(%0t)",xact.get_begin_realtime()))):""),\
+          ((xact != null)?((xact.get_end_time()==-1)?"":($sformatf(" END_TIME(%0t)",xact.get_end_realtime()))):""),\
+          ((xact != null)?((xact.get_req_accept_realtime()==-1)?"":($sformatf(" REQ_ACCEPT_TIME(%0t)",xact.get_req_accept_realtime()))):""))
+
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+`define SVT_CHI_SNP_PRINT_PREFIX(xact) \
+$sformatf("{SYS_ID(%0d) OBJ_NUM(%0d) NODE_ID(%0d) %0sTYPE(%0s)%0s TXN_ID('d%0d) QOS('d%0d) ADDR(%0x) NS(%0b)POISON(%0h) DATACHECK(%0h)%0s%0s%0s%0s%0s%0s%0s%0s%0s%0s%0s} ",\
+          ((xact != null && xact.cfg!= null  && xact.cfg.sys_cfg != null)?xact.cfg.sys_cfg.system_id:-1),\
+          ((xact != null)?xact.object_num:-1),\
+          ((xact != null && xact.cfg!= null)?xact.cfg.node_id:-1),\
+          ((xact != null)?xact.source_target_info:""),\
+          ((xact != null)?xact.snp_req_msg_type.name:"null"),\
+          ((xact != null)?((xact.snp_req_msg_type==svt_chi_snoop_transaction::SNPDVMOP)?(xact.is_dvm_msg_type_sync()?" DVM_TYPE(SYNC)":" DVM_TYPE(NON-SYNC)"):""):""),\
+          ((xact != null)?xact.txn_id:0),\
+          ((xact != null)?xact.qos:0), \
+          ((xact != null)?xact.addr:0), \
+          ((xact != null)?xact.is_non_secure_access:0),\
+          ((xact != null)?xact.poison:0),\
+          ((xact != null)?xact.datacheck:0),\
+          ((xact != null && xact.cfg!= null)?((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_B)?($sformatf(" DONOTGOTOSD('b%0b) RET_TO_SRC('b%0b)",xact.do_not_go_to_sd, xact.ret_to_src)):""):""),\
+          ((xact != null && xact.cfg!= null)?((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_B && xact.is_forward_type_snoop())?($sformatf(" FWD_NID('d%0d) FWD_TXN_ID('d%0d)",xact.fwd_nid, xact.fwd_txn_id)):""):""),\
+          ((xact != null && xact.cfg!= null)?((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_B && xact.is_cache_stash_snoop())?($sformatf(" DO_NOT_DATA_PULL('b%0b) DATA_PULL('b%0b) STASH_LPID_VALID(%0b) STASH_LPID(%0d)",xact.do_not_data_pull, xact.data_pull, xact.stash_lpid_valid, xact.stash_lpid)):""):""),\
+          ((xact != null && xact.cfg!= null)?((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_B && xact.is_cache_stash_snoop() && (xact.data_pull == 1 && (xact.get_end_time()!=-1)))?($sformatf(" DATA_PULL_TXN_ID('d%0d) DATA_PULL_DBID('d%0d) DATA_PULL_FINAL_STATE(%0s)",xact.data_pull_txn_id, xact.data_pull_dbid, xact.data_pull_resp_final_state.name())):""):""),\
+          ((xact != null && xact.cfg!= null)?((xact.cfg.chi_spec_revision>=svt_chi_node_configuration::ISSUE_B && xact.get_end_time()!=-1)?($sformatf(" DATASOURCE('b%0b)",xact.data_source)):""):""),\
+          `ifdef SVT_CHI_ISSUE_E_ENABLE \
+          ((xact != null)?((xact.cfg.dvm_version_support >= svt_chi_node_configuration::DVM_v8_4 && xact.snp_req_msg_type==svt_chi_transaction::SNPDVMOP && xact.snp_dvm_op_p1_payload[13:11] == 3'b000)?($sformatf(" IS_TLBI_INVALIDATE_BY_VA_OR_IPA(%0b)", xact.snp_dvm_op_p1_payload[4])):""):""),\
+          `else \
+            "", \
+          `endif \
+          `ifdef SVT_CHI_ISSUE_E_ENABLE \
+          ((xact != null)?((xact.cfg.dvm_version_support >= svt_chi_node_configuration::DVM_v8_4 && xact.snp_req_msg_type==svt_chi_snoop_transaction::SNPDVMOP && xact.snp_dvm_op_p1_payload[13:11] == 3'b000 && xact.snp_dvm_op_p1_payload[4] == 1)?($sformatf(" IS_RANGE_BASED_TLBI(%0b)", xact.dvm_range)):""):""),\
+          ((xact != null && xact.data_status != svt_chi_snoop_transaction::INITIAL)?($sformatf(" DATA_TAGOP\(%0s\)", xact.data_tag_op)):""),\
+          ((xact != null && xact.is_forward_type_snoop() && xact.fwded_read_data_status != svt_chi_snoop_transaction::INITIAL)?($sformatf(" FWDED_TAGOP\(%0s\)", xact.fwded_tag_op)):""),\
+          `else \
+            "", \
+            "", \
+            "", \
+          `endif \
+          ((xact != null)?((xact.get_begin_time()==-1)?"":($sformatf(" START_TIME(%0t)",xact.get_begin_realtime()))):""),\
+          ((xact != null)?((xact.get_end_time()==-1)?"":($sformatf(" END_TIME(%0t)",xact.get_end_realtime()))):""))
+`else
+`define SVT_CHI_SNP_PRINT_PREFIX(xact) \
+$sformatf("{SYS_ID(%0d) OBJ_NUM(%0d) NODE_ID(%0d) %0sTYPE(%0s)%0s TXN_ID('d%0d) QOS('d%0d) ADDR(%0x) NS(%0b)%0s%0s} ",\
+          ((xact != null && xact.cfg!= null  && xact.cfg.sys_cfg != null)?xact.cfg.sys_cfg.system_id:-1),\
+          ((xact != null)?xact.object_num:-1),\
+          ((xact != null && xact.cfg!= null )?xact.cfg.node_id:-1),\
+          ((xact != null)?xact.source_target_info:""),\
+          ((xact != null)?xact.snp_req_msg_type.name:"null"),\
+          ((xact != null)?((xact.snp_req_msg_type==svt_chi_snoop_transaction::SNPDVMOP)?(xact.is_dvm_msg_type_sync()?" DVM_TYPE(SYNC)":" DVM_TYPE(NON-SYNC)"):""):""),\
+          ((xact != null)?xact.txn_id:0),\
+          ((xact != null)?xact.qos:0), \
+          ((xact != null)?xact.addr:0), \
+          ((xact != null)?xact.is_non_secure_access:0),\
+          ((xact != null)?((xact.get_begin_time()==-1)?"":($sformatf(" START_TIME(%0t)",xact.get_begin_realtime()))):""),\
+          ((xact != null)?((xact.get_end_time()==-1)?"":($sformatf(" END_TIME(%0t)",xact.get_end_realtime()))):""))
+`endif
+
+`define SVT_CHI_FLIT_CAUSAL_PRINT_PREFIX(flit) \
+                    ((flit == null) ? "CAUSAL XACT {SYS_ID(-1) OBJ_NUM(-1) START_TIME(0) NODE_ID(-1) TYPE(null) TXN_ID(0) ADDR(0)}":flit.causal_xact_psdisplay_concise())
+
+`define SVT_CHI_FLIT_PRINT_PREFIX(flit) \
+                    ((flit == null) ? "FLIT {SYS_ID(-1) OBJ_NUM(-1) START_TIME(0) NODE_ID(-1) TYPE(null) TXN_ID(0) ADDR(0)}":flit.psdisplay_concise())
+  
+`ifdef SVT_CHI_DISPLAY_COHERENT_XACT_TYPE
+`define SVT_CHI_PRINT_PREFIX1(xact) \
+$sformatf("{OBJ_NUM(%0d) TYPE(%0s) ADDR(%0x)} ",\
+          ((xact != null)?xact.object_num:-1),\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?xact.addr:0))
+`else
+`define SVT_CHI_PRINT_PREFIX1(xact) \
+$sformatf("{OBJ_NUM(%0d) TYPE(%0s) ADDR(%0x)} ",\
+          ((xact != null)?xact.object_num:-1),\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?xact.addr:0))
+`endif
+
+/** Used to indicate the status of the TX LINKACTIVE Interface state machine. */
+`define SVT_CHI_TXLA_STOP_STATE 0
+`define SVT_CHI_TXLA_ACTIVATE_STATE 1
+`define SVT_CHI_TXLA_RUN_STATE 2
+`define SVT_CHI_TXLA_DEACTIVATE_STATE 3
+
+/** Used to indicate the status of the RX LINKACTIVE Interface state machine. */
+`define SVT_CHI_RXLA_STOP_STATE 0
+`define SVT_CHI_RXLA_ACTIVATE_STATE 1
+`define SVT_CHI_RXLA_RUN_STATE 2
+`define SVT_CHI_RXLA_DEACTIVATE_STATE 3
+
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+/** Used to indicate the status of the sysco interface state machine. */
+`define SVT_CHI_COHERENCY_DISABLED_STATE   0
+`define SVT_CHI_COHERENCY_CONNECT_STATE    1
+`define SVT_CHI_COHERENCY_ENABLED_STATE    2
+`define SVT_CHI_COHERENCY_DISCONNECT_STATE 3
+`endif
+
+// Compliance with AIP although spec doesn not explicitly state it.
+`define SVT_CHI_AIP_COMPLIANCE 1
+
+// Defines for the generator source
+`define SVT_CHI_NO_SOURCE 0
+`define SVT_CHI_ATOMIC_GEN_SOURCE 1
+`define SVT_CHI_SCENARIO_GEN_SOURCE 2
+`define SVT_CHI_MS_SCENARIO_GEN_SOURCE 3 
+`define SVT_CHI_SIMPLE_RESPONSE_GEN_SOURCE 4
+`define SVT_CHI_MEMORY_RESPONSE_GEN_SOURCE 5
+`define SVT_CHI_USER_RESPONSE_GEN_SOURCE 7
+
+// Defines for snoop response generator source
+`define SVT_CHI_CACHE_SNOOP_RESPONSE_GEN_SOURCE 0
+`define SVT_CHI_USER_SNOOP_RESPONSE_GEN_SOURCE 1
+
+// Reordering Algorithm types
+`define SVT_CHI_REORDERING_ROUND_ROBIN  0 
+`define SVT_CHI_REORDERING_RANDOM       1
+`define SVT_CHI_REORDERING_PRIORITIZED  2
+
+//reset_type
+`define SVT_CHI_EXCLUDE_UNSTARTED_XACT 0
+`define SVT_CHI_RESET_ALL_XACT 1
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+//The below macro's with SVT_CHI_IS* are used only inside the data classes.
+`define SVT_CHI_IS_NON_COHERENT_COMBINED_NCBWRITE_CMO \
+       (xact_type == WRITENOSNPFULL_CLEANSHARED || \
+        xact_type == WRITENOSNPFULL_CLEANINVALID || \
+        xact_type == WRITENOSNPFULL_CLEANSHAREDPERSISTSEP || \
+        xact_type == WRITENOSNPPTL_CLEANSHARED || \
+        xact_type == WRITENOSNPPTL_CLEANINVALID || \
+        xact_type == WRITENOSNPPTL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_IS_COHERENT_COMBINED_NCBWRITE_CMO \
+       (xact_type == WRITEUNIQUEFULL_CLEANSHARED || \
+        xact_type == WRITEUNIQUEPTL_CLEANSHARED || \
+        xact_type == WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP || \
+        xact_type == WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_IS_COHERENT_COMBINED_CBWRITE_CMO \
+       (xact_type == WRITEBACKFULL_CLEANSHARED || \
+        xact_type == WRITEBACKFULL_CLEANINVALID || \
+        xact_type == WRITEBACKFULL_CLEANSHAREDPERSISTSEP || \
+        xact_type == WRITECLEANFULL_CLEANSHARED || \
+        xact_type == WRITECLEANFULL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_IS_FULL_CACHELINE_COMBINED_NCBWRITE_CMO \
+       (xact_type == WRITENOSNPFULL_CLEANSHARED || \
+        xact_type == WRITENOSNPFULL_CLEANINVALID || \
+        xact_type == WRITENOSNPFULL_CLEANSHAREDPERSISTSEP || \
+        xact_type == WRITEUNIQUEFULL_CLEANSHARED || \
+        xact_type == WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_IS_PTL_CACHELINE_COMBINED_NCBWRITE_CMO \
+       (xact_type == WRITENOSNPPTL_CLEANSHARED || \
+        xact_type == WRITENOSNPPTL_CLEANINVALID || \
+        xact_type == WRITENOSNPPTL_CLEANSHAREDPERSISTSEP || \
+        xact_type == WRITEUNIQUEPTL_CLEANSHARED || \
+        xact_type == WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_IS_COMBINED_WRITE_PERSISTENT_CMO \
+       (xact_type == WRITENOSNPFULL_CLEANSHAREDPERSISTSEP || \
+        xact_type == WRITENOSNPPTL_CLEANSHAREDPERSISTSEP || \
+        xact_type == WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP || \
+        xact_type == WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP || \
+        xact_type == WRITEBACKFULL_CLEANSHAREDPERSISTSEP || \
+        xact_type == WRITECLEANFULL_CLEANSHAREDPERSISTSEP)
+
+//The below macro's with SVT_CHI_XACT_IS* can be used elsewhere other than data classes
+//xact passed should be svt_chi_transaction class or its derived classes handle
+`define SVT_CHI_XACT_IS_NON_COHERENT_COMBINED_NCBWRITE_CMO(xact) \
+       (xact.xact_type == svt_chi_transaction::WRITENOSNPFULL_CLEANSHARED || \
+        xact.xact_type == svt_chi_transaction::WRITENOSNPFULL_CLEANINVALID || \
+        xact.xact_type == svt_chi_transaction::WRITENOSNPFULL_CLEANSHAREDPERSISTSEP || \
+        xact.xact_type == svt_chi_transaction::WRITENOSNPPTL_CLEANSHARED || \
+        xact.xact_type == svt_chi_transaction::WRITENOSNPPTL_CLEANINVALID || \
+        xact.xact_type == svt_chi_transaction::WRITENOSNPPTL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_XACT_IS_COHERENT_COMBINED_NCBWRITE_CMO(xact) \
+       (xact.xact_type == svt_chi_transaction::WRITEUNIQUEFULL_CLEANSHARED || \
+        xact.xact_type == svt_chi_transaction::WRITEUNIQUEPTL_CLEANSHARED || \
+        xact.xact_type == svt_chi_transaction::WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP || \
+        xact.xact_type == svt_chi_transaction::WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_XACT_IS_COHERENT_COMBINED_CBWRITE_CMO(xact) \
+       (xact.xact_type == svt_chi_transaction::WRITEBACKFULL_CLEANSHARED || \
+        xact.xact_type == svt_chi_transaction::WRITEBACKFULL_CLEANINVALID || \
+        xact.xact_type == svt_chi_transaction::WRITEBACKFULL_CLEANSHAREDPERSISTSEP || \
+        xact.xact_type == svt_chi_transaction::WRITECLEANFULL_CLEANSHARED || \
+        xact.xact_type == svt_chi_transaction::WRITECLEANFULL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_XACT_IS_FULL_CACHELINE_COMBINED_NCBWRITE_CMO(xact) \
+       (xact.xact_type == svt_chi_transaction::WRITENOSNPFULL_CLEANSHARED || \
+        xact.xact_type == svt_chi_transaction::WRITENOSNPFULL_CLEANINVALID || \
+        xact.xact_type == svt_chi_transaction::WRITENOSNPFULL_CLEANSHAREDPERSISTSEP || \
+        xact.xact_type == svt_chi_transaction::WRITEUNIQUEFULL_CLEANSHARED || \
+        xact.xact_type == svt_chi_transaction::WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_XACT_IS_PTL_CACHELINE_COMBINED_NCBWRITE_CMO(xact) \
+       (xact.xact_type == svt_chi_transaction::WRITENOSNPPTL_CLEANSHARED || \
+        xact.xact_type == svt_chi_transaction::WRITENOSNPPTL_CLEANINVALID || \
+        xact.xact_type == svt_chi_transaction::WRITENOSNPPTL_CLEANSHAREDPERSISTSEP || \
+        xact.xact_type == svt_chi_transaction::WRITEUNIQUEPTL_CLEANSHARED || \
+        xact.xact_type == svt_chi_transaction::WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_XACT_IS_COMBINED_WRITE_PERSISTENT_CMO(xact) \
+       (xact.xact_type == svt_chi_transaction::WRITENOSNPFULL_CLEANSHAREDPERSISTSEP || \
+        xact.xact_type == svt_chi_transaction::WRITENOSNPPTL_CLEANSHAREDPERSISTSEP || \
+        xact.xact_type == svt_chi_transaction::WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP || \
+        xact.xact_type == svt_chi_transaction::WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP || \
+        xact.xact_type == svt_chi_transaction::WRITEBACKFULL_CLEANSHAREDPERSISTSEP || \
+        xact.xact_type == svt_chi_transaction::WRITECLEANFULL_CLEANSHAREDPERSISTSEP)
+
+//The below macro's with SVT_CHI_XACT_IS* can be used elsewhere other than data classes
+//xact_flit passed should be svt_chi_flit class or its derived classes handle
+`define SVT_CHI_FLIT_IS_NON_COHERENT_COMBINED_NCBWRITE_CMO(xact_flit) \
+       (xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITENOSNPFULL_CLEANSHARED || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITENOSNPFULL_CLEANINVALID || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITENOSNPFULL_CLEANSHAREDPERSISTSEP || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITENOSNPPTL_CLEANSHARED || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITENOSNPPTL_CLEANINVALID || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITENOSNPPTL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_FLIT_IS_COHERENT_COMBINED_NCBWRITE_CMO(xact_flit) \
+       (xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITEUNIQUEFULL_CLEANSHARED || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITEUNIQUEPTL_CLEANSHARED || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_FLIT_IS_COHERENT_COMBINED_CBWRITE_CMO(xact_flit) \
+       (xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITEBACKFULL_CLEANSHARED || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITEBACKFULL_CLEANINVALID || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITEBACKFULL_CLEANSHAREDPERSISTSEP || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITECLEANFULL_CLEANSHARED || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITECLEANFULL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_FLIT_IS_COMBINED_WRITE_PERSISTENT_CMO(xact_flit) \
+       (xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITENOSNPFULL_CLEANSHAREDPERSISTSEP || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITENOSNPPTL_CLEANSHAREDPERSISTSEP || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITEBACKFULL_CLEANSHAREDPERSISTSEP || \
+        xact_flit.req_vc_flit_opcode == svt_chi_flit::WRITECLEANFULL_CLEANSHAREDPERSISTSEP)
+
+`define SVT_CHI_FLIT_CLASS_ONLY_IS_COMBINED_WRITE_PERSISTENT_CMO \
+       (req_vc_flit_opcode == WRITENOSNPFULL_CLEANSHAREDPERSISTSEP || \
+        req_vc_flit_opcode == WRITENOSNPPTL_CLEANSHAREDPERSISTSEP || \
+        req_vc_flit_opcode == WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP || \
+        req_vc_flit_opcode == WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP || \
+        req_vc_flit_opcode == WRITEBACKFULL_CLEANSHAREDPERSISTSEP || \
+        req_vc_flit_opcode == WRITECLEANFULL_CLEANSHAREDPERSISTSEP)
+
+`endif
+
+`define SVT_CHI_XACT_STATUS_ENDED(xact) \
+       (xact.status == svt_chi_transaction::ACCEPT || \
+        xact.status == svt_chi_transaction::DISABLED || \
+        xact.status == svt_chi_transaction::CANCELLED || \
+        xact.status == svt_chi_transaction::ABORTED)
+
+// Snoop response can be unique only if final state is UC/UD
+`define SVT_CHI_SNOOP_RESP_ISUNIQUE(xact) \
+    xact.final_state == svt_chi_snoop_transaction::UC || \
+    xact.final_state == svt_chi_snoop_transaction::UD
+
+                        
+`define SVT_CHI_SNOOP_INIT_STATE_ISUNIQUE(xact) \
+    xact.current_state == svt_chi_snoop_transaction::UC || \
+    xact.current_state == svt_chi_snoop_transaction::UD || \
+    xact.current_state == svt_chi_snoop_transaction::UDP || \
+    xact.current_state == svt_chi_snoop_transaction::UCE
+
+                        
+`define SVT_CHI_SNOOP_RESP_ISSHARED(xact) \
+    xact.final_state == svt_chi_snoop_transaction::SC || \
+    xact.final_state == svt_chi_snoop_transaction::SD  
+
+`define SVT_CHI_CLEAN_FINAL_STATE(xact) \
+    ( \
+     xact.final_state == svt_chi_snoop_transaction::UC && \
+     xact.snp_req_msg_type != svt_chi_snoop_transaction::SNPONCE \
+    ) || \
+    xact.final_state == svt_chi_snoop_transaction::SC || \
+    xact.final_state == svt_chi_snoop_transaction::UCE  
+
+`define SVT_CHI_CLEAN_CURRENT_STATE(xact) \
+    xact.current_state == svt_chi_snoop_transaction::UC || \
+    xact.current_state == svt_chi_snoop_transaction::SC || \
+    xact.current_state == svt_chi_snoop_transaction::UCE  
+
+`define SVT_CHI_SNOOP_PRINT_PREFIX(xact) \
+$sformatf("{SYS_ID(%0d) OBJ_NUM(%0d) NODE_ID(%0d) TYPE(%0s)%0s TXN_ID('d%0d) ADDR(%0x)} ",\
+          ((xact != null  && xact.cfg!= null  && xact.cfg.sys_cfg != null  )?xact.cfg.sys_cfg.system_id:-1),\
+          ((xact != null)?xact.object_num:-1),\
+          ((xact != null && xact.cfg!= null )?xact.cfg.node_id:-1),\
+          ((xact != null)?xact.snp_req_msg_type.name:"null"),\
+          ((xact != null)?((xact.snp_req_msg_type==svt_chi_snoop_transaction::SNPDVMOP)?(xact.is_dvm_msg_type_sync()?" DVM_TYPE(SYNC)":" DVM_TYPE(NON-SYNC)"):""):""), \
+          ((xact != null)?xact.txn_id:0), \
+          ((xact != null)?xact.addr:0))
+
+`define SVT_CHI_ALLOWED_SLAVE_CMO_XACT(xact,axi_slave_xact) \
+    ((xact.xact_type == svt_chi_transaction::CLEANSHARED) && \
+       ((axi_slave_xact.xact_type == svt_axi_transaction::COHERENT) && \
+        (axi_slave_xact.coherent_xact_type == svt_axi_transaction::CLEANSHARED))) \
+    || \
+    ((xact.xact_type == svt_chi_transaction::CLEANINVALID) && \
+       ((axi_slave_xact.xact_type == svt_axi_transaction::COHERENT) && \
+        (axi_slave_xact.coherent_xact_type == svt_axi_transaction::CLEANINVALID))) \
+    || \
+    ((xact.xact_type == svt_chi_transaction::MAKEINVALID) && \
+       ((axi_slave_xact.xact_type == svt_axi_transaction::COHERENT) && \
+        (axi_slave_xact.coherent_xact_type == svt_axi_transaction::MAKEINVALID))) \
+    `ifdef SVT_CHI_ISSUE_B_ENABLE \
+    || \
+    ((xact.xact_type == svt_chi_transaction::CLEANSHAREDPERSIST) && \
+       ((axi_slave_xact.xact_type == svt_axi_transaction::COHERENT) && \
+        (axi_slave_xact.coherent_xact_type == svt_axi_transaction::CLEANSHAREDPERSIST))) \
+    `endif\
+
+
+`ifdef SVT_ACE5_ENABLE
+`define SVT_CHI_GET_RN_ATOMIC_ATTRIBUTES_FROM_AXI_SLAVE_XACT(axi_slave_xact,atomic_operation, atomic_opcode ) \
+  case(axi_slave_xact.atomic_xact_op_type) \
+    svt_axi_transaction::ATOMICSTORE_ADD : atomic_opcode = svt_chi_common_transaction::ATOMICSTORE_ADD;\
+    svt_axi_transaction::ATOMICSTORE_CLR : atomic_opcode = svt_chi_common_transaction::ATOMICSTORE_CLR;\
+    svt_axi_transaction::ATOMICSTORE_EOR : atomic_opcode = svt_chi_common_transaction::ATOMICSTORE_EOR; \
+    svt_axi_transaction::ATOMICSTORE_SET : atomic_opcode = svt_chi_common_transaction::ATOMICSTORE_SET; \
+    svt_axi_transaction::ATOMICSTORE_SMAX : atomic_opcode = svt_chi_common_transaction::ATOMICSTORE_SMAX; \
+    svt_axi_transaction::ATOMICSTORE_SMIN : atomic_opcode = svt_chi_common_transaction::ATOMICSTORE_SMIN;\
+    svt_axi_transaction::ATOMICSTORE_UMAX : atomic_opcode = svt_chi_common_transaction::ATOMICSTORE_UMAX; \
+    svt_axi_transaction::ATOMICSTORE_UMIN : atomic_opcode = svt_chi_common_transaction::ATOMICSTORE_UMIN; \
+    svt_axi_transaction::ATOMICLOAD_ADD : atomic_opcode = svt_chi_common_transaction::ATOMICLOAD_ADD;\
+    svt_axi_transaction::ATOMICLOAD_CLR : atomic_opcode = svt_chi_common_transaction::ATOMICLOAD_CLR; \
+    svt_axi_transaction::ATOMICLOAD_EOR : atomic_opcode = svt_chi_common_transaction::ATOMICLOAD_EOR; \
+    svt_axi_transaction::ATOMICLOAD_SET : atomic_opcode = svt_chi_common_transaction::ATOMICLOAD_SET; \
+    svt_axi_transaction::ATOMICLOAD_SMAX : atomic_opcode = svt_chi_common_transaction::ATOMICLOAD_SMAX; \
+    svt_axi_transaction::ATOMICLOAD_UMAX : atomic_opcode = svt_chi_common_transaction::ATOMICLOAD_UMAX; \
+    svt_axi_transaction::ATOMICLOAD_UMIN : atomic_opcode = svt_chi_common_transaction::ATOMICLOAD_UMIN; \
+    svt_axi_transaction::ATOMICSWAP : atomic_opcode = svt_chi_common_transaction::ATOMICSWAP; \
+    svt_axi_transaction::ATOMICCOMPARE : atomic_opcode = svt_chi_common_transaction::ATOMICCOMPARE; \
+    default : atomic_opcode = svt_chi_common_transaction::EVICT; \
+  endcase\
+  case(axi_slave_xact.atomic_transaction_type) \
+    svt_axi_transaction::COMPARE : atomic_operation = svt_chi_transaction::COMPARE;\
+    svt_axi_transaction::LOAD : atomic_operation = svt_chi_transaction::LOAD; \
+    svt_axi_transaction::STORE : atomic_operation = svt_chi_transaction::STORE; \
+    svt_axi_transaction::SWAP : atomic_operation = svt_chi_transaction::SWAP;\
+    default: atomic_operation = svt_chi_transaction::NON_ATOMIC;\
+  endcase
+`endif
+
+`ifndef SVT_CHI_ALLOWED_SNOOP_XACT
+  `define SVT_CHI_ALLOWED_SNOOP_XACT(xact,snoop,sys_cfg) \
+        ((xact.is_valid_for_invisible_cache_mode() == 1) && \
+         ( \
+          ( \
+           (xact.xact_type == svt_chi_transaction::READNOSNP) && \
+            ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPONCE) \
+            `ifdef SVT_CHI_ISSUE_B_ENABLE \
+             || \
+             (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPONCEFWD) \
+            `endif \
+            ) \
+           ) \
+          || \
+          ( \
+           (xact.xact_type == svt_chi_transaction::WRITENOSNPFULL) && \
+           ( \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPMAKEINVALID) \
+            `ifdef SVT_CHI_ISSUE_E_ENABLE \
+            || \
+            (snoop.cfg.mem_tagging_enable && xact.req_tag_op != svt_chi_transaction::TAG_UPDATE && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) \
+            `endif \
+           ) \
+          ) \
+          `ifdef SVT_CHI_ISSUE_E_ENABLE \
+          || \
+          ( \
+           (xact.xact_type == svt_chi_transaction::WRITENOSNPZERO) && \
+           ( \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPMAKEINVALID) \
+            || \
+            (snoop.cfg.mem_tagging_enable && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) \
+           ) \
+          ) \
+          || \
+          ( \
+           (xact.xact_type == svt_chi_transaction::WRITENOSNPFULL_CLEANSHARED || xact.xact_type == svt_chi_transaction::WRITENOSNPFULL_CLEANINVALID || xact.xact_type == svt_chi_transaction::WRITENOSNPFULL_CLEANSHAREDPERSISTSEP) && \
+           ( \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPMAKEINVALID) \
+            || \
+            (snoop.cfg.mem_tagging_enable && xact.req_tag_op != svt_chi_transaction::TAG_UPDATE && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) \
+           ) \
+          ) || \
+          ( \
+           (xact.xact_type == svt_chi_transaction::WRITENOSNPPTL_CLEANSHARED || xact.xact_type == svt_chi_transaction::WRITENOSNPPTL_CLEANINVALID || xact.xact_type == svt_chi_transaction::WRITENOSNPPTL_CLEANSHAREDPERSISTSEP) && \
+           ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) \
+            || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUE) \
+           ) \
+          ) \
+          `endif \
+          || \
+          ( \
+           (xact.xact_type == svt_chi_transaction::WRITENOSNPPTL) && \
+           ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) \
+            || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUE) \
+           ) \
+          ) \
+         ) \
+        ) || \
+        ((xact.xact_type == svt_chi_transaction::READONCE) && \
+          ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPONCE) \
+          `ifdef SVT_CHI_ISSUE_B_ENABLE \
+          || \
+          (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPONCEFWD) \
+          `endif \
+         ) \
+        ) || \
+        ((xact.xact_type == svt_chi_transaction::READCLEAN) && \
+         ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEAN) \
+          `ifdef SVT_CHI_ISSUE_B_ENABLE \
+          || \
+          (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANFWD) \
+          || \
+          (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPNOTSHAREDDIRTYFWD) \
+          `endif \
+         ) \
+        ) || \
+        ((xact.xact_type == svt_chi_transaction::READSHARED) && \
+         ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPSHARED) \
+          `ifdef SVT_CHI_ISSUE_B_ENABLE \
+          || \
+          (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPNOTSHAREDDIRTYFWD)  \
+          || \
+          (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPSHAREDFWD)  \
+          `endif \
+         ) \
+        ) || \
+        ((xact.xact_type == svt_chi_transaction::READUNIQUE) && \
+         ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUE) \
+          `ifdef SVT_CHI_ISSUE_B_ENABLE \
+          || \
+          (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUEFWD)  \
+          `endif \
+         ) \
+        ) || \
+        ((xact.xact_type == svt_chi_transaction::CLEANUNIQUE) && \
+         (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID)) || \
+        `ifdef SVT_CHI_ISSUE_E_ENABLE \
+        ((xact.xact_type == svt_chi_transaction::MAKEREADUNIQUE) && \
+         ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) \
+           || (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPMAKEINVALID)  \
+           || (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUE)  \
+           || (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUEFWD)  \
+           || (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPPREFERUNIQUEFWD && xact.is_exclusive == 1)  \
+           || (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPPREFERUNIQUE && xact.is_exclusive == 1)  \
+           || (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPNOTSHAREDDIRTYFWD && xact.is_exclusive == 1)  \
+           || (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPNOTSHAREDDIRTY && xact.is_exclusive == 1)  \
+           || (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANFWD && xact.is_exclusive == 1)  \
+           || (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEAN && xact.is_exclusive == 1)  \
+           || (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPSHARED && xact.is_exclusive == 1)  \
+         ) \
+        ) || \
+        ((xact.xact_type == svt_chi_transaction::READPREFERUNIQUE) && \
+         ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPPREFERUNIQUE) \
+           || (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPPREFERUNIQUEFWD) \
+         ) \
+        ) || \
+        `endif \
+        ((xact.xact_type == svt_chi_transaction::MAKEUNIQUE) && \
+         ( \
+          (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPMAKEINVALID) \
+          `ifdef SVT_CHI_ISSUE_E_ENABLE \
+           || \
+           (snoop.cfg.mem_tagging_enable && xact.req_tag_op != svt_chi_transaction::TAG_UPDATE && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) \
+          `endif \
+         ) \
+        ) || \
+        ((xact.xact_type == svt_chi_transaction::CLEANSHARED) && \
+         (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANSHARED)) || \
+        ((xact.xact_type == svt_chi_transaction::CLEANINVALID) && \
+         (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID)) || \
+        ((xact.xact_type == svt_chi_transaction::MAKEINVALID) && \
+         ( \
+         (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPMAKEINVALID) \
+          `ifdef SVT_CHI_ISSUE_E_ENABLE \
+           || \
+           (snoop.cfg.mem_tagging_enable && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) \
+          `endif \
+         ) \
+        ) || \
+        ((xact.xact_type == svt_chi_transaction::WRITEUNIQUEFULL) && \
+         ( \
+          (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPMAKEINVALID) \
+          `ifdef SVT_CHI_ISSUE_E_ENABLE \
+           || \
+           (snoop.cfg.mem_tagging_enable && xact.req_tag_op != svt_chi_transaction::TAG_UPDATE && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) \
+          `endif \
+         ) \
+        ) || \
+        `ifdef SVT_CHI_ISSUE_E_ENABLE \
+        ((xact.xact_type == svt_chi_transaction::WRITEUNIQUEZERO) && \
+         ( \
+          (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPMAKEINVALID) \
+           || \
+           (snoop.cfg.mem_tagging_enable && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) \
+         ) \
+        ) || \
+        ((xact.xact_type == svt_chi_transaction::WRITEUNIQUEFULL_CLEANSHARED || xact.xact_type == svt_chi_transaction::WRITEUNIQUEFULL_CLEANSHAREDPERSISTSEP) && \
+         ( \
+          (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPMAKEINVALID) \
+           || \
+           (snoop.cfg.mem_tagging_enable && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) \
+         ) \
+        ) || \
+        ((xact.xact_type == svt_chi_transaction::WRITEUNIQUEPTL_CLEANSHARED || xact.xact_type == svt_chi_transaction::WRITEUNIQUEPTL_CLEANSHAREDPERSISTSEP) && \
+         ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) || \
+          (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUE))) || \
+        ((xact.xact_type == svt_chi_transaction::WRITEBACKFULL_CLEANSHARED || xact.xact_type == svt_chi_transaction::WRITEBACKFULL_CLEANSHAREDPERSISTSEP) && \
+         (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANSHARED)) || \
+        ((xact.xact_type == svt_chi_transaction::WRITEBACKFULL_CLEANINVALID) && \
+         (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID)) || \
+        ((xact.xact_type == svt_chi_transaction::WRITECLEANFULL_CLEANSHARED || xact.xact_type == svt_chi_transaction::WRITECLEANFULL_CLEANSHAREDPERSISTSEP) && \
+         (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANSHARED)) || \
+        ((xact.xact_type == svt_chi_transaction::STASHONCESEPUNIQUE) && \
+         ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPSTASHUNIQUE) || \
+          (sys_cfg.expect_snpuniquestash_for_stashonceunique_xact && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUESTASH) \
+         )) || \
+        ((xact.xact_type == svt_chi_transaction::STASHONCESEPSHARED) && \
+         (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPSTASHSHARED)) || \
+        `endif \
+        ((xact.xact_type == svt_chi_transaction::WRITEUNIQUEPTL) && \
+         ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) || \
+          (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUE))) || \
+        `ifdef SVT_CHI_ISSUE_B_ENABLE \
+          ((xact.xact_type == svt_chi_transaction::READSPEC) && \
+           (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEAN)) || \
+          ((xact.xact_type == svt_chi_transaction::READONCECLEANINVALID) && \
+           ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPONCE) || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPONCEFWD) || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPMAKEINVALID) || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUE))) || \
+          ((xact.xact_type == svt_chi_transaction::READONCEMAKEINVALID) && \
+           ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPONCE) || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPONCEFWD) || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPMAKEINVALID) || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUE))) || \
+          ((xact.xact_type == svt_chi_transaction::READNOTSHAREDDIRTY) && \
+           ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPNOTSHAREDDIRTY) || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEAN) || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPNOTSHAREDDIRTYFWD) || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPSHARED))) || \
+          ((xact.xact_type == svt_chi_transaction::CLEANSHAREDPERSIST) && \
+           (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANSHARED)) || \
+           `ifdef SVT_CHI_ISSUE_D_ENABLE \
+           ((xact.xact_type == svt_chi_transaction::CLEANSHAREDPERSISTSEP) && \
+           (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANSHARED)) || \
+           `endif \
+          ((xact.xact_type == svt_chi_transaction::WRITEUNIQUEFULLSTASH) && \
+           ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPMAKEINVALIDSTASH) || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPMAKEINVALID) \
+            `ifdef SVT_CHI_ISSUE_E_ENABLE \
+             || \
+             (snoop.cfg.mem_tagging_enable && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID) \
+             || \
+             (snoop.cfg.mem_tagging_enable && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUESTASH) \
+             || \
+             (snoop.cfg.mem_tagging_enable && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUE) \
+            `endif \
+           )) || \
+          ((xact.xact_type == svt_chi_transaction::WRITEUNIQUEPTLSTASH) && \
+           ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUESTASH) || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUE))) || \
+          ((xact.xact_type == svt_chi_transaction::STASHONCEUNIQUE) && \
+           ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPSTASHUNIQUE) || \
+            (sys_cfg.expect_snpuniquestash_for_stashonceunique_xact && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUESTASH) || \
+            (sys_cfg.expect_snponce_for_stashonceunique_xact && snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPONCE) \
+           )) || \
+          ((xact.xact_type == svt_chi_transaction::STASHONCESHARED) && \
+           (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPSTASHSHARED)) || \
+          (((xact.xact_type == svt_chi_transaction::ATOMICSTORE_ADD) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICSTORE_CLR) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICSTORE_EOR) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICSTORE_SET) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICSTORE_SMAX) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICSTORE_SMIN) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICSTORE_UMAX) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICSTORE_UMIN) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICLOAD_ADD) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICLOAD_CLR) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICLOAD_EOR) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICLOAD_SET) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICLOAD_SMAX) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICLOAD_SMIN) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICLOAD_UMAX) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICLOAD_UMIN) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICSWAP) || \
+            (xact.xact_type == svt_chi_transaction::ATOMICCOMPARE)) && \
+           ((snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPUNIQUE) || \
+            (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPCLEANINVALID))) || \
+        `endif \
+        ((xact.xact_type == svt_chi_transaction::DVMOP) && \
+         (snoop.snp_req_msg_type == svt_chi_snoop_transaction::SNPDVMOP))
+`else // !`ifndef SVT_CHI_ALLOWED_SNOOP_XACT
+  `define SVT_CHI_ALLOWED_SNOOP_XACT_MACRO_DEFINED_IN_TB 1
+`endif
+
+`define svt_chi_xxm_fatal(id,msg) \
+`ifdef SVT_VMM_TECHNOLOGY \
+`svt_fatal(id,msg); \
+`else \
+`svt_xvm_fatal(id,msg); \
+`endif
+
+`define svt_chi_xxm_error(id,msg) \
+`ifdef SVT_VMM_TECHNOLOGY \
+`svt_error(id,msg); \
+`else \
+`svt_xvm_error(id,msg); \
+`endif
+
+`define svt_chi_xxm_warning(id,msg) \
+`ifdef SVT_VMM_TECHNOLOGY \
+`svt_warning(id,msg); \
+`else \
+`svt_xvm_warning(id,msg); \
+`endif
+
+`define svt_chi_xxm_note(id,msg) \
+`ifdef SVT_VMM_TECHNOLOGY \
+`svt_note(id,msg); \
+`else \
+`svt_xvm_note(id,msg); \
+`endif
+
+`define svt_chi_xxm_debug(id,msg) \
+`ifdef SVT_VMM_TECHNOLOGY \
+`svt_debug(id,msg); \
+`else \
+`svt_xvm_debug(id,msg); \
+`endif
+
+`define svt_chi_xxm_verbose(id,msg) \
+`ifdef SVT_VMM_TECHNOLOGY \
+`svt_verbose(id,msg); \
+`else \
+`svt_xvm_verbose(id,msg); \
+`endif
+      
+/** Defines for enabling protocol checks coverage at protocol layer, 
+ *  link layer and system level checks. 
+ */
+`ifndef CHI_ENABLE_PROTOCOL_CHECK_COV
+`define CHI_ENABLE_PROTOCOL_CHECK_COV 0
+`endif
+
+/** Define for controlling default value for enabling DMT*/
+`ifndef SVT_CHI_ENABLE_DMT
+  `define SVT_CHI_ENABLE_DMT 0
+`endif                        
+
+/** Define for controlling default value for enabling DCT*/
+`ifndef SVT_CHI_ENABLE_DCT
+  `define SVT_CHI_ENABLE_DCT 0
+`endif                        
+
+/** Define for controlling default value for enabling DWT*/
+`ifndef SVT_CHI_ENABLE_DWT
+  `define SVT_CHI_ENABLE_DWT 0
+`endif                        
+
+/** Define for controlling default value for enabling Stash*/
+`ifndef SVT_CHI_ENABLE_STASH
+  `define SVT_CHI_ENABLE_STASH 0
+`endif                        
+
+/** Define for controlling default value for enabling Stash Data Pull*/
+`ifndef SVT_CHI_ENABLE_STASH_DATA_PULL
+  `define SVT_CHI_ENABLE_STASH_DATA_PULL 0
+`endif                        
+
+/** Define for controlling default value for enabling Ordered Stash Data Pull*/
+`ifndef SVT_CHI_ENABLE_ORD_STASH_DATA_PULL
+  `define SVT_CHI_ENABLE_ORD_STASH_DATA_PULL 0
+`endif                        
+
+/** Define for controlling default value for enabling Seperate Read Data and Home Response */
+`ifndef SVT_CHI_ENABLE_SEP_RD_DATA_SEP_RSP
+  `define SVT_CHI_ENABLE_SEP_RD_DATA_SEP_RSP 0
+`endif             
+            
+/** Define for controlling default value for enabling Memory Tagging */
+`ifndef SVT_CHI_ENABLE_MEMORY_TAGGING
+  `define SVT_CHI_ENABLE_MEMORY_TAGGING 0
+`endif  
+
+/** Define for controlling the default value of svt_chi_system_configuration::abf_enable */
+`ifndef SVT_CHI_SYS_CFG_ABF_ENABLE
+  `define SVT_CHI_SYS_CFG_ABF_ENABLE 0
+`endif
+
+/** Define for controlling the default value of svt_chi_hn_status::address_based_flush_policy */
+`ifndef SVT_CHI_HN_STATUS_DEFAULT_ADDRESS_BASED_FLUSH_POLICY
+  `define SVT_CHI_HN_STATUS_DEFAULT_ADDRESS_BASED_FLUSH_POLICY CLEANINVALID_ABF
+`endif
+            
+/** Defines CHI exclusive access status **/
+`define SVT_CHI_COHERENT_EXCL_ACCESS_INITIAL 0 
+`define SVT_CHI_COHERENT_EXCL_ACCESS_PASS    1 
+`define SVT_CHI_COHERENT_EXCL_ACCESS_FAIL    2
+
+/** Defines CHI exclusive monitor status**/
+`define SVT_CHI_EXCL_MON_INVALID 0 
+`define SVT_CHI_EXCL_MON_SET     1 
+`define SVT_CHI_EXCL_MON_RESET   2
+
+/** Defines CHI exclusive transaction drop condition**/
+`define SVT_CHI_EXCL_MON_FAILURE_COND_DEFAULT_VALUE_XACT_DROPPED 0 
+`define SVT_CHI_EXCL_MON_RESET_ACCESS_FAIL_XACT_DROPPED          1 
+`define SVT_CHI_EXCL_MON_SET_ACCESS_FAIL_XACT_DROPPED            2 
+`define SVT_CHI_EXCL_MON_SET_ACCESS_PASS_XACT_DROPPED            3 
+`define SVT_CHI_EXCL_MON_RESET_SNOOP_INVALIDATION_XACT_DROPPED   4 
+`define SVT_CHI_EXCL_MON_RESET_STORE_WITHOUT_LOAD_XACT_DROPPED   5 
+`define SVT_CHI_EXCL_MON_INVALID_MAX_EXCL_ACCESS_XACT_DROPPED    6 
+
+/** Maximum number of active exclusive accesses at a given node**/
+`ifndef SVT_CHI_MAX_NUM_EXCLUSIVE_ACCESS
+`define SVT_CHI_MAX_NUM_EXCLUSIVE_ACCESS 4 
+`endif
+
+/** Define the width of enum bits **/
+`define SVT_CHI_ERROR_CTRL_REG_WIDTH    1
+`define SVT_CHI_CTRL_REG_NO_ERR          `SVT_CHI_ERROR_CTRL_REG_WIDTH'h0
+`define SVT_CHI_SNP_ERR_EXCL_SEQ_FAIL    `SVT_CHI_ERROR_CTRL_REG_WIDTH'h1
+
+/** Define Max LPID width used for monitoring exclusive accesses by exclusive monitor **/
+`ifndef SVT_CHI_MAX_LPID_WIDTH
+`define SVT_CHI_MAX_LPID_WIDTH    `SVT_CHI_LPID_WIDTH
+`endif
+
+`define SVT_CHI_NON_COHERENT_EXCLUSIVE_ACCESS_CONDITION(xact) \
+    ((xact.xact_type == svt_chi_transaction::WRITENOSNPPTL || \
+      xact.xact_type == svt_chi_transaction::WRITENOSNPFULL || \
+       xact.xact_type == svt_chi_transaction::READNOSNP  ) \
+    )
+
+`ifndef SVT_CHI_MAX_READ_FIFO_DRAIN_RATE
+  `define SVT_CHI_MAX_READ_FIFO_DRAIN_RATE 64
+`endif
+
+`ifndef SVT_CHI_MAX_WRITE_FIFO_FILL_RATE
+  `define SVT_CHI_MAX_WRITE_FIFO_FILL_RATE 64
+`endif
+
+`ifndef SVT_CHI_MAX_READ_FIFO_FULL_LEVEL
+  // drain_rate * max_num_outstanding
+  `define SVT_CHI_MAX_READ_FIFO_FULL_LEVEL 8192 
+`endif
+
+`ifndef SVT_CHI_MAX_WRITE_FIFO_FULL_LEVEL
+  // drain_rate * max_num_outstanding
+  `define SVT_CHI_MAX_WRITE_FIFO_FULL_LEVEL 8192 
+`endif
+
+//##################################################################
+//## Exclusion setup for CHI System Environment
+//##################################################################
+
+//# Exclude CHI Coverage
+//# -------------------------------------------
+`ifdef SVT_AMBA_EXCLUDE_CHI_COVERAGE
+  `define  SVT_AMBA_EXCLUDE_CHI_MONITOR_COVERAGE  1  //# Exclude CHI Monitor Coverage
+  `define  SVT_AMBA_EXCLUDE_CHI_CHECK_COVERAGE    1  //# Exclude CHI Check Coverage
+
+  //# Capturing Macro name as string based on other macros define
+  `define  EXCLUDE_CHI_SYSTEM_MONITOR_COVERAGE_BASED_ON_MACRO_STRING         SVT_AMBA_EXCLUDE_CHI_COVERAGE
+  `define  EXCLUDE_CHI_NODE_PROTOCOL_MONITOR_COVERAGE_BASED_ON_MACRO_STRING  SVT_AMBA_EXCLUDE_CHI_COVERAGE
+  `define  EXCLUDE_CHI_RN_LINK_MONITOR_COVERAGE_BASED_ON_MACRO_STRING        SVT_AMBA_EXCLUDE_CHI_COVERAGE
+  `define  EXCLUDE_CHI_SN_LINK_MONITOR_COVERAGE_BASED_ON_MACRO_STRING        SVT_AMBA_EXCLUDE_CHI_COVERAGE
+  `define  EXCLUDE_CHI_SYSTEM_CHECK_COVERAGE_BASED_ON_MACRO_STRING           SVT_AMBA_EXCLUDE_CHI_COVERAGE
+  `define  EXCLUDE_CHI_NODE_PL_CHECK_COVERAGE_BASED_ON_MACRO_STRING          SVT_AMBA_EXCLUDE_CHI_COVERAGE
+  `define  EXCLUDE_CHI_NODE_LL_CHECK_COVERAGE_BASED_ON_MACRO_STRING          SVT_AMBA_EXCLUDE_CHI_COVERAGE
+`endif
+
+
+
+//# Exclude CHI Monitor Coverage
+`ifdef SVT_AMBA_EXCLUDE_CHI_MONITOR_COVERAGE
+  `define  SVT_AMBA_EXCLUDE_CHI_SYSTEM_MONITOR_COVERAGE         1  //# Exclude CHI System Monitor Coverage
+  `define  SVT_AMBA_EXCLUDE_CHI_NODE_PROTOCOL_MONITOR_COVERAGE  1  //# Exclude CHI Node Protocol Monitor Coverage
+  `define  SVT_AMBA_EXCLUDE_CHI_RN_LINK_MONITOR_COVERAGE        1  //# Exclude CHI RN Link Monitor Coverage
+  `define  SVT_AMBA_EXCLUDE_CHI_SN_LINK_MONITOR_COVERAGE        1  //# Exclude CHI SN Link Monitor Coverage
+
+  //# Capturing Macro name as string based on other macros define
+  `ifndef  EXCLUDE_CHI_SYSTEM_MONITOR_COVERAGE_BASED_ON_MACRO_STRING
+           `define  EXCLUDE_CHI_SYSTEM_MONITOR_COVERAGE_BASED_ON_MACRO_STRING         SVT_AMBA_EXCLUDE_CHI_MONITOR_COVERAGE
+  `endif
+  `ifndef  EXCLUDE_CHI_NODE_PROTOCOL_MONITOR_COVERAGE_BASED_ON_MACRO_STRING
+           `define  EXCLUDE_CHI_NODE_PROTOCOL_MONITOR_COVERAGE_BASED_ON_MACRO_STRING  SVT_AMBA_EXCLUDE_CHI_MONITOR_COVERAGE
+  `endif
+  `ifndef  EXCLUDE_CHI_RN_LINK_MONITOR_COVERAGE_BASED_ON_MACRO_STRING
+           `define  EXCLUDE_CHI_RN_LINK_MONITOR_COVERAGE_BASED_ON_MACRO_STRING        SVT_AMBA_EXCLUDE_CHI_MONITOR_COVERAGE
+  `endif
+  `ifndef  EXCLUDE_CHI_SN_LINK_MONITOR_COVERAGE_BASED_ON_MACRO_STRING
+           `define  EXCLUDE_CHI_SN_LINK_MONITOR_COVERAGE_BASED_ON_MACRO_STRING        SVT_AMBA_EXCLUDE_CHI_MONITOR_COVERAGE
+  `endif
+
+`endif
+
+//# Exclude CHI Check Coverage
+`ifdef SVT_AMBA_EXCLUDE_CHI_CHECK_COVERAGE
+  `define  SVT_AMBA_EXCLUDE_CHI_SYSTEM_CHECK_COVERAGE   1  //# Exclude CHI System Check Coverage
+  `define  SVT_AMBA_EXCLUDE_CHI_NODE_PL_CHECK_COVERAGE  1  //# Exclude CHI Protocol Check Coverage
+  `define  SVT_AMBA_EXCLUDE_CHI_NODE_LL_CHECK_COVERAGE  1  //# Exclude CHI Link Check Coverage
+
+  `ifndef  EXCLUDE_CHI_SYSTEM_CHECK_COVERAGE_BASED_ON_MACRO_STRING
+           `define  EXCLUDE_CHI_SYSTEM_CHECK_COVERAGE_BASED_ON_MACRO_STRING           SVT_AMBA_EXCLUDE_CHI_CHECK_COVERAGE
+  `endif
+  `ifndef  EXCLUDE_CHI_NODE_PL_CHECK_COVERAGE_BASED_ON_MACRO_STRING
+           `define  EXCLUDE_CHI_NODE_PL_CHECK_COVERAGE_BASED_ON_MACRO_STRING          SVT_AMBA_EXCLUDE_CHI_CHECK_COVERAGE
+  `endif
+  `ifndef  EXCLUDE_CHI_NODE_LL_CHECK_COVERAGE_BASED_ON_MACRO_STRING
+           `define  EXCLUDE_CHI_NODE_LL_CHECK_COVERAGE_BASED_ON_MACRO_STRING          SVT_AMBA_EXCLUDE_CHI_CHECK_COVERAGE
+  `endif
+`endif
+
+//# -------------------------------------------
+
+//# Capturing Macro name as string based on other macros define
+`ifdef  SVT_AMBA_EXCLUDE_CHI_SYSTEM_MONITOR_COVERAGE
+   `ifndef  EXCLUDE_CHI_SYSTEM_MONITOR_COVERAGE_BASED_ON_MACRO_STRING
+        `define  EXCLUDE_CHI_SYSTEM_MONITOR_COVERAGE_BASED_ON_MACRO_STRING         SVT_AMBA_EXCLUDE_CHI_SYSTEM_MONITOR_COVERAGE
+   `endif
+`endif
+`ifdef  SVT_AMBA_EXCLUDE_CHI_NODE_PROTOCOL_MONITOR_COVERAGE
+  `ifndef  EXCLUDE_CHI_NODE_PROTOCOL_MONITOR_COVERAGE_BASED_ON_MACRO_STRING
+        `define  EXCLUDE_CHI_NODE_PROTOCOL_MONITOR_COVERAGE_BASED_ON_MACRO_STRING  SVT_AMBA_EXCLUDE_CHI_NODE_PROTOCOL_MONITOR_COVERAGE
+   `endif
+`endif
+`ifdef  SVT_AMBA_EXCLUDE_CHI_RN_LINK_MONITOR_COVERAGE
+  `ifndef  EXCLUDE_CHI_RN_LINK_MONITOR_COVERAGE_BASED_ON_MACRO_STRING
+        `define  EXCLUDE_CHI_RN_LINK_MONITOR_COVERAGE_BASED_ON_MACRO_STRING        SVT_AMBA_EXCLUDE_CHI_RN_LINK_MONITOR_COVERAGE
+   `endif
+`endif
+`ifdef  SVT_AMBA_EXCLUDE_CHI_SN_LINK_MONITOR_COVERAGE
+  `ifndef  EXCLUDE_CHI_SN_LINK_MONITOR_COVERAGE_BASED_ON_MACRO_STRING
+        `define  EXCLUDE_CHI_SN_LINK_MONITOR_COVERAGE_BASED_ON_MACRO_STRING        SVT_AMBA_EXCLUDE_CHI_SN_LINK_MONITOR_COVERAGE
+   `endif
+`endif
+
+`ifdef  SVT_AMBA_EXCLUDE_CHI_SYSTEM_CHECK_COVERAGE
+  `ifndef  EXCLUDE_CHI_SYSTEM_CHECK_COVERAGE_BASED_ON_MACRO_STRING
+        `define  EXCLUDE_CHI_SYSTEM_CHECK_COVERAGE_BASED_ON_MACRO_STRING   SVT_AMBA_EXCLUDE_CHI_SYSTEM_CHECK_COVERAGE
+   `endif
+`endif
+`ifdef  SVT_AMBA_EXCLUDE_CHI_NODE_PL_CHECK_COVERAGE
+  `ifndef  EXCLUDE_CHI_NODE_PL_CHECK_COVERAGE_BASED_ON_MACRO_STRING
+        `define  EXCLUDE_CHI_NODE_PL_CHECK_COVERAGE_BASED_ON_MACRO_STRING  SVT_AMBA_EXCLUDE_CHI_NODE_PL_CHECK_COVERAGE
+   `endif
+`endif
+`ifdef  SVT_AMBA_EXCLUDE_CHI_NODE_LL_CHECK_COVERAGE
+  `ifndef  EXCLUDE_CHI_NODE_LL_CHECK_COVERAGE_BASED_ON_MACRO_STRING
+        `define  EXCLUDE_CHI_NODE_LL_CHECK_COVERAGE_BASED_ON_MACRO_STRING  SVT_AMBA_EXCLUDE_CHI_NODE_LL_CHECK_COVERAGE
+   `endif
+`endif
+
+
+//##################################################################
+
+// Defines CHI Scenario Sequence
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+
+// Write followed by Read Scenario Combination
+`define SVT_CHI_WRITE_FOLLOWED_BY_READ_PATTERN_SEQ                                    1_0
+`define SVT_CHI_REQ_ORDERED_WR_FOLLOWED_BY_REQ_ORDERED_RD_PATTERN_SEQ                 1_1
+`define SVT_CHI_REQ_ORDERED_WR_FOLLOWED_BY_REQ_ORDERED_RD_W_SAME_ADDR_PATTERN_SEQ     1_1_1
+`define SVT_CHI_REQ_ORDERED_WR_FOLLOWED_BY_REQ_ORDERED_RD_W_DIFF_ADDR_PATTERN_SEQ     1_1_2
+`define SVT_CHI_REQ_ORDERED_WR_FOLLOWED_BY_EP_ORDERED_RD_PATTERN_SEQ                  1_2
+`define SVT_CHI_REQ_ORDERED_WR_FOLLOWED_BY_EP_ORDERED_RD_W_SAME_ADDR_PATTERN_SEQ      1_2_1
+`define SVT_CHI_REQ_ORDERED_WR_FOLLOWED_BY_EP_ORDERED_RD_W_DIFF_ADDR_PATTERN_SEQ      1_2_2
+`define SVT_CHI_EP_ORDERED_WR_FOLLOWED_BY_EP_ORDERED_RD_PATTERN_SEQ                   1_3
+`define SVT_CHI_EP_ORDERED_WR_FOLLOWED_BY_EP_ORDERED_RD_W_SAME_ADDR_PATTERN_SEQ       1_3_1
+`define SVT_CHI_EP_ORDERED_WR_FOLLOWED_BY_EP_ORDERED_RD_W_DIFF_ADDR_PATTERN_SEQ       1_3_2
+`define SVT_CHI_EP_ORDERED_WR_FOLLOWED_BY_REQ_ORDERED_RD_PATTERN_SEQ                  1_4
+`define SVT_CHI_EP_ORDERED_WR_FOLLOWED_BY_REQ_ORDERED_RD_W_SAME_ADDR_PATTERN_SEQ      1_4_1
+`define SVT_CHI_EP_ORDERED_WR_FOLLOWED_BY_REQ_ORDERED_RD_W_DIFF_ADDR_PATTERN_SEQ      1_4_2
+
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_WR_FOLLOWED_BY_RD_W_SAME_CACHELINE_ADDR_PATTERN_SEQ                             1_5
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_NO_LIKELYSHARED_NO_ORDER_WR_FOLLOWED_BY_RD_W_SAME_CACHELINE_ADDR_PATTERN_SEQ    1_5_1
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_NO_LIKELYSHARED_ORDER_WR_FOLLOWED_BY_RD_W_SAME_CACHELINE_ADDR_PATTERN_SEQ       1_5_2
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_LIKELYSHARED_NO_ORDER_WR_FOLLOWED_BY_RD_W_SAME_CACHELINE_ADDR_PATTERN_SEQ       1_5_3
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_LIKELYSHARED_ORDER_WR_FOLLOWED_BY_RD_W_SAME_CACHELINE_ADDR_PATTERN_SEQ          1_5_4
+
+
+// Write followed by Write Scenario Combination
+`define SVT_CHI_WRITE_FOLLOWED_BY_WRITE_PATTERN_SEQ                                   2_0
+`define SVT_CHI_REQ_ORDERED_WR_FOLLOWED_BY_REQ_ORDERED_WR_PATTERN_SEQ                 2_1
+`define SVT_CHI_REQ_ORDERED_WR_FOLLOWED_BY_REQ_ORDERED_WR_W_SAME_ADDR_PATTERN_SEQ     2_1_1
+`define SVT_CHI_REQ_ORDERED_WR_FOLLOWED_BY_REQ_ORDERED_WR_W_DIFF_ADDR_PATTERN_SEQ     2_1_2
+`define SVT_CHI_REQ_ORDERED_WR_FOLLOWED_BY_EP_ORDERED_WR_PATTERN_SEQ                  2_2
+`define SVT_CHI_REQ_ORDERED_WR_FOLLOWED_BY_EP_ORDERED_WR_W_SAME_ADDR_PATTERN_SEQ      2_2_1
+`define SVT_CHI_REQ_ORDERED_WR_FOLLOWED_BY_EP_ORDERED_WR_W_DIFF_ADDR_PATTERN_SEQ      2_2_2
+`define SVT_CHI_EP_ORDERED_WR_FOLLOWED_BY_EP_ORDERED_WR_PATTERN_SEQ                   2_3
+`define SVT_CHI_EP_ORDERED_WR_FOLLOWED_BY_EP_ORDERED_WR_W_SAME_ADDR_PATTERN_SEQ       2_3_1
+`define SVT_CHI_EP_ORDERED_WR_FOLLOWED_BY_EP_ORDERED_WR_W_DIFF_ADDR_PATTERN_SEQ       2_3_2
+`define SVT_CHI_EP_ORDERED_WR_FOLLOWED_BY_REQ_ORDERED_WR_PATTERN_SEQ                  2_4
+`define SVT_CHI_EP_ORDERED_WR_FOLLOWED_BY_REQ_ORDERED_WR_W_SAME_ADDR_PATTERN_SEQ      2_4_1
+`define SVT_CHI_EP_ORDERED_WR_FOLLOWED_BY_REQ_ORDERED_WR_W_DIFF_ADDR_PATTERN_SEQ      2_4_2
+
+`define SVT_CHI_BACK2BACK_ORDERED_WRITEUNIQUE_PATTERN_SEQ                             2_5
+`define SVT_CHI_BACK2BACK_ORDERED_WRITEUNIQUE_W_EXPCOMPACK_PATTERN_SEQ                2_5_1
+
+`define SVT_CHI_BACK2BACK_ORDERED_WRITENOSNP_PATTERN_SEQ                             2_5_0_0
+`define SVT_CHI_BACK2BACK_REQ_ORDERED_WRITENOSNP_PATTERN_SEQ                         2_5_0_1
+`define SVT_CHI_BACK2BACK_REQ_ORDERED_WRITENOSNP_EP_ORDERED_WRITENOSNP_PATTERN_SEQ   2_5_0_2
+`define SVT_CHI_BACK2BACK_EP_ORDERED_WRITENOSNP_PATTERN_SEQ                          2_5_0_3
+`define SVT_CHI_BACK2BACK_EP_ORDERED_WRITENOSNP_REQ_ORDERED_WRITENOSNP_PATTERN_SEQ   2_5_0_4
+`define SVT_CHI_BACK2BACK_ORDERED_WRITENOSNP_W_EXPCOMPACK_PATTERN_SEQ                2_5_0_5
+
+`define SVT_CHI_COMPACK_FOR_SECOND_OWO_WRITEUNIQUE_BEFORE_COMP_BUT_AFTER_COMP_FOR_FIRST_OWO_WRITEUNQIUE             2_5_0_6
+`define SVT_CHI_COMPACK_FOR_SECOND_OWO_WRITEUNIQUE_BEFORE_COMP_BUT_AFTER_COMP_FOR_FIRST_OWO_WRITEUNQIUE_W_SAME_ADDR 2_5_0_7
+`define SVT_CHI_COMPACK_FOR_SECOND_OWO_WRITENOSNP_BEFORE_COMP_BUT_AFTER_COMP_FOR_FIRST_OWO_WRITENOSNP               2_5_0_8
+`define SVT_CHI_COMPACK_FOR_SECOND_OWO_WRITENOSNP_BEFORE_COMP_BUT_AFTER_COMP_FOR_FIRST_OWO_WRITENOSNP_W_SAME_ADDR   2_5_0_9
+
+`define SVT_CHI_BACK2BACK_COPYBACK_TRANSACTION_PATTERN_SEQ                                      2_5_2
+`define SVT_CHI_BACK2BACK_COPYBACK_TRANS_W_SAME_OR_OVERLAPPING_ADDR_PATTERN_SEQ                 2_5_2_1
+`define SVT_CHI_BACK2BACK_COPYBACK_TRANS_W_SAME_OR_OVERLAPPING_ADDR_W_ALLOW_RETRY_PATTERN_SEQ   2_5_2_1_1
+`define SVT_CHI_BACK2BACK_COPYBACK_TRANS_W_SAME_OR_OVERLAPPING_ADDR_WO_ALLOW_RETRY_PATTERN_SEQ  2_5_2_1_2
+
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_WR_FOLLOWED_BY_WR_W_SAME_CACHELINE_ADDR_PATTERN_SEQ                             2_6
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_NO_LIKELYSHARED_NO_ORDER_WR_FOLLOWED_BY_WR_W_SAME_CACHELINE_ADDR_PATTERN_SEQ    2_6_1
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_NO_LIKELYSHARED_ORDER_WR_FOLLOWED_BY_WR_W_SAME_CACHELINE_ADDR_PATTERN_SEQ       2_6_2
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_LIKELYSHARED_NO_ORDER_WR_FOLLOWED_BY_WR_W_SAME_CACHELINE_ADDR_PATTERN_SEQ       2_6_3
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_LIKELYSHARED_ORDER_WR_FOLLOWED_BY_WR_W_SAME_CACHELINE_ADDR_PATTERN_SEQ          2_6_4
+
+`define SVT_CHI_STREAMING_ORDERED_WRITEUNIQUE_TRANSACTIONS                            2_7_0
+`define SVT_CHI_STREAMING_ORDERED_WRITENOSNP_TRANSACTIONS                             2_7_1
+
+
+
+// Read followed by Read Scenario Combination
+`define SVT_CHI_READ_FOLLOWED_BY_READ_PATTERN_SEQ                                     3_0
+`define SVT_CHI_REQ_ORDERED_RD_FOLLOWED_BY_REQ_ORDERED_RD_PATTERN_SEQ                 3_1
+`define SVT_CHI_REQ_ORDERED_RD_FOLLOWED_BY_REQ_ORDERED_RD_W_SAME_ADDR_PATTERN_SEQ     3_1_1
+`define SVT_CHI_REQ_ORDERED_RD_FOLLOWED_BY_REQ_ORDERED_RD_W_DIFF_ADDR_PATTERN_SEQ     3_1_2
+`define SVT_CHI_REQ_ORDERED_RD_FOLLOWED_BY_EP_ORDERED_RD_PATTERN_SEQ                  3_2
+`define SVT_CHI_REQ_ORDERED_RD_FOLLOWED_BY_EP_ORDERED_RD_W_SAME_ADDR_PATTERN_SEQ      3_2_1
+`define SVT_CHI_REQ_ORDERED_RD_FOLLOWED_BY_EP_ORDERED_RD_W_DIFF_ADDR_PATTERN_SEQ      3_2_2
+`define SVT_CHI_EP_ORDERED_RD_FOLLOWED_BY_EP_ORDERED_RD_PATTERN_SEQ                   3_3
+`define SVT_CHI_EP_ORDERED_RD_FOLLOWED_BY_EP_ORDERED_RD_W_SAME_ADDR_PATTERN_SEQ       3_3_1
+`define SVT_CHI_EP_ORDERED_RD_FOLLOWED_BY_EP_ORDERED_RD_W_DIFF_ADDR_PATTERN_SEQ       3_3_2
+`define SVT_CHI_EP_ORDERED_RD_FOLLOWED_BY_REQ_ORDERED_RD_PATTERN_SEQ                  3_4
+`define SVT_CHI_EP_ORDERED_RD_FOLLOWED_BY_REQ_ORDERED_RD_W_SAME_ADDR_PATTERN_SEQ      3_4_1
+`define SVT_CHI_EP_ORDERED_RD_FOLLOWED_BY_REQ_ORDERED_RD_W_DIFF_ADDR_PATTERN_SEQ      3_4_2
+
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_RD_FOLLOWED_BY_RD_W_SAME_CACHELINE_ADDR_PATTERN_SEQ                             3_5
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_NO_LIKELYSHARED_NO_ORDER_RD_FOLLOWED_BY_RD_W_SAME_CACHELINE_ADDR_PATTERN_SEQ    3_5_1
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_NO_LIKELYSHARED_ORDER_RD_FOLLOWED_BY_RD_W_SAME_CACHELINE_ADDR_PATTERN_SEQ       3_5_2
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_LIKELYSHARED_NO_ORDER_RD_FOLLOWED_BY_RD_W_SAME_CACHELINE_ADDR_PATTERN_SEQ       3_5_3
+
+
+// Read followed by Write Scenario Combination
+`define SVT_CHI_READ_FOLLOWED_BY_WRITE_PATTERN_SEQ                                    4_0
+`define SVT_CHI_REQ_ORDERED_RD_FOLLOWED_BY_REQ_ORDERED_WR_PATTERN_SEQ                 4_1
+`define SVT_CHI_REQ_ORDERED_RD_FOLLOWED_BY_REQ_ORDERED_WR_W_SAME_ADDR_PATTERN_SEQ     4_1_1
+`define SVT_CHI_REQ_ORDERED_RD_FOLLOWED_BY_REQ_ORDERED_WR_W_DIFF_ADDR_PATTERN_SEQ     4_1_2
+`define SVT_CHI_REQ_ORDERED_RD_FOLLOWED_BY_EP_ORDERED_WR_PATTERN_SEQ                  4_2
+`define SVT_CHI_REQ_ORDERED_RD_FOLLOWED_BY_EP_ORDERED_WR_W_SAME_ADDR_PATTERN_SEQ      4_2_1
+`define SVT_CHI_REQ_ORDERED_RD_FOLLOWED_BY_EP_ORDERED_WR_W_DIFF_ADDR_PATTERN_SEQ      4_2_2
+`define SVT_CHI_EP_ORDERED_RD_FOLLOWED_BY_EP_ORDERED_WR_PATTERN_SEQ                   4_3
+`define SVT_CHI_EP_ORDERED_RD_FOLLOWED_BY_EP_ORDERED_WR_W_SAME_ADDR_PATTERN_SEQ       4_3_1
+`define SVT_CHI_EP_ORDERED_RD_FOLLOWED_BY_EP_ORDERED_WR_W_DIFF_ADDR_PATTERN_SEQ       4_3_2
+`define SVT_CHI_EP_ORDERED_RD_FOLLOWED_BY_REQ_ORDERED_WR_PATTERN_SEQ                  4_4
+`define SVT_CHI_EP_ORDERED_RD_FOLLOWED_BY_REQ_ORDERED_WR_W_SAME_ADDR_PATTERN_SEQ      4_4_1
+`define SVT_CHI_EP_ORDERED_RD_FOLLOWED_BY_REQ_ORDERED_WR_W_DIFF_ADDR_PATTERN_SEQ      4_4_2
+
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_RD_FOLLOWED_BY_WR_W_SAME_CACHELINE_ADDR_PATTERN_SEQ                             4_5
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_NO_LIKELYSHARED_NO_ORDER_RD_FOLLOWED_BY_WR_W_SAME_CACHELINE_ADDR_PATTERN_SEQ    4_5_1
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_NO_LIKELYSHARED_ORDER_RD_FOLLOWED_BY_WR_W_SAME_CACHELINE_ADDR_PATTERN_SEQ       4_5_2
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_LIKELYSHARED_NO_ORDER_RD_FOLLOWED_BY_WR_W_SAME_CACHELINE_ADDR_PATTERN_SEQ       4_5_3
+`define SVT_CHI_SNOOPABLE_WRITEBACK_NO_ALLOCATE_LIKELYSHARED_ORDER_RD_FOLLOWED_BY_WR_W_SAME_CACHELINE_ADDR_PATTERN_SEQ          4_5_4
+
+
+// Non No-Ordering 'N' Transactions
+//`define SVT_CHI_NON_NO_ORDERING_TYPE_PATTERN_SEQ                 5_0
+
+
+
+// N - Times Back2Back Order Type Transaction
+`define SVT_CHI_BACK2BACK_ORDER_TYPE_PATTERN_SEQ                 5_1_0
+
+// `SVT_CHI_BACK2BACK_ORDER_TYPE_PATTERN_SEQ + 0_n
+`define SVT_CHI_BACK2BACK_N_TIMES_ORDER_TYPE_PATTERN_SEQ(n)      (`SVT_CHI_BACK2BACK_ORDER_TYPE_PATTERN_SEQ + n)
+
+`define SVT_CHI_BACK2BACK_4_TIMES_ORDER_TYPE_PATTERN_SEQ         5_1_4
+`define SVT_CHI_BACK2BACK_4_TIMES_REQ_ORDER_TYPE_PATTERN_SEQ     5_1_4_1
+`define SVT_CHI_BACK2BACK_4_TIMES_EP_ORDER_TYPE_PATTERN_SEQ      5_1_4_2
+`define SVT_CHI_BACK2BACK_8_TIMES_ORDER_TYPE_PATTERN_SEQ         5_1_8
+`define SVT_CHI_BACK2BACK_8_TIMES_REQ_ORDER_TYPE_PATTERN_SEQ     5_1_8_1
+`define SVT_CHI_BACK2BACK_8_TIMES_EP_ORDER_TYPE_PATTERN_SEQ      5_1_8_2
+
+`define SVT_CHI_NON_CONTIGUOUS_4_TIMES_ORDER_TYPE_PATTERN_SEQ         5_2_4
+`define SVT_CHI_NON_CONTIGUOUS_4_TIMES_REQ_ORDER_TYPE_PATTERN_SEQ     5_2_4_1
+`define SVT_CHI_NON_CONTIGUOUS_4_TIMES_EP_ORDER_TYPE_PATTERN_SEQ      5_2_4_2
+`define SVT_CHI_NON_CONTIGUOUS_8_TIMES_ORDER_TYPE_PATTERN_SEQ         5_2_8
+`define SVT_CHI_NON_CONTIGUOUS_8_TIMES_REQ_ORDER_TYPE_PATTERN_SEQ     5_2_8_1
+`define SVT_CHI_NON_CONTIGUOUS_8_TIMES_EP_ORDER_TYPE_PATTERN_SEQ      5_2_8_2
+
+
+
+
+// No Ordering Read Transaction after two consecutive Non No Ordering WR/RD Transaction
+`define SVT_CHI_NO_ORDERING_RD_AFTER_TWO_NON_NO_ORDERING_TRANSACTION_PATTERN_SEQ                                       6_0
+
+`define SVT_CHI_NO_ORDERING_RD_AFTER_TWO_NON_NO_ORDERING_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ                           6_1
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_WR_FOLLOWED_BY_REQ_ORDER_WR_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ         6_1_1
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_WR_FOLLOWED_BY_EP_ORDER_WR_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ          6_1_2
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_WR_FOLLOWED_BY_REQ_ORDER_RD_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ         6_1_3
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_WR_FOLLOWED_BY_EP_ORDER_RD_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ          6_1_4
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_RD_FOLLOWED_BY_REQ_ORDER_WR_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ         6_1_5
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_RD_FOLLOWED_BY_EP_ORDER_WR_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ          6_1_6
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_RD_FOLLOWED_BY_REQ_ORDER_RD_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ         6_1_7
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_RD_FOLLOWED_BY_EP_ORDER_RD_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ          6_1_8
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_WR_FOLLOWED_BY_REQ_ORDER_WR_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ          6_1_9
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_WR_FOLLOWED_BY_EP_ORDER_WR_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ           6_1_10
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_WR_FOLLOWED_BY_REQ_ORDER_RD_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ          6_1_11
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_WR_FOLLOWED_BY_EP_ORDER_RD_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ           6_1_12
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_RD_FOLLOWED_BY_REQ_ORDER_WR_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ          6_1_13
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_RD_FOLLOWED_BY_EP_ORDER_WR_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ           6_1_14
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_RD_FOLLOWED_BY_REQ_ORDER_RD_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ          6_1_15
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_RD_FOLLOWED_BY_EP_ORDER_RD_TRANSACTION_W_SAME_ADDR_PATTERN_SEQ           6_1_16
+
+`define SVT_CHI_NO_ORDERING_RD_AFTER_TWO_NON_NO_ORDERING_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ                      6_2
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_WR_FOLLOWED_BY_REQ_ORDER_WR_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ    6_2_1
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_WR_FOLLOWED_BY_EP_ORDER_WR_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ     6_2_2
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_WR_FOLLOWED_BY_REQ_ORDER_RD_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ    6_2_3
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_WR_FOLLOWED_BY_EP_ORDER_RD_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ     6_2_4
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_RD_FOLLOWED_BY_REQ_ORDER_WR_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ    6_2_5
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_RD_FOLLOWED_BY_EP_ORDER_WR_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ     6_2_6
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_RD_FOLLOWED_BY_REQ_ORDER_RD_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ    6_2_7
+`define SVT_CHI_NO_ORDERING_RD_AFTER_REQ_ORDER_RD_FOLLOWED_BY_EP_ORDER_RD_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ     6_2_8
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_WR_FOLLOWED_BY_REQ_ORDER_WR_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ     6_2_9
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_WR_FOLLOWED_BY_EP_ORDER_WR_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ      6_2_10
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_WR_FOLLOWED_BY_REQ_ORDER_RD_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ     6_2_11
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_WR_FOLLOWED_BY_EP_ORDER_RD_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ      6_2_12
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_RD_FOLLOWED_BY_REQ_ORDER_WR_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ     6_2_13
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_RD_FOLLOWED_BY_EP_ORDER_WR_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ      6_2_14
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_RD_FOLLOWED_BY_REQ_ORDER_RD_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ     6_2_15
+`define SVT_CHI_NO_ORDERING_RD_AFTER_EP_ORDER_RD_FOLLOWED_BY_EP_ORDER_RD_TRANSACTION_W_DIFF_DIFF_ADDR_PATTERN_SEQ      6_2_16
+
+`define SVT_CHI_THREE_READ_REQUEST_ORDERING_TRANSACTION_PATTERN_SEQ       7_0
+`define SVT_CHI_THREE_READ_REQUEST_REQ_ORDERING_TRANSACTION_PATTERN_SEQ   7_0_1
+`define SVT_CHI_THREE_READ_REQUEST_EP_ORDERING_TRANSACTION_PATTERN_SEQ    7_0_2
+
+`define SVT_CHI_RETRY_TRANS_BETWEEN_TWO_NORMAL_TRANSACTIONS_OF_SAME_TXNID_PATTERN_SEQ                8_1_0
+`define SVT_CHI_RETRY_TRANS_W_SAME_TXNID_BETWEEN_TWO_NORMAL_TRANSACTIONS_OF_SAME_TXNID_PATTERN_SEQ   8_1_1
+`define SVT_CHI_RETRY_TRANS_W_DIFF_TXNID_BETWEEN_TWO_NORMAL_TRANSACTIONS_OF_SAME_TXNID_PATTERN_SEQ   8_1_2
+
+`define SVT_CHI_RETRY_TRANS_AFTER_TWO_NORMAL_TRANSACTIONS_OF_SAME_TXNID_PATTERN_SEQ                  8_2_0
+`define SVT_CHI_RETRY_TRANS_W_SAME_TXNID_AFTER_TWO_NORMAL_TRANSACTIONS_OF_SAME_TXNID_PATTERN_SEQ     8_2_1
+`define SVT_CHI_RETRY_TRANS_W_DIFF_TXNID_AFTER_TWO_NORMAL_TRANSACTIONS_OF_SAME_TXNID_PATTERN_SEQ     8_2_2
+
+`define SVT_CHI_CANCELLED_TRANS_BETWEEN_TWO_NORMAL_TRANSACTIONS_OF_SAME_TXNID_PATTERN_SEQ            9_0
+
+`define SVT_CHI_CANCELLED_TRANS_AFTER_TWO_NORMAL_TRANSACTIONS_OF_SAME_TXNID_PATTERN_SEQ              9_1
+
+
+
+// DVM Operations
+`define SVT_CHI_DVMOP_TLBI_FOLLOWED_BY_DVMOP_SYNC_PATTERN_SEQ                                                                                                         10_1
+`define SVT_CHI_DVMOP_TLBI_FOLLOWED_BY_DVMOP_TLBI_FOLLOWED_BY_DVMOP_SYNC_PATTERN_SEQ                                                                                  10_2
+`define SVT_CHI_DVMOP_TLBI_FOLLOWED_BY_RETRY_DVMOP_TLBI_FOLLOWED_BY_DVMOP_SYNC_FOLLOWED_BY_RETRY_DVMOP_SYNC_PATTERN_SEQ                                               10_3
+`define SVT_CHI_TLBI_FOLLOWED_BY_CANCEL_TLBI_FOLLOWED_BY_TLBI_OF_SAME_TXNID_FOLLOWED_BY_SYNC_FOLLOWED_BY_CANCEL_SYNC_FOLLOWED_BY_SYNC_OF_SAME_TXNID_PATTERN_SEQ       10_4
+`define SVT_CHI_DVMOP_TLBI_FOLLOWED_BY_DVMOP_SYNC_FOLLOWED_BY_DVMOP_SYNC_PFOLLOWED_BY_DVMOP_TLBI_ATTERN_SEQ                                                           10_5
+`define SVT_CHI_TLBI_FOLLOWED_BY_CANCEL_TLBI_FOLLOWED_BY_NON_DVMOP_OF_SAME_TXNID_FOLLOWED_BY_SYNC_FOLLOWED_BY_CANCEL_SYNC_FOLLOWED_BY_SYNC_OF_SAME_TXNID_PATTERN_SEQ  10_6
+`define SVT_CHI_DVMOP_TLBI_FOLLOWED_BY_CMO_FOLLOWED_BY_DVMOP_SYNC_PATTERN_SEQ                                                                                         10_7
+`define SVT_CHI_DVMOP_TLBI_FOLLOWED_BY_CMO_FOLLOWED_BY_DVMOP_TLBI_FOLLOWED_BY_DVMOP_SYNC_PATTERN_SEQ                                                                  10_8
+`define SVT_CHI_DVMOP_TLBI_FOLLOWED_BY_DVMOP_SYNC_SAME_LPID                                                                                                           10_9
+`define SVT_CHI_DVMOP_TLBI_FOLLOWED_BY_DVMOP_SYNC_DIFF_LPID                                                                                                           10_10
+`define SVT_CHI_OUTSTANDING_DVMOP_TLBI_FOLLOWED_BY_DVMOP_SYNC_SAME_LPID                                                                                               10_11
+`define SVT_CHI_OUTSTANDING_DVMOP_TLBI_FOLLOWED_BY_DVMOP_SYNC_DIFF_LPID                                                                                               10_12
+`define SVT_CHI_DVMOP_TLBI_OUTSTANDING_FOLLOWED_BY_DVMOP_SYNC_FOLLOWED_BY_RETRY_DVMOP_SYNC_PATTERN_SEQ                                                                10_13
+`define SVT_CHI_DVMOP_TLBI_OUTSTANDING_FOLLOWED_BY_DVMOP_SYNC_WITH_SAME_LPID_FOLLOWED_BY_RETRY_DVMOP_SYNC_PATTERN_SEQ                                                 10_14
+`define SVT_CHI_DVMOP_TLBI_OUTSTANDING_FOLLOWED_BY_DVMOP_SYNC_WITH_DIFF_LPID_FOLLOWED_BY_RETRY_DVMOP_SYNC_PATTERN_SEQ                                                 10_15
+`define SVT_CHI_DVMOP_TLBI_OUTSTANDING_FOLLOWED_BY_DVMOP_TLBI_FOLLOWED_BY_RETRY_DVMOP_TLBI_PATTERN_SEQ                                                                10_16
+`define SVT_CHI_DVMOP_TLBI_OUTSTANDING_FOLLOWED_BY_DVMOP_TLBI_WITH_SAME_LPID_FOLLOWED_BY_RETRY_DVMOP_TLBI_PATTERN_SEQ                                                 10_17
+`define SVT_CHI_DVMOP_TLBI_OUTSTANDING_FOLLOWED_BY_DVMOP_TLBI_WITH_DIFF_LPID_FOLLOWED_BY_RETRY_DVMOP_TLBI_PATTERN_SEQ                                                 10_18
+
+// Exclusive Accesses
+`define SVT_CHI_LOAD_FOLLOWED_BY_STORE_PATTERN_SEQ                                                                                                                    11_0_0
+`define SVT_CHI_EXCLUSIVE_ACCESSES_SEQUENCE_PAIR_PATTERN_SEQ                                                                                                          11_0_1
+`define SVT_CHI_EXCLUSIVE_ACCESSES_SEQUENCE_PAIR_WITH_DIFF_MEMORY_ATTRIBUTE_PATTERN_SEQ                                                                               11_0_2
+`define SVT_CHI_EXCLUSIVE_ACCESSES_SEQUENCE_PAIR_WITH_SAME_MEMORY_ATTRIBUTE_PATTERN_SEQ                                                                               11_0_3
+`define SVT_CHI_EXCLUSIVE_ACCESSES_SEQUENCE_PAIR_WITH_DIFF_SNOOP_ATTRIBUTE_PATTERN_SEQ                                                                                11_0_4
+`define SVT_CHI_LOAD_FOLLOWED_BY_STORE_FOLLOWED_BY_STORE_PATTERN_SEQ                                                                                                  11_1_0
+`define SVT_CHI_EXCLUSIVE_ACCESSES_SEQUENCE_PAIR_INTERLEAVED_BY_ANOTHER_EXCL_STORE_PATTERN_SEQ                                                                        11_1_1
+`define SVT_CHI_EXCLUSIVE_ACCESSES_SEQUENCE_PAIR_INTERLEAVED_BY_ANOTHER_EXCL_STORE_FROM_DIFF_LPID_PATTERN_SEQ                                                         11_1_2
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+// Memory Tagging
+`define SVT_CHI_WRITE_WITH_TAGOP_UPDATE_FOLLOWED_BY_READ_WITH_TAGOP_TRANSFER_PATTERN_SEQ                12_0_0
+`define SVT_CHI_WRITE_WITH_TAGOP_UPDATE_FOLLOWED_BY_READ_WITH_TAGOP_FETCH_PATTERN_SEQ                   12_0_1
+`define SVT_CHI_READNOSNP_WITH_TAGOP_FETCH_FOLLOWED_BY_WRITENOSNP_WITH_TAGOP_MATCH_PATTERN_SEQ          12_0_2
+`define SVT_CHI_READUNIQUE_WITH_TAGOP_FETCH_FOLLOWED_BY_COBYBACK_XACT_WITH_TAGOP_TRANSFER_PATTERN_SEQ   12_0_3
+`endif
+
+`define SVT_AMBA_DATA_OBJ_CREATE(class_type,component_type,component_name_str) \
+`ifdef SVT_VMM_TECHNOLOGY \
+  class_type::create_instance(component_type,component_name_str,`__FILE__,`__LINE__) \
+`else \
+  class_type::type_id::create(component_name_str,component_type) \
+`endif
+
+                        
+`endif // GUARD_SVT_CHI_COMMON_DEFINES_SVI
+
+

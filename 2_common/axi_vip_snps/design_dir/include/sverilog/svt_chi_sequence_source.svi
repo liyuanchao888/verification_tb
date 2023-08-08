@@ -1,0 +1,46 @@
+//--------------------------------------------------------------------------
+// COPYRIGHT (C) 2013-2018 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//--------------------------------------------------------------------------
+
+`ifndef GUARD_SVT_CHI_SEQUENCE_SOURCE_UVM_SVI
+`define GUARD_SVT_CHI_SEQUENCE_SOURCE_UVM_SVI
+
+
+`ifdef SVT_AMBA_OPTIMIZED_COMPILE
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_transaction_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_transaction_sequencer_callback)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_transaction_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_sn_transaction_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_snoop_transaction_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_sn_snoop_transaction_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_virtual_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_rn_virtual_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_virtual_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_sn_virtual_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_virtual_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_virtual_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_transaction_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_snoop_transaction_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_snoop_transaction_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_virtual_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_transaction_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_sn_transaction_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_flit_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_protocol_service_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_link_service_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_virtual_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_xact_to_axi_master_xact_sequence)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_slave_xact_to_chi_rn_xact_sequence)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_snp_xact_to_chi_snp_xact_sequence)
+`endif
+
+`endif

@@ -1,0 +1,3 @@
+Command Line: /tools/synopsys/verdi-R-2020.12-SP1/platform/LINUXAMD64/bin/Novas -full64 -elab /tools/proj/verification_platform/ut_noc/7_run/2_work/output/simv.daidir/kdb.elab++ -nologo -ssf /tools/proj/verification_platform/ut_noc/7_run/2_work/directed_test/directed_test_12345678.fsdb -guiConf /tools/proj/verification_platform/ut_noc/7_run/2_work/novas.conf -rcFile /home/vagrant/novas.rc -l /tools/proj/verification_platform/ut_noc/7_run/2_work/directed_test/directed_test_12345678.verdi.log
+uname(Linux centos7 3.10.0-1160.90.1.el7.x86_64 #1 SMP Thu May 4 15:21:22 UTC 2023 x86_64)
+au time 23408.512533 62.550890 45.127529 delta 559087616 559087616 total 1040502784 1040502784

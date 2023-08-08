@@ -1,0 +1,44 @@
+//=======================================================================
+// COPYRIGHT (C) 2017-2018 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//
+//-----------------------------------------------------------------------
+
+`ifndef GUARD_SVT_AHB_SYSTEM_CONFIGURATION_VMM_PKG
+`define GUARD_SVT_AHB_SYSTEM_CONFIGURATION_VMM_PKG
+
+`include "svt_amba_common_configuration.vmm.pkg"
+
+`include "svt_ahb_if.svi"
+
+package svt_ahb_system_configuration_vmm_pkg;
+
+  import `SVT_VMM_PKG::*;
+
+  import svt_vmm_pkg::*;
+`ifdef SVT_AMBA_ENABLE_C_BASED_MEM
+  import svt_mem_vmm_pkg::*;
+`endif
+
+  import svt_amba_common_configuration_vmm_pkg::*;
+
+  `include "svt_ahb_defines.svi"
+  `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_slave_addr_range)
+  `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_configuration)
+  `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_master_configuration)
+  `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_slave_configuration)
+  `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_bus_configuration)
+  `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_system_configuration)
+  `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_mem_address_mapper)
+  
+endpackage
+
+`endif // GUARD_SVT_AHB_SYSTEM_CONFIGURATION_VMM_PKG

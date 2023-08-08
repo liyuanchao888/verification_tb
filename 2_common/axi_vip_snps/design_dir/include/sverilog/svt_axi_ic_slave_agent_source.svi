@@ -1,0 +1,16 @@
+
+`ifndef GUARD_SVT_AXI_IC_SLAVE_AGENT_SOURCE_SVI
+`define GUARD_SVT_AXI_IC_SLAVE_AGENT_SOURCE_SVI
+
+`include `SVT_SOURCE_MAP_AGENT_INCLUDE_SVI(amba_svt,axi_slave_agent_svt,R-2020.12,svt_axi_slave_agent_source)
+`ifdef SVT_UVM_TECHNOLOGY
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,axi_master_svt,R-2020.12,svt_axi_master_source.uvm)
+`elsif SVT_OVM_TECHNOLOGY
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,axi_master_svt,R-2020.12,svt_axi_master_source.ovm)
+`endif
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_slave_agent_svt,R-2020.12,svt_axi_ic_slave_sequencer)
+ `include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_slave_agent_svt,R-2020.12,svt_axi_ic_slave_sequence)
+ `include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_slave_agent_svt,R-2020.12,svt_axi_ic_slave_agent)
+
+`endif //GUARD_SVT_AXI_IC_SLAVE_AGENT_SOURCE_SVI

@@ -1,0 +1,24 @@
+
+`ifndef GUARD_SVT_AXI_PORT_MONITOR_SOURCE_UVM_SVI
+`define GUARD_SVT_AXI_PORT_MONITOR_SOURCE_UVM_SVI
+
+`include "svt_axi_component_source.uvm.svi"
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_cache_monitor_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor.uvm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_pa_writer_callbacks)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_def_cov_data_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_def_cov_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_def_state_cov_data_callbacks)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_def_state_cov_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_def_toggle_cov_data_callbacks)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_def_toggle_cov_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_system_checker_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_transaction_report_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_pattern_sequence_collection)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_cov_data)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_cov)
+
+`endif //GUARD_SVT_AXI_PORT_MONITOR_SOURCE_UVM_SVI

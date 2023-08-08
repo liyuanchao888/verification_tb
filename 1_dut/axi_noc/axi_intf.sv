@@ -47,6 +47,7 @@ interface AXI_BUS #(
   logic             aw_valid;
   logic             aw_ready;
 
+  id_t              w_id; //ycli add for axi3
   data_t            w_data;
   strb_t            w_strb;
   logic             w_last;
@@ -84,7 +85,7 @@ interface AXI_BUS #(
 
   modport Master (
     output aw_id, aw_addr, aw_len, aw_size, aw_burst, aw_lock, aw_cache, aw_prot, aw_qos, aw_region, aw_atop, aw_user, aw_valid, input aw_ready,
-    output w_data, w_strb, w_last, w_user, w_valid, input w_ready,
+    output w_id,w_data, w_strb, w_last, w_user, w_valid, input w_ready,
     input b_id, b_resp, b_user, b_valid, output b_ready,
     output ar_id, ar_addr, ar_len, ar_size, ar_burst, ar_lock, ar_cache, ar_prot, ar_qos, ar_region, ar_user, ar_valid, input ar_ready,
     input r_id, r_data, r_resp, r_last, r_user, r_valid, output r_ready
@@ -92,7 +93,7 @@ interface AXI_BUS #(
 
   modport Slave (
     input aw_id, aw_addr, aw_len, aw_size, aw_burst, aw_lock, aw_cache, aw_prot, aw_qos, aw_region, aw_atop, aw_user, aw_valid, output aw_ready,
-    input w_data, w_strb, w_last, w_user, w_valid, output w_ready,
+    input w_id,w_data, w_strb, w_last, w_user, w_valid, output w_ready,
     output b_id, b_resp, b_user, b_valid, input b_ready,
     input ar_id, ar_addr, ar_len, ar_size, ar_burst, ar_lock, ar_cache, ar_prot, ar_qos, ar_region, ar_user, ar_valid, output ar_ready,
     output r_id, r_data, r_resp, r_last, r_user, r_valid, input r_ready
@@ -100,7 +101,7 @@ interface AXI_BUS #(
 
   modport Monitor (
     input aw_id, aw_addr, aw_len, aw_size, aw_burst, aw_lock, aw_cache, aw_prot, aw_qos, aw_region, aw_atop, aw_user, aw_valid, aw_ready,
-          w_data, w_strb, w_last, w_user, w_valid, w_ready,
+          w_id,w_data, w_strb, w_last, w_user, w_valid, w_ready,
           b_id, b_resp, b_user, b_valid, b_ready,
           ar_id, ar_addr, ar_len, ar_size, ar_burst, ar_lock, ar_cache, ar_prot, ar_qos, ar_region, ar_user, ar_valid, ar_ready,
           r_id, r_data, r_resp, r_last, r_user, r_valid, r_ready

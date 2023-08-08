@@ -1,0 +1,8 @@
+
+`ifndef GUARD_SVT_AXI_LP_MASTER_AGENT_CMD_SOURCE_SVI
+`define GUARD_SVT_AXI_LP_MASTER_AGENT_CMD_SOURCE_SVI
+
+`include `SVT_SOURCE_MAP_AGENT_INCLUDE_SVI(amba_svt,axi_lp_master_agent_svt,R-2020.12,svt_axi_lp_master_agent_source)
+
+
+`endif //GUARD_SVT_AXI_LP_MASTER_AGENT_CMD_SOURCE_SVI

@@ -1,0 +1,15 @@
+
+`ifndef GUARD_SVT_AXI_MASTER_SOURCE_UVM_SVI
+`define GUARD_SVT_AXI_MASTER_SOURCE_UVM_SVI
+
+`include "svt_axi_component_source.uvm.svi"
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_master_svt,R-2020.12,svt_axi_base_master_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_master_svt,R-2020.12,svt_axi_master_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_master_svt,R-2020.12,svt_axi_ic_master_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_master_svt,R-2020.12,svt_axi_master.uvm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_master_svt,R-2020.12,svt_axi_master_monitor.uvm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_master_svt,R-2020.12,svt_axi_master_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_master_svt,R-2020.12,svt_axi_master_monitor_common)
+
+`endif //GUARD_SVT_AXI_MASTER_SOURCE_UVM_SVI

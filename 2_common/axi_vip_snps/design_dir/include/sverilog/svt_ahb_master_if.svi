@@ -1,0 +1,293 @@
+
+`ifndef GUARD_SVT_AHB_MASTER_IF_SVI
+`define GUARD_SVT_AHB_MASTER_IF_SVI
+
+`include "svt_ahb_port_defines.svi"
+
+/**
+ * <b>General description:</b><p>
+ * The master interface svt_ahb_master_if defines the AHB signals appropriate
+ * for a single port, along with the modports needed for the AHB master and
+ * monitor VIP. Debug signals and a debug modport are also defined. The debug
+ * port provides useful information for debugging.
+ *
+ */
+`ifndef SVT_AHB_DISABLE_IMPLICIT_BUS_CONNECTION
+interface svt_ahb_master_if (input logic                                    common_hclk, 
+                             input logic                                    common_hresetn,
+                             input logic [(`SVT_AHB_MAX_DATA_WIDTH - 1):0]  hrdata_bus,
+                             input logic                                    hready_bus,
+                             input logic [(`SVT_AHB_HRESP_PORT_WIDTH- 1):0] hresp_bus,
+                             input logic [(`SVT_AHB_MAX_DATA_USER_WIDTH - 1):0]  hrdata_huser_bus
+                             );
+`else
+interface svt_ahb_master_if (input logic                                    common_hclk, 
+                             input logic                                    common_hresetn);
+`endif
+
+  // Parameter describing an interface to be active or passive
+  // If this parameter == 1 then the interface is active otherwise passive
+  // By default the interface is active
+  bit                     is_active=1; 
+
+  /** User clock
+      In multiple clock mode, user is expected to drive this signal */
+  logic                   hclk;
+
+  /** User reset
+      In multiple reset mode, user is expected to drive this signal */
+  logic                   hresetn;
+
+/** @cond PRIVATE */  
+  // Parameter to enable/disable Common Clock Mode
+  // By default this mode will be enabled
+  bit                     common_clock_mode=1;
+
+  // Parameter to enable/disable Common Reset Mode
+  // By default this mode will be enabled  
+  bit                     common_reset_mode=1;
+
+  // Global Interface signals
+  logic                   internal_hclk;
+  logic                   internal_hresetn;
+/** @endcond */
+  logic                   hgrant;
+  logic                   [(`SVT_AHB_MAX_DATA_WIDTH - 1):0] hrdata;
+  logic                   hready;
+  logic                   [(`SVT_AHB_HRESP_PORT_WIDTH - 1):0] hresp;
+  logic                   [(`SVT_AHB_MAX_ADDR_WIDTH - 1):0] haddr;
+  `ifdef SVT_AHB_V6_ENABLE
+  logic                   [(`SVT_AHB_HBSTRB_PORT_WIDTH -1):0] hbstrb;
+  logic                   hunalign;
+  `endif
+  logic                   [(`SVT_AHB_HBURST_PORT_WIDTH - 1):0] hburst;
+  logic                   hbusreq;
+  logic                   hlock;
+  logic                   [(`SVT_AHB_HPROT_PORT_WIDTH - 1):0] hprot;
+  logic                   hnonsec;
+  logic                   [(`SVT_AHB_HSIZE_PORT_WIDTH - 1):0] hsize;
+  logic                   [(`SVT_AHB_HTRANS_PORT_WIDTH - 1):0] htrans;
+  logic                   [(`SVT_AHB_MAX_DATA_WIDTH - 1):0] hwdata;
+  logic                   hwrite;
+
+  /** Debug port signals */
+  logic [(`SVT_AHB_DEBUG_PORT_WIDTH-1):0] addr_phase_xact_num;
+  logic [(`SVT_AHB_DEBUG_PORT_WIDTH-1):0] data_phase_xact_num;
+  logic [(`SVT_AHB_DEBUG_PORT_WIDTH-1):0] xact_beat_num;
+  
+  /** AHB sideband signals */
+  logic     [`SVT_AHB_MAX_USER_WIDTH-1:0]       control_huser;
+  logic     [`SVT_AHB_MAX_DATA_USER_WIDTH-1:0]  hwdata_huser;
+  logic     [`SVT_AHB_MAX_DATA_USER_WIDTH-1:0]  hrdata_huser;
+
+/** @cond PRIVATE */
+  /** This bit vector is set by svt_ahb_master_param_if, when the given parameter
+    * value is greater than the corresponding system constant MAX macro defined
+    * inside svt_ahb_port_defines.svi or svt_ahb_user_defines.svi. The AHB system
+    * level component (uvm,ovm: svt_ahb_master_agent;vmm: svt_ahb_master_group) flags 
+    * the corresponding FATAL error if any bit of this bit vector is set. 
+    * In an environment where AHB parameterized interface is not used, 
+    * this bit vector will not have any significance.
+    *   
+    * param_check_flag [0]  - SVT_AHB_HADDR_PORT_WIDTH_PARAM<br> 
+    * param_check_flag [1]  - SVT_AHB_DATA_WIDTH_PARAM<br> 
+    * param_check_flag [2]  - SVT_AHB_CONTROL_HUSER_PORT_WIDTH_PARAM<br> 
+    * param_check_flag [3]  - SVT_AHB_HBURST_PORT_WIDTH_PARAM<br> 
+    * param_check_flag [4]  - SVT_AHB_HPROT_PORT_WIDTH_PARAM<br> 
+    * param_check_flag [5]  - SVT_AHB_HSIZE_PORT_WIDTH_PARAM<br> 
+    * param_check_flag [6]  - SVT_AHB_HTRANS_PORT_WIDTH_PARAM<br>
+    * param_check_flag [7]  - SVT_AHB_DATA_HUSER_PORT_WIDTH_PARAM<br> */
+   bit [7:0] 					param_check_flag;
+/** @endcond */
+
+  // Depending upon the Clock Mode, assign either the User Clock or
+  // Common Clock to the 'internal_hclk' signal
+  assign internal_hclk = (common_clock_mode == 0) ? hclk : common_hclk;
+
+  // Depending upon the Reset Mode, assign either the User Reset or
+  // Common Reset to the 'internal_hresetn' signal
+  assign internal_hresetn = (common_reset_mode == 0) ? hresetn : common_hresetn;
+
+`ifndef SVT_AHB_DISABLE_IMPLICIT_BUS_CONNECTION
+  // Assign bus signals to master signals
+  assign hrdata  =   hrdata_bus;
+  assign hready  =   hready_bus;
+  assign hresp   =   hresp_bus;
+  assign hrdata_huser  =   hrdata_huser_bus;
+`endif
+  
+  // AHB Clocking blocks
+  //-----------------------------------------------------------------------
+  /**
+   * Clocking block that defines VIP AHB Master Interface
+   * signal synchronization and directionality.
+   */
+  clocking ahb_master_cb @(posedge internal_hclk);
+    default input #`SVT_AHB_MASTER_IF_SETUP_TIME output #`SVT_AHB_MASTER_IF_HOLD_TIME;
+ 
+    // Input to AHB Master
+    input internal_hresetn;
+    input hrdata;
+    input hready;
+    input hgrant;
+    input hresp;
+    input hrdata_huser;
+
+    // Output from AHB Master
+    output haddr;
+    `ifdef SVT_AHB_V6_ENABLE
+    output hbstrb;
+ 	  output hunalign;
+    `endif
+    output hburst;
+    output hbusreq;
+    output hlock;
+    output hprot;
+    output hnonsec;
+    output hsize;
+    output htrans;
+    output hwdata;
+    output hwrite;
+    output control_huser;
+    output hwdata_huser;
+
+  endclocking: ahb_master_cb
+
+  //-----------------------------------------------------------------------
+  /**
+   * Clocking block that defines VIP AHB Bus-Master Interface
+   * signal synchronization and directionality.
+   */
+  // The BUS signals are expected to be synchronized to svt_ahb_if::common_hclk
+  clocking ahb_bus_cb @(posedge common_hclk);
+    default input #`SVT_AHB_MASTER_IF_SETUP_TIME output #`SVT_AHB_MASTER_IF_HOLD_TIME;
+ 
+    // Input to the AHB Bus from the AHB master
+    input haddr;
+    `ifdef SVT_AHB_V6_ENABLE
+    input hbstrb;
+ 	  input hunalign;
+    `endif
+    input hburst;
+    input hbusreq;
+    input hlock;
+    input hprot;
+    input hnonsec;
+    input hsize;
+    input htrans;
+    input hwdata;
+    input hwrite;
+    input control_huser;
+    input hwdata_huser;
+
+    // Output from AHB Bus to the to AHB Master
+    output hgrant;    
+  endclocking: ahb_bus_cb
+  
+  //-----------------------------------------------------------------------
+  /**
+   * Clocking block that defines the AHB Monitor Interface
+   * signal synchronization and directionality.
+   */
+  clocking ahb_monitor_cb @(posedge internal_hclk);
+    default input #`SVT_AHB_MONITOR_IF_SETUP_TIME output #`SVT_AHB_MONITOR_IF_HOLD_TIME;
+  
+    input internal_hresetn;
+    input hgrant;
+    input hrdata;
+    input hready;
+    input hresp;
+    input haddr;
+    `ifdef SVT_AHB_V6_ENABLE
+    input hbstrb;
+ 	 	input hunalign;
+    `endif
+    input hburst;
+    input hbusreq;
+    input hlock;
+    input hprot;
+    input hnonsec;
+    input hsize;
+    input htrans;
+    input hwdata;
+    input hwrite;
+    input control_huser;
+    input hwdata_huser;
+    input hrdata_huser;
+
+   endclocking : ahb_monitor_cb
+
+//-----------------------------------------------------------------------
+// Modports
+//-----------------------------------------------------------------------
+  //------------------------------------------------------------------------
+  /** Modport used to connect the VIP Master to AHB interface signals. */
+  modport svt_ahb_master_modport (clocking ahb_master_cb,input internal_hresetn);
+
+  //------------------------------------------------------------------------
+  /** Modport used to connect the VIP Bus to AHB master interface signals. 
+   *  The asynchronous signals are required for multiplexing functionality.
+   */
+  modport svt_ahb_bus_modport (clocking ahb_bus_cb, 
+                               // Input to the AHB Bus from the AHB master
+                               input haddr,
+                               `ifdef SVT_AHB_V6_ENABLE
+                               input hbstrb,
+ 	 	                           input hunalign,
+                               `endif
+                               input hburst,
+                               input hbusreq,
+                               input hlock,
+                               input hprot,
+                               input hnonsec,
+                               input hsize,
+                               input htrans,
+                               input hwdata,
+                               input hwrite,
+                               input control_huser,
+                               input hwdata_huser,
+                               // Output from AHB Bus to the AHB Master
+                               output hgrant
+                               );
+
+  //-----------------------------------------------------------------------
+  /** Modport used to connect the VIP Monitor to AHB interface signals. */
+  modport svt_ahb_monitor_modport (clocking ahb_monitor_cb,input internal_hresetn);
+
+  //-----------------------------------------------------------------------
+  /** Asynchronous modport suitable for SV Master Bind interface */
+  modport svt_ahb_master_async_modport (input   hgrant,
+                                        input   hrdata,
+                                        input   hready,
+                                        input   hresp,
+                                        input   hrdata_huser,
+                                        output  haddr,
+                                        `ifdef SVT_AHB_V6_ENABLE
+                                        output hbstrb,
+                                        output hunalign,
+                                        `endif
+                                        output  hburst,
+                                        output  hbusreq,
+                                        output  hlock,
+                                        output  hprot,
+                                        output  hnonsec,
+                                        output  hsize,
+                                        output  htrans,
+                                        output  hwdata,
+                                        output  hwrite,
+                                        output  control_huser,
+                                        output  hwdata_huser,
+                                        input   is_active);
+
+  //-----------------------------------------------------------------------
+  /** Modport used to connect the VIP Debug Port. */
+  modport svt_ahb_debug_modport (output addr_phase_xact_num,
+                                 output data_phase_xact_num,
+                                 output xact_beat_num); 
+ 
+ /**support for signal logging. */
+ `SVT_IF_UTIL_SUPPORT_SIGNAL_LOGGING(1)
+
+  endinterface: svt_ahb_master_if
+
+`endif // GUARD_SVT_AHB_MASTER_IF_SVI

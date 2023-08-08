@@ -2,8 +2,7 @@
 `define TEST_TOP__SV
 
 //`timescale 1ns/1ns
-import uvm_pkg::*;
-`include "uvm_macros.svh"
+`include "tb_define.svh"
 
 //module clk_rst(output reg clk,output reg rst_n);
 //    parameter TIME_PERIOD = 10;	
@@ -15,8 +14,6 @@ import uvm_pkg::*;
 //    always #(TIME_PERIOD/2) clk = !clk; //100Mhz , 10ms(5ms)
 //endmodule
 
-`include "axi/typedef.svh"
-`include "axi/assign.svh"
 //testbench Top
 module test_top();
     reg clk  ;
@@ -38,6 +35,7 @@ module test_top();
 	//dut instance //dut_top u_top(.*);  
 //    if_sif m_vif_sif0(clk, rst_n); //interface
 
+	`include "../../../1_dut/axi_noc/dut_define.svh"
 	axi_xbar_intf #(
     .AXI_USER_WIDTH        ( TbAxiUserWidth  ),
     .Cfg                   ( xbar_cfg        ),

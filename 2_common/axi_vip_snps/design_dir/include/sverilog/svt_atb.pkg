@@ -1,0 +1,76 @@
+//=======================================================================
+// COPYRIGHT (C) 2010-2017 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//
+//-----------------------------------------------------------------------
+
+`ifndef GUARD_SVT_ATB_PKG
+`define GUARD_SVT_ATB_PKG
+
+`ifdef SVT_UVM_TECHNOLOGY
+
+  `ifdef DESIGNWARE_INCDIR
+    `define SVT_AMBA_LOADER_FILE `"`DESIGNWARE_INCDIR/vip/svt/common/latest/sverilog/include/svt_bootloader.svi`"
+    `include `SVT_AMBA_LOADER_FILE
+    `include `SVT_SOURCE_MAP_LIB_INCLUDE_PKG(R-2020.12,svt.uvm)
+  `else
+    `include "svt_loader_util.svi"
+    `include "svt.uvm.pkg"
+  `endif
+`include "svt_amba_common.uvm.pkg"
+`elsif SVT_OVM_TECHNOLOGY
+  `ifdef DESIGNWARE_INCDIR
+    `define SVT_AMBA_LOADER_FILE `"`DESIGNWARE_INCDIR/vip/svt/common/latest/sverilog/include/svt_bootloader.svi`"
+    `include `SVT_AMBA_LOADER_FILE
+    `include `SVT_SOURCE_MAP_LIB_INCLUDE_PKG(R-2020.12,svt.ovm)
+  `else
+    `include "svt_loader_util.svi"
+    `include "svt.ovm.pkg"
+  `endif
+`include "svt_amba_common.ovm.pkg"
+`elsif SVT_VMM_TECHNOLOGY
+  `ifdef DESIGNWARE_INCDIR
+    `define SVT_AMBA_LOADER_FILE `"`DESIGNWARE_INCDIR/vip/svt/common/latest/sverilog/include/svt_bootloader.svi`"
+    `include `SVT_AMBA_LOADER_FILE
+    `include `SVT_SOURCE_MAP_LIB_INCLUDE_PKG(R-2020.12,svt.vmm)
+  `else
+    `include "svt_loader_util.svi"
+    `include "svt.vmm.pkg"
+  `endif
+`include "svt_amba_common.vmm.pkg"
+`endif
+
+`include "svt_atb_if.svi"
+
+package svt_atb_pkg;
+
+`ifdef SVT_UVM_TECHNOLOGY
+ import uvm_pkg::*;
+ import svt_uvm_pkg::*;
+ import svt_amba_common_uvm_pkg::*;
+`elsif SVT_OVM_TECHNOLOGY
+ import ovm_pkg::*;
+ import svt_ovm_pkg::*;
+ import svt_amba_common_ovm_pkg::*;
+`elsif SVT_OVM_TECHNOLOGY
+ import vmm_pkg::*;
+ import svt_vmm_pkg::*;
+ import svt_amba_common_vmm_pkg::*;
+`endif
+
+ typedef virtual svt_atb_if svt_atb_vif;
+ typedef virtual svt_atb_master_if svt_atb_master_vif;
+ typedef virtual svt_atb_slave_if svt_atb_slave_vif;
+
+ `include `SVT_SOURCE_MAP_ENV_INCLUDE_SVI(amba_svt,atb_system_env_svt,R-2020.12,svt_atb_system_env_source)
+endpackage
+
+`endif //GUARD_SVT_ATB_PKG

@@ -1,0 +1,44 @@
+
+`ifndef GUARD_SVT_AXI_VMM_SOURCE_SVI
+`define GUARD_SVT_AXI_VMM_SOURCE_SVI
+
+`ifndef SVT_AMBA_VCAP_ENABLE
+`ifndef SVT_EXCLUDE_VCAP
+`define SVT_EXCLUDE_VCAP
+`endif
+`endif
+`ifndef DESIGNWARE_INCDIR
+  `include "svt_source.vmm.svi"
+`endif
+`include "svt_amba_common_source.vmm.svi"
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_port_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_lp_port_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_interconnect_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_system_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_service)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_transaction_exception)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_transaction_exception_list)    
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_snoop_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_snoop_transaction_exception)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_snoop_transaction_exception_list)    
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_master_snoop_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_ic_snoop_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_master_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_slave_transaction)
+`ifdef SVT_AXI_QVN_ENABLE
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_qvn_transaction)
+`endif
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_ic_slave_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_barrier_pair_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_cache_line)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_cache)
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_fifo_mem)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_system_transaction)
+`ifndef SVT_EXCLUDE_VCAP
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_fifo_rate_control_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_traffic_profile_transaction)
+`endif
+`endif // GUARD_SVT_AXI_VMM_SOURCE_SVI

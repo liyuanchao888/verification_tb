@@ -1,0 +1,48 @@
+version: (200506)
+
+available memory: 64M bytes
+used memory: 417792 bytes [need 408K bytes if disable swap]
+
+used block: 22 [memory(22) file(0)]
+                 [ 8K(17) 16K(1) 64K(4) { total 408K bytes } ]
+overhead: (9555) bytes for (22) blocks [Average: (434) bytes/block]
+
+write  => 0(times) 0K(bytes) [0K bytes to file]
+read   => 4(times) 133K(bytes) [24K bytes compressed data from file]
+access => 502608(times) 3957M(bytes)
+          [hit ratio: 99.9992%]
+
+time: write(0) read(0.001)  unit: second
+
+swap file directory: (/tools/proj/verification_platform/ut_noc/7_run/1_script/verdiLog)
+used swap file number: (5)
+
+
+
+swap file manager:
+arrSize: (256)
+idxCnt: (6)
+closeHead: (1)
+closeTail: (5)
+openCnt: (4)
+fid(5): fd(1073741826) fileName(/tools/proj/verification_platform/ut_noc/7_run/2_work/output/simv.daidir/kdb.elab++/work.lib++/axi_xbar.sv.tdc)
+	size(27841) lastModTime(1691464274) curModTime(1691464274)
+	mode(rb)	hot(0) cool(4) pos(0)
+fid(4): fd(1073741825) fileName(/tools/proj/verification_platform/ut_noc/7_run/2_work/output/simv.daidir/kdb.elab++/work.lib++/tb_define.svh#inc___vcs_unit__1__547#.tdc)
+	size(1090) lastModTime(1691464287) curModTime(1691464287)
+	mode(rb)	hot(5) cool(2) pos(0)
+fid(3): fd(0) fileName(/tools/proj/verification_platform/ut_noc/7_run/2_work/output/simv.daidir/kdb.elab++/work.lib++/dut_define.svh.tdc)
+	size(3832) lastModTime(1691464274) curModTime(1691464274)
+	mode(rb)	hot(0) cool(0) pos(0)
+fid(2): fd(25) fileName(/tools/proj/verification_platform/ut_noc/7_run/1_script/verdiLog/_swap_0001#8323329#20204)
+	size(0) lastModTime(0) curModTime(1691465286)
+	mode(w+b)	hot(4) cool(1) pos(0)
+fid(1): fd(1073741824) fileName(/tools/proj/verification_platform/ut_noc/7_run/2_work/output/simv.daidir/kdb.elab++/work.lib++/test_top.sv.tdc)
+	size(4175) lastModTime(1691464287) curModTime(1691464287)
+	mode(rb)	hot(2) cool(0) pos(0)
+fid(0): fd(0) fileName(NULL)
+	mode(NULL)	hot(0) cool(0) pos(0)
+==================================================
+mySelf(19f3f400) pre(19f30d20) next(0)
+version(200506)
+date(Mar  2 2021 03:35:41)

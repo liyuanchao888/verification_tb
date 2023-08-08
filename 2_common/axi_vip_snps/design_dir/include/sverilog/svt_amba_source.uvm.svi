@@ -1,0 +1,36 @@
+
+`ifndef GUARD_SVT_AMBA_SOURCE_UVM_SVI
+`define GUARD_SVT_AMBA_SOURCE_UVM_SVI
+
+// Enable AXI to CHI mapping. Do not remove this line.
+`ifdef  SVT_AMBA_INCLUDE_CHI_IN_AMBA_SYS_ENV
+`define SVT_AMBA_AXI_TO_CHI_MAP_ENABLE
+`endif
+
+
+`ifndef SVT_AMBA_VCAP_ENABLE
+`ifndef SVT_EXCLUDE_VCAP
+`define SVT_EXCLUDE_VCAP
+`endif
+`endif
+
+`ifndef DESIGNWARE_INCDIR
+  `include "svt_source.uvm.svi"
+`endif
+
+`ifndef SVT_AMBA_EXCLUDE_APB_IN_AMBA_SYS_ENV
+  `include "svt_apb_source.uvm.svi"
+`endif  
+`ifndef SVT_AMBA_EXCLUDE_AHB_IN_AMBA_SYS_ENV
+  `include "svt_ahb_source.uvm.svi"
+`endif
+`include "svt_axi_source.uvm.svi"
+`ifdef  SVT_AMBA_INCLUDE_CHI_IN_AMBA_SYS_ENV
+`include "svt_chi_source.uvm.svi"
+`endif
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_system_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_system_checker)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_system_transaction)
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_mem_system_backdoor)
+`endif // GUARD_SVT_AMBA_SOURCE_UVM_SVI

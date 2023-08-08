@@ -1,0 +1,11 @@
+
+`ifndef GUARD_SVT_AXI_INTERCONNECT_SOURCE_VMM_SVI
+`define GUARD_SVT_AXI_INTERCONNECT_SOURCE_VMM_SVI
+
+`include "svt_axi_component_source.vmm.svi"
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_interconnect_svt,R-2020.12,svt_axi_interconnect_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_interconnect_svt,R-2020.12,svt_axi_interconnect_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_interconnect_svt,R-2020.12,svt_axi_interconnect.vmm)
+
+`endif //GUARD_SVT_AXI_INTERCONNECT_SOURCE_VMM_SVI

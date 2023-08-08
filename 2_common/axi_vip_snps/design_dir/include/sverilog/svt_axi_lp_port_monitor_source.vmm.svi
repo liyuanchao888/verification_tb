@@ -1,0 +1,10 @@
+
+`ifndef GUARD_SVT_AXI_LP_PORT_MONITOR_SOURCE_VMM_SVI
+`define GUARD_SVT_AXI_LP_PORT_MONITOR_SOURCE_VMM_SVI
+
+`include "svt_axi_component_source.vmm.svi"
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_lp_port_monitor_svt,R-2020.12,svt_axi_lp_port_monitor_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_lp_port_monitor_svt,R-2020.12,svt_axi_lp_port_monitor.vmm)
+
+`endif //GUARD_SVT_AXI_LP_PORT_MONITOR_SOURCE_VMM_SVI

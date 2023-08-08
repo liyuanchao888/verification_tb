@@ -1,0 +1,58 @@
+//=======================================================================
+// COPYRIGHT (C) 2017-2018 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//
+//-----------------------------------------------------------------------
+
+`ifndef GUARD_SVT_AMBA_SYSTEM_CONFIGURATION_UVM_PKG
+`define GUARD_SVT_AMBA_SYSTEM_CONFIGURATION_UVM_PKG
+
+`ifndef SVT_AMBA_EXCLUDE_APB_IN_AMBA_SYS_ENV
+  `include "svt_apb_system_configuration.uvm.pkg"
+`endif  
+`ifndef SVT_AMBA_EXCLUDE_AHB_IN_AMBA_SYS_ENV
+  `include "svt_ahb_system_configuration.uvm.pkg"
+`endif  
+`include "svt_axi_system_configuration.uvm.pkg"
+
+`ifdef SVT_AMBA_OPTIMIZED_COMPILE
+  `include "svt_chi_source.uvm.pkg"
+`endif
+
+package svt_amba_system_configuration_uvm_pkg;
+
+  import uvm_pkg::*;
+
+  import svt_uvm_pkg::*;
+`ifdef SVT_AMBA_ENABLE_C_BASED_MEM
+  import svt_mem_uvm_pkg::*;
+`endif
+
+  import svt_amba_common_configuration_uvm_pkg::*;
+
+`ifdef SVT_AMBA_OPTIMIZED_COMPILE
+  import svt_chi_source_uvm_pkg::*;
+`endif
+
+
+`ifndef SVT_AMBA_EXCLUDE_APB_IN_AMBA_SYS_ENV
+  import svt_apb_system_configuration_uvm_pkg::*;
+`endif  
+`ifndef SVT_AMBA_EXCLUDE_AHB_IN_AMBA_SYS_ENV
+  import svt_ahb_system_configuration_uvm_pkg::*;
+`endif  
+  import svt_axi_system_configuration_uvm_pkg::*;
+
+  `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_system_configuration)
+  
+endpackage
+
+`endif // GUARD_SVT_AMBA_SYSTEM_CONFIGURATION_UVM_PKG

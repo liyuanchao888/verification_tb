@@ -75,6 +75,8 @@ for(m_i=0; m_i <TbNumMasters; m_i++) begin
 end
 
 for(s_j=0; s_j<TbNumSlaves;s_j++) begin
+
+    //aw-channel
     assign  axi_if.slave_if[s_j].awid       = slave[s_j].aw_id     ;
     assign  axi_if.slave_if[s_j].awaddr     = slave[s_j].aw_addr   ;
     assign  axi_if.slave_if[s_j].awlen      = slave[s_j].aw_len    ;
@@ -91,6 +93,8 @@ for(s_j=0; s_j<TbNumSlaves;s_j++) begin
 
 	assign  slave[s_j].aw_ready = axi_if.slave_if[s_j].awready     ;
 
+	//w-channel
+    assign  axi_if.slave_if[s_j].wid        = slave[s_j].aw_id     ; //ycli add for axi4 to axi3, use awid to wid
     assign  axi_if.slave_if[s_j].wdata      = slave[s_j].w_data    ;
     assign  axi_if.slave_if[s_j].wstrb      = slave[s_j].w_strb    ;
     assign  axi_if.slave_if[s_j].wlast      = slave[s_j].w_last    ;
@@ -98,12 +102,14 @@ for(s_j=0; s_j<TbNumSlaves;s_j++) begin
     assign  axi_if.slave_if[s_j].wvalid     = slave[s_j].w_valid   ;
     assign  slave[s_j].w_ready = axi_if.slave_if[s_j].wready       ;
 
+    //respond-channel
     assign  slave[s_j].b_id    = axi_if.slave_if[s_j].bid          ;
     assign  slave[s_j].b_resp  = axi_if.slave_if[s_j].bresp        ;
     assign  slave[s_j].b_user  = axi_if.slave_if[s_j].buser        ;
     assign  slave[s_j].b_valid = axi_if.slave_if[s_j].bvalid       ;
     assign  axi_if.slave_if[s_j].bready     = slave[s_j].b_ready   ;
 	
+    //ar-channel
     assign  axi_if.slave_if[s_j].arid       = slave[s_j].ar_id     ;
     assign  axi_if.slave_if[s_j].araddr     = slave[s_j].ar_addr   ;
     assign  axi_if.slave_if[s_j].arlen      = slave[s_j].ar_len    ;
@@ -119,6 +125,7 @@ for(s_j=0; s_j<TbNumSlaves;s_j++) begin
 
 	assign  slave[s_j].ar_ready = axi_if.slave_if[s_j].arready     ;
 
+    //r-channel
     assign  slave[s_j].r_id    =  axi_if.slave_if[s_j].rid           ;
     assign  slave[s_j].r_data  =  axi_if.slave_if[s_j].rdata         ;
     assign  slave[s_j].r_resp  =  axi_if.slave_if[s_j].rresp         ;

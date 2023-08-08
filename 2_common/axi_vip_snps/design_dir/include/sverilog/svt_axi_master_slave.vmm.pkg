@@ -1,0 +1,31 @@
+//=======================================================================
+// COPYRIGHT (C) 2010-2017 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//
+//-----------------------------------------------------------------------
+
+`ifndef GUARD_SVT_AXI_MASTER_SLAVE_VMM_PKG
+`define GUARD_SVT_AXI_MASTER_SLAVE_VMM_PKG
+
+`include "svt.vmm.pkg"
+`include "svt_amba_common.vmm.pkg"
+
+package svt_axi_master_slave_vmm_pkg;
+
+ import `SVT_VMM_PKG::*;
+ import svt_vmm_pkg::*;
+ import svt_amba_common_vmm_pkg::*;
+
+ `include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,axi_master_group_svt,R-2020.12,svt_axi_master_group_source)
+ `include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,axi_slave_group_svt,R-2020.12,svt_axi_slave_group_source)
+endpackage
+
+`endif //GUARD_SVT_AXI_MASTER_SLAVE_VMM_PKG

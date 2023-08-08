@@ -1,0 +1,35 @@
+//=======================================================================
+// COPYRIGHT (C) 2010, 2011, 2012, 2013 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//
+//-----------------------------------------------------------------------
+
+`ifndef GUARD_SVT_AXI_SYSTEM_ENV_SOURCE_SVI
+`define GUARD_SVT_AXI_SYSTEM_ENV_SOURCE_SVI
+
+`include `SVT_SOURCE_MAP_AGENT_INCLUDE_SVI(amba_svt,axi_master_agent_svt,R-2020.12,svt_axi_master_agent_source)
+`include `SVT_SOURCE_MAP_AGENT_INCLUDE_SVI(amba_svt,axi_slave_agent_svt,R-2020.12,svt_axi_slave_agent_source)
+/*
+`include `SVT_SOURCE_MAP_AGENT_INCLUDE_SVI(amba_svt,axi_interconnect_env_svt,R-2020.12,svt_axi_interconnect_env_source)
+`ifdef SVT_UVM_TECHNOLOGY
+`include `SVT_SOURCE_MAP_AGENT_INCLUDE_SVI(amba_svt,axi_system_monitor_svt,R-2020.12,svt_axi_system_monitor_source.uvm)
+`elsif SVT_OVM_TECHNOLOGY
+`include `SVT_SOURCE_MAP_AGENT_INCLUDE_SVI(amba_svt,axi_system_monitor_svt,R-2020.12,svt_axi_system_monitor_source.ovm)
+`endif
+*/
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_system_sequencer)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_system_sequence_library)
+//`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_ace_master_sequence_base)
+//`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_ace_master_sequence_collection)
+//`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_system_env)
+
+`endif //GUARD_SVT_AXI_SYSTEM_ENV_SOURCE_SVI

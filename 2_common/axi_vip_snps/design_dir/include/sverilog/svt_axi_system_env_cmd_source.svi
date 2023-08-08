@@ -1,0 +1,9 @@
+
+`ifndef GUARD_SVT_AXI_SYSTEM_ENV_CMD_SOURCE_SVI
+`define GUARD_SVT_AXI_SYSTEM_ENV_CMD_SOURCE_SVI
+
+`include `SVT_SOURCE_MAP_ENV_INCLUDE_SVI(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_system_env_source)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_system_env_cmd)
+
+
+`endif //GUARD_SVT_AXI_SYSTEM_ENV_CMD_SOURCE_SVI

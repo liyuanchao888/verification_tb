@@ -1,0 +1,1855 @@
+
+`ifndef GUARD_SVT_AXI_MASTER_IF_SVI
+`define GUARD_SVT_AXI_MASTER_IF_SVI
+
+`include "svt_axi_defines.svi"
+
+/**
+    @grouphdr Interfaces svt_axi_master_if AXI Master interface. This is a sub-interface of svt_axi_if.
+ */
+
+/**
+ * @groupname svt_axi_master_if
+ * <b>General description:</b><p>
+ * The master interface svt_axi_master_if defines the AXI signals appropriate
+ * for a single port, along with the modports needed for the AXI master and
+ * monitor VIP. Debug signals and a debug modport are also defined. The debug
+ * port provides useful information for debugging.
+ *
+ * <b>Clock signal description:</b><br>
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Signal Name </b></th><th bgcolor="#dddddd"> Signal Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> aclk </b></td><td> If all AXI interfaces in the system are expected to run on a different clock, user can use the aclk signal in the port interfaces. Set the configuration parameter svt_axi_system_configuration::common_clock_mode to 0. In this case, connect the aclk signal in each port interface to the appropriate port specific clock in the testbench.</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>Debug port description:</b><br>
+ * In active and passive mode, the VIP assigns a unique number to each
+ * transaction. This number is also displayed in the messages issued by the VIP.
+ * The debug port reflects this unique transaction number. This makes it easy to
+ * fnd a particular transaction on the waveforms, by looking at the debug port
+ * signals. For example, if messages mentions that there is a error on
+ * transaction #100, used can jump to value #100 on debug port signals, to find
+ * the transaction. A seperate debug port is provided for each AXI channel, so
+ * that you can jump to the address phase, data phase or response phase of a
+ * given transaction, for example transaction #100.
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Signal Name </b></th><th bgcolor="#dddddd"> Signal Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> read_addr_xact_num </b></td><td> Transaction number on read address channel. Used in active mode.</b></td><tr>
+ *    <tr><td><b> read_data_xact_num </b></td><td> Transaction number on read data channel. Used in active mode.</b></td><tr>
+ *    <tr><td><b> read_data_xfer_id </b></td><td> Data transfer number on read data channel. Used in active mode.</b></td><tr>
+ *    <tr><td><b> write_addr_xact_num </b></td><td> Transaction number on write address channel. Used in active mode.</b></td><tr>
+ *    <tr><td><b> write_data_xact_num </b></td><td> Transaction number on write data channel. Used in active mode.</b></td><tr>
+ *    <tr><td><b> write_data_xfer_id </b></td><td> Data transfer number on write data channel. Used in active mode.</b></td><tr>
+ *    <tr><td><b> write_resp_xact_num </b></td><td> Transaction number on write response channel. Used in active mode.</b></td><tr>
+ *    <tr><td><b> snoop_addr_xact_num </b></td><td> Transaction number on snoop address channel. Used in active mode.</b></td><tr>
+ *    <tr><td><b> snoop_data_xact_num </b></td><td> Transaction number on snoop data channel. Used in active mode.</b></td><tr>
+ *    <tr><td><b> snoop_data_xfer_id </b></td><td> Data transfer number on snoop data channel. Used in active mode.</b></td><tr>
+ *    <tr><td><b> snoop_resp_xact_num </b></td><td> Transaction number on snoop response channel. Used in active mode.</b></td><tr>
+ *    <tr><td><b> mon_read_addr_xact_num </b></td><td> Transaction number on read address channel. Used in passive mode.</b></td><tr>
+ *    <tr><td><b> mon_read_data_xact_num </b></td><td> Transaction number on read data channel. Used in passive mode.</b></td><tr>
+ *    <tr><td><b> mon_read_data_xfer_id </b></td><td> Data transfer number on read data channel. Used in passive mode.</b></td><tr>
+ *    <tr><td><b> mon_write_addr_xact_num </b></td><td> Transaction number on write address channel. Used in passive mode.</b></td><tr>
+ *    <tr><td><b> mon_write_data_xact_num </b></td><td> Transaction number on write data channel. Used in passive mode.</b></td><tr>
+ *    <tr><td><b> mon_write_data_xfer_id </b></td><td> Data transfer number on write data channel. Used in passive mode.</b></td><tr>
+ *    <tr><td><b> mon_write_resp_xact_num </b></td><td> Transaction number on write response channel. Used in passive mode.</b></td><tr>
+ *    <tr><td><b> mon_snoop_addr_xact_num </b></td><td> Transaction number on snoop address channel. Used in passive mode.</b></td><tr>
+ *    <tr><td><b> mon_snoop_data_xact_num </b></td><td> Transaction number on snoop data channel. Used in passive mode.</b></td><tr>
+ *    <tr><td><b> mon_snoop_data_xfer_id </b></td><td> Data transfer number on snoop data channel. Used in passive mode.</b></td><tr>
+ *    <tr><td><b> mon_snoop_resp_xact_num </b></td><td> Transaction number on snoop response channel. Used in passive mode.</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>AXI signal description:</b><br>
+ * This sub-interface supports signals for AXI3, AXI4, ACE and AXI4 Stream
+ * protocols. The names of the signals match the names specified in the AXI
+ * specification. Please refer to the AXI specification for specific description
+ * of any of the signals.
+ */
+interface svt_axi_master_if (input logic common_aclk);
+
+  // Parameter describing an interface to be active or passive
+  // If this parameter == 1 then the interface is active otherwise passive
+  // By default the interface is active
+  bit						  is_active=1;
+  
+  // Parameter to enable/disable Common Clock Mode
+  // By default this mode will be enabled
+  bit                                             common_clock_mode=1;
+
+  // This flag is used to perform clock-gating 
+  // If clock_enable is set to '0' then no clock will be propagated from this point onwards
+  bit                                             clock_enable=0;
+
+
+  // User clock
+  // In multiple clock mode, user is expected to drive this signal
+  logic                                           aclk;
+
+  // Global Interface signals
+/** @cond PRIVATE */
+  logic                                           internal_aclk;
+/** @endcond */
+  logic                                           aresetn;
+
+  //-----------------------------------------------------------------------
+  // AXI3 Interface Write Address Channel Signals
+  //-----------------------------------------------------------------------
+  logic                                           awvalid;
+  logic [`SVT_AXI_MAX_ADDR_WIDTH-1:0]             awaddr;
+  logic [`SVT_AXI_MAX_BURST_LENGTH_WIDTH-1:0]     awlen;
+  logic [`SVT_AXI_SIZE_WIDTH-1:0]                 awsize;
+  logic [`SVT_AXI_BURST_WIDTH-1:0]                awburst;
+  logic [`SVT_AXI_LOCK_WIDTH-1:0]                 awlock;
+  logic [`SVT_AXI_CACHE_WIDTH-1:0]                awcache;
+  logic [`SVT_AXI_PROT_WIDTH-1:0]                 awprot;
+  logic [`SVT_AXI_MAX_ID_WIDTH-1:0]               awid;
+  logic                                           awready;
+ 
+  // AXI5 Unique ID Feature Write Address Channel Signals
+  logic                                           awidunq;
+
+  // AXI ACE5 Extension of Write Address Channel Signals
+  logic [`SVT_AXI_STASH_NID_WIDTH-1:0]            awstashnid;
+  logic [`SVT_AXI_STASH_LPID_WIDTH-1:0]           awstashlpid;
+  logic                                           awstashnid_en;
+  logic                                           awstashlpid_en;
+  logic                                           awtrace;
+  logic                                           awmmusecsid;
+  logic [`SVT_AXI_MAX_MMUSID_WIDTH-1:0]           awmmusid;
+  logic                                           awmmussidv;
+  logic [`SVT_AXI_MAX_MMUSSID_WIDTH-1:0]          awmmussid;
+  logic                                           awmmuatst;
+  logic [`SVT_ACE5_ATOMIC_TYPE_WIDTH-1:0]         awatop; 
+  logic [`SVT_AXI_MAX_MPAM_WIDTH-1:0]             awmpam;
+  logic [`SVT_AXI_MAX_TAG_WIDTH-1:0]              awtagop;
+ 
+  // AXI ACE Extension of Write Address Channel Signals
+  logic [`SVT_AXI_ACE_DOMAIN_WIDTH-1:0]		  awdomain;	
+  logic [`SVT_AXI_ACE_WSNOOP_WIDTH-1:0]		  awsnoop;
+  logic [`SVT_AXI_ACE_WCMO_WIDTH-1:0]		  awcmo;	
+  logic [`SVT_AXI_ACE_BARRIER_WIDTH-1:0]	  awbar; 
+  logic                                           awunique;
+ 
+  // AXI ACE Parity Check Signals
+  logic                                           awvalidchk;
+  logic                                           awreadychk;   
+  logic [(`CEIL(`SVT_AXI_MAX_ID_WIDTH,8))-1:0]    awidchk;   
+  logic [(`CEIL(`SVT_AXI_MAX_ADDR_WIDTH,8))-1:0]  awaddrchk;
+  logic                                           awlenchk;
+  logic                                           awctlchk0;
+  logic                                           awctlchk1;
+  logic                                           awctlchk2;
+  
+  //-----------------------------------------------------------------------
+  // AXI Interface Read Address Channel Signals
+  //-----------------------------------------------------------------------
+  logic                                           arvalid;
+  logic [`SVT_AXI_MAX_ADDR_WIDTH-1:0]             araddr;
+  logic [`SVT_AXI_MAX_BURST_LENGTH_WIDTH-1:0]     arlen;
+  logic [`SVT_AXI_SIZE_WIDTH-1:0]                 arsize;
+  logic [`SVT_AXI_BURST_WIDTH-1:0]                arburst;
+  logic [`SVT_AXI_LOCK_WIDTH-1:0]                 arlock;
+  logic [`SVT_AXI_CACHE_WIDTH-1:0]                arcache;
+  logic [`SVT_AXI_PROT_WIDTH-1:0]                 arprot;
+  logic [`SVT_AXI_MAX_ID_WIDTH-1:0]               arid;
+  logic                                           arready;
+
+  // AXI5 Unique ID Feature Read Address Channel Signals
+  logic                                           aridunq;
+  
+  // AXI ACE Extension of Read Address Channel with DVMv8.1
+  logic [`SVT_AXI_MAX_VMIDEXT_WIDTH-1:0]          arvmidext;
+  logic [`SVT_AXI_TAGOP_WIDTH-1:0]                artagop;
+
+  // AXI ACE Extension of Read Address Channel 
+  logic [`SVT_AXI_ACE_DOMAIN_WIDTH-1:0]		  ardomain;	
+  logic [`SVT_AXI_ACE_RSNOOP_WIDTH-1:0]		  arsnoop;	
+  logic [`SVT_AXI_ACE_BARRIER_WIDTH-1:0]	  arbar;
+ 
+  // AXI ACE5 Extension of Read Address Channel with DVMv8.1
+  logic                                           artrace;
+  logic                                           armmusecsid;
+  logic [`SVT_AXI_MAX_MMUSID_WIDTH-1:0]           armmusid;
+  logic                                           armmussidv;
+  logic [`SVT_AXI_MAX_MMUSSID_WIDTH-1:0]          armmussid;
+  logic                                           armmuatst;
+  logic [`SVT_AXI_MAX_MPAM_WIDTH-1:0]             armpam;
+  
+  // AXI ACE Parity Check Signals
+  logic                                           arvalidchk;
+  logic                                           arreadychk;
+  logic [(`CEIL(`SVT_AXI_MAX_ID_WIDTH,8))-1:0]    aridchk;
+  logic [(`CEIL(`SVT_AXI_MAX_ADDR_WIDTH,8))-1:0]  araddrchk;
+  logic                                           arlenchk;
+  logic                                           arctlchk0;
+  logic                                           arctlchk1;
+  logic                                           arctlchk2;
+  logic                                           arctlchk3;
+ 
+  //-----------------------------------------------------------------------
+  // AXI Interface Read Channel Signals
+  //-----------------------------------------------------------------------
+  logic                                           rvalid;
+  logic                                           rlast;
+  logic [`SVT_AXI_MAX_DATA_WIDTH-1:0]             rdata;
+  logic [`SVT_AXI_RESP_WIDTH-1:0]                 rresp;
+  logic [`SVT_AXI_MAX_ID_WIDTH-1:0]               rid;
+  logic                                           rready;
+  
+  // AXI ACE Extension of Read Data Channel
+  logic 					  rack;
+  logic 					  rackchk;
+  
+  // AXI ACE5 Extension of Read Data Channel
+  logic [(`SVT_AXI_MAX_DATA_WIDTH/8)-1:0]         rdatachk;
+  logic [`SVT_AXI_MAX_DATA_WIDTH/64-1:0]          rpoison;
+  logic                                           rtrace;
+  logic[`SVT_AXI_MAX_TAG_WIDTH-1:0]               rtag;
+
+  // AXI5 Unique ID Feature Read Data Channel Signals
+  logic                                           ridunq;
+
+  logic                                           rvalidchk;
+  logic                                           rreadychk;
+  logic [(`CEIL(`SVT_AXI_MAX_ID_WIDTH,8))-1:0]    ridchk;
+  logic                                           rrespchk;
+  logic                                           rlastchk;
+  
+  //-----------------------------------------------------------------------
+  // AXI Interface Write Channel Signals
+  //-----------------------------------------------------------------------
+  logic                                           wvalid;
+  logic                                           wlast;
+  logic [`SVT_AXI_MAX_DATA_WIDTH-1:0]             wdata;
+  logic [`SVT_AXI_MAX_DATA_WIDTH/8-1:0]           wstrb;
+  logic [`SVT_AXI_MAX_ID_WIDTH-1:0]               wid;
+  logic                                           wready;
+  
+  // AXI ACE5 Extension of Write Data Channel
+  logic [(`SVT_AXI_MAX_DATA_WIDTH/8)-1:0]         wdatachk;
+  logic                                           wtrace;
+  logic [`SVT_AXI_MAX_DATA_WIDTH/64-1:0]          wpoison;
+  logic[`SVT_AXI_MAX_TAG_WIDTH-1:0]               wtag;
+  logic[`SVT_AXI_MAX_TAGUPDATE_WIDTH-1:0]         wtagupdate;
+  
+  // AXI ACE Parity Check Signals
+  logic                                           wvalidchk;
+  logic                                           wreadychk;
+  logic [(`CEIL(`SVT_AXI_MAX_DATA_WIDTH,64))-1:0] wstrbchk;
+  logic                                           wlastchk;
+  
+  //-----------------------------------------------------------------------
+  // AXI Interface Write Response Channel Signals
+  //-----------------------------------------------------------------------
+  logic                                           bvalid;
+  logic [`SVT_AXI_RESP_WIDTH-1:0]                 bresp;
+  logic [`SVT_AXI_MAX_ID_WIDTH-1:0]               bid;
+  logic                                           bready;
+
+  // AXI5 Unique ID Feature Write Response Channel Signals
+  logic                                           bidunq;
+
+  // AXI ACE Extension of Write Response Channel
+  logic						  wack;
+  logic						  wackchk;
+
+  // AXI ACE5 Extension of Write Response channel 
+  logic                                           btrace;
+  logic 					  awakeup;	
+  logic 					  awakeupchk;	
+  logic[`SVT_AXI_MAX_TAG_MATCH_RESP_WIDTH-1:0]    btagmatch;
+  logic                                           bcomp;
+  
+  //AXI ACE Parity Check Signals
+  logic                                           bvalidchk;
+  logic                                           breadychk;
+  logic [(`CEIL(`SVT_AXI_MAX_ID_WIDTH,8))-1:0]    bidchk;
+  logic                                           brespchk;
+
+  //-----------------------------------------------------------------------
+  // AXI4 Interface Signals
+  //-----------------------------------------------------------------------
+  logic [`SVT_AXI_REGION_WIDTH-1:0]               awregion;
+  logic [`SVT_AXI_QOS_WIDTH-1:0]                  awqos;
+  logic [`SVT_AXI_MAX_ADDR_USER_WIDTH-1:0]        awuser;
+  
+  logic [`SVT_AXI_REGION_WIDTH-1:0]               arregion;
+  logic [`SVT_AXI_QOS_WIDTH-1:0]                  arqos;
+  logic [`SVT_AXI_MAX_ADDR_USER_WIDTH-1:0]        aruser;
+
+  logic [`SVT_AXI_MAX_DATA_USER_WIDTH-1:0]        wuser;
+  logic [`SVT_AXI_MAX_DATA_USER_WIDTH-1:0]        ruser;
+  logic [`SVT_AXI_MAX_BRESP_USER_WIDTH-1:0]       buser;
+
+  logic [(`CEIL(`SVT_AXI_MAX_ADDR_USER_WIDTH,8))-1:0]        awuserchk;
+  logic [(`CEIL(`SVT_AXI_MAX_ADDR_USER_WIDTH,8))-1:0]        aruserchk;
+  logic [(`CEIL(`SVT_AXI_MAX_DATA_USER_WIDTH,8))-1:0]        wuserchk;
+  logic [(`CEIL(`SVT_AXI_MAX_DATA_USER_WIDTH,8))-1:0]        ruserchk;
+  logic [(`CEIL(`SVT_AXI_MAX_BRESP_USER_WIDTH,8))-1:0]       buserchk;
+  //-----------------------------------------------------------------------
+  // AXI ACE Interface SNOOP Address Channel Signals 
+  //-----------------------------------------------------------------------
+  logic 					  acvalid;	
+  logic 				    	  acwakeup;
+  logic 					  actrace;	
+  logic        					  acready;	
+  logic [`SVT_AXI_ACE_SNOOP_ADDR_WIDTH-1:0]	  acaddr;	        
+  logic [`SVT_AXI_ACE_SNOOP_TYPE_WIDTH-1:0]	  acsnoop;	
+  logic [`SVT_AXI_ACE_SNOOP_PROT_WIDTH-1:0]	  acprot;		
+  // logic					acbar;  // doesn't appear to be used in spec
+  // AXI ACE Extension of snoop address Channel with DVMv8.1
+  logic [`SVT_AXI_MAX_VMIDEXT_WIDTH-1:0]          acvmidext;
+
+  //AXI ACE Parity Check Signals
+  logic 					  acvalidchk;	
+  logic        				  	  acreadychk;	
+  logic [(`CEIL(`SVT_AXI_ACE_SNOOP_ADDR_WIDTH,8))-1:0]  acaddrchk;	        
+  logic        					  acctlchk;	
+  logic                                           acvmidextchk;
+  logic 				   	  acwakeupchk;
+  
+  //-----------------------------------------------------------------------
+  // AXI ACE Interface SNOOP Response Channel Signals
+  //-----------------------------------------------------------------------
+  logic 					  crtrace;	
+  logic 					  crvalid;	
+  logic        					  crready;	
+  logic [`SVT_AXI_ACE_SNOOP_RESP_WIDTH-1:0]	  crresp;		
+  
+  //AXI ACE Parity Check Signals
+  logic        					  crreadychk;	
+  logic 					  crvalidchk;	
+  logic                                 	  crrespchk;		
+
+  //-----------------------------------------------------------------------
+  // AXI ACE Interface Data Channel Signals
+  //-----------------------------------------------------------------------
+  logic 					  cdvalid;	
+  logic        				  	  cdready;	
+  logic [`SVT_AXI_ACE_SNOOP_DATA_WIDTH-1:0]	  cddata;		
+  logic        					  cdlast;
+
+  // AXI ACE5 Extension of Snoop Data Channel
+  logic [(`SVT_AXI_ACE_SNOOP_DATA_WIDTH/8)-1:0]	  cddatachk;
+  logic [`SVT_AXI_ACE_SNOOP_DATA_WIDTH/64-1:0]	  cdpoison;
+  logic 					  cdtrace;	
+  
+  //AXI ACE Parity Check Signals
+  logic        					  cdreadychk;	
+  logic 					  cdvalidchk;	
+  logic        					  cdlastchk;
+
+  //-----------------------------------------------------------------------
+  // AXI4 STREAM Interface Signals
+  //-----------------------------------------------------------------------
+  logic                                           tvalid;
+  logic                                           tready;
+  logic [`SVT_AXI_MAX_TDATA_WIDTH-1:0]            tdata;
+  logic [`SVT_AXI_TSTRB_WIDTH-1:0]                tstrb;
+  logic [`SVT_AXI_MAX_TDEST_WIDTH-1:0]            tdest;
+  logic [`SVT_AXI_TKEEP_WIDTH-1:0]                tkeep;
+  logic                                           tlast;
+  logic [`SVT_AXI_MAX_TID_WIDTH-1:0]              tid;
+  logic [`SVT_AXI_MAX_TUSER_WIDTH-1:0]            tuser;
+
+  //----------------------------------------------------------------------
+  // AXI G Read Data Chunking Interface Siganal
+  //----------------------------------------------------------------------
+  logic                                         archunken;
+  logic                                         rchunkv;
+  logic[`SVT_AXI_MAX_CHUNK_NUM_WIDTH-1:0]       rchunknum;
+  logic[`SVT_AXI_MAX_CHUNK_STROBE_WIDTH-1:0]    rchunkstrb;
+
+  //-----------------------------------------------------------------------
+  // QVN Interface Signals
+  //-----------------------------------------------------------------------
+  `ifdef SVT_AXI_QVN_ENABLE
+  logic  [3:0] arvnet  ;
+  logic  [3:0] awvnet  ;
+  logic  [3:0] wvnet   ;
+
+  logic  [3:0] varqosvn3   ;
+  logic        varvalidvn3 ;
+  logic        varreadyvn3 ;
+  logic  [3:0] vawqosvn3   ;
+  logic        vawvalidvn3 ;
+  logic        vawreadyvn3 ;
+  logic        vwvalidvn3  ;
+  logic        vwreadyvn3  ;
+
+  logic  [3:0] varqosvn2   ;
+  logic        varvalidvn2 ;
+  logic        varreadyvn2 ;
+  logic  [3:0] vawqosvn2   ;
+  logic        vawvalidvn2 ;
+  logic        vawreadyvn2 ;
+  logic        vwvalidvn2  ;
+  logic        vwreadyvn2  ;
+
+  logic  [3:0] varqosvn1   ;
+  logic        varvalidvn1 ;
+  logic        varreadyvn1 ;
+  logic  [3:0] vawqosvn1   ;
+  logic        vawvalidvn1 ;
+  logic        vawreadyvn1 ;
+  logic        vwvalidvn1  ;
+  logic        vwreadyvn1  ;
+
+  logic  [3:0] varqosvn0   ;
+  logic        varvalidvn0 ;
+  logic        varreadyvn0 ;
+  logic  [3:0] vawqosvn0   ;
+  logic        vawvalidvn0 ;
+  logic        vawreadyvn0 ;
+  logic        vwvalidvn0  ;
+  logic        vwreadyvn0  ;
+  `endif
+
+
+`ifndef SVT_AXI_DISABLE_DEBUG_PORTS
+  /** Debug port signals driven in active mode */
+  logic [31:0]                                  read_addr_xact_num;
+  logic [31:0]                                  read_data_xact_num;
+  logic [31:0]                                  read_data_xfer_id;
+
+  logic [31:0]                                  write_addr_xact_num;
+  logic [31:0]                                  write_data_xact_num;
+  logic [31:0]                                  write_data_xfer_id;
+  logic [31:0]                                  write_resp_xact_num;
+
+  /** Debug ports for ACE interface */
+  logic [31:0]                                  snoop_addr_xact_num;
+  logic [31:0]                                  snoop_data_xact_num;
+  logic [31:0]                                  snoop_data_xfer_id;
+  logic [31:0]                                  snoop_resp_xact_num;
+
+  /** Debug port signals driven in passive mode */
+  logic [31:0]                                  mon_read_addr_xact_num;
+  logic [31:0]                                  mon_read_data_xact_num;
+  logic [31:0]                                  mon_read_data_xfer_id;
+
+  logic [31:0]                                  mon_write_addr_xact_num;
+  logic [31:0]                                  mon_write_data_xact_num;
+  logic [31:0]                                  mon_write_data_xfer_id;
+  logic [31:0]                                  mon_write_resp_xact_num;
+
+  /** Debug ports for ACE interface */
+  logic [31:0]                                  mon_snoop_addr_xact_num;
+  logic [31:0]                                  mon_snoop_data_xact_num;
+  logic [31:0]                                  mon_snoop_data_xfer_id;
+  logic [31:0]                                  mon_snoop_resp_xact_num;
+`endif
+
+/** @cond PRIVATE */
+   // This bit vector set by svt_axi_master_param_if, if the parameter value
+   // more than the system constant MAX macro defined in svt_axi_port_defines.svi 
+   // or svt_axi_user_defines.svi. The bit vector is used in svt_axi_master_agent,
+   // if set Master agent will generate  FATAL error. In environment where master
+   // parameterized interface is not used, this is equivalent to dead code.
+   
+   // param_check_flag [0]  - SVT_AXI_ADDR_WIDTH_PARAM          
+   // param_check_flag [1]  - SVT_AXI_BURST_LENGTH_WIDTH_PARAM  
+   // param_check_flag [2]  - SVT_AXI_DATA_WIDTH_PARAM          
+   // param_check_flag [3]  - SVT_AXI_ID_WIDTH_PARAM            
+   // param_check_flag [4]  - SVT_AXI_ADDR_USER_WIDTH_PARAM     
+   // param_check_flag [5]  - SVT_AXI_DATA_USER_WIDTH_PARAM     
+   // param_check_flag [6]  - SVT_AXI_BRESP_USER_WIDTH_PARAM    
+   // param_check_flag [7]  - SVT_AXI_ACE_SNOOP_ADDR_WIDTH_PARAM
+   // param_check_flag [8]  - SVT_AXI_ACE_SNOOP_DATA_WIDTH_PARAM
+   // param_check_flag [9]  - SVT_AXI_TDATA_WIDTH_PARAM         
+   // param_check_flag [10] - SVT_AXI_TDEST_WIDTH_PARAM         
+   // param_check_flag [11] - SVT_AXI_TID_WIDTH_PARAM           
+   // param_check_flag [12] - SVT_AXI_TUSER_WIDTH_PARAM         
+   bit [12:0] 					param_check_flag;
+
+   // The interger will be updated from svt_axi_master_param_if with the corresponding
+   // parameter value. This value will be used in do_is_valid() function in
+   // svt_axi_port_configuration.
+   int 						svt_axi_addr_width_val = 0;
+   int 						svt_axi_data_width_val = 0;
+   int 						svt_axi_id_width_val =0;
+   int                                          svt_axi_ace_snoop_addr_width_val = 0; 
+   int 						svt_axi_ace_snoop_data_width_val = 0;
+
+   int 						svt_axi_max_tdest_width_val =0;
+   int 						svt_axi_max_tid_width_val = 0;
+   int 						svt_axi_max_tuser_width_val = 0;
+   int 						svt_axi_max_rchunknum_width_val = 0;
+   int 						svt_axi_max_rchunkstrb_width_val = 0;
+
+/** @endcond */
+   
+  // Depending upon the Clock Mode, assign either the User Clock or
+  // Common Clock to the 'internal_aclk' signal
+  assign internal_aclk = (clock_enable == 0) ? 0 : ((common_clock_mode == 0) ? aclk : common_aclk);
+
+
+  // AXI Clocking blocks
+  //-----------------------------------------------------------------------
+  /**
+   * Clocking block that defines VIP AXI Master Interface
+   * signal synchronization and directionality.
+   */
+  clocking axi_master_cb @(posedge internal_aclk);
+    default input #`SVT_AXI_MASTER_IF_SETUP_TIME output #`SVT_AXI_MASTER_IF_HOLD_TIME;
+
+    input   aresetn ;
+
+    output  awid ;
+    output  awstashnid ;
+    output  awstashnid_en ;
+    output  awstashlpid ;
+    output  awstashlpid_en ;
+    output  awmmusecsid;
+    output  awmmusid;
+    output  awmmussidv;
+    output  awmmussid;
+    output  awatop;
+    output  awmpam;    
+    output  awmmuatst;
+    output  awtagop;
+
+    output  awidunq ;
+    output  awaddr ;
+    output  awregion ;
+    output  awlen ;
+    output  awsize ;
+    output  awburst ;
+    output  awlock ;
+    output  awcache ;
+    output  awprot ;
+    output  awqos ;
+    output  awvalid ;
+    output  awtrace ;
+    output  awuser ;
+    output  awuserchk ;
+    input   awready ;
+
+    output  awvalidchk;
+    input   awreadychk;   
+    output  awidchk;
+    output  awaddrchk;
+    output  awlenchk;
+    output  awctlchk0;
+    output  awctlchk1;
+    output  awctlchk2;
+
+    output  wid ;  
+    output  wdata ;
+    output  wtag;
+    output  wtagupdate;
+    output  wstrb ;
+    output  wpoison;
+    output  wlast ;
+    output  wvalid ;
+    output  wtrace ;
+    output  wuser ;
+    output  wuserchk ;
+    output  wdatachk ;
+    input   wready ;
+
+    output  wvalidchk ;
+    input   wreadychk ;
+    output  wstrbchk ;
+    output  wlastchk ;
+ 
+    input   bid ;
+    input   bidunq ;
+    input   bresp ;
+    input   btagmatch ;
+    input   bcomp ;
+    input   bvalid ;
+    input   btrace ;
+    input   buser ;
+    input   buserchk ;
+    output  bready ;
+    
+    input   bvalidchk ;
+    output  breadychk ;
+    input   bidchk ;
+    input   brespchk ;
+    
+    output  arid ; 
+    output  aridunq ;
+    output  araddr ;
+    output  arregion ;
+    output  arlen ;
+    output  arsize ;
+    output  arburst ;
+    output  arlock ;
+    output  arcache ;
+    output  arprot ;
+    output  arqos ;
+    output  arvalid ;
+    output  artagop;
+    output  artrace ;
+    output  armmusecsid;   
+    output  armmusid;
+    output  armmussidv;
+    output  armmussid;
+    output  armmuatst;
+    output  armpam;
+    output  aruser ;
+    output  aruserchk ;
+    input   arready ;
+    output  arvmidext ;
+    output  arvalidchk ;
+    input   arreadychk ;
+    output  aridchk ; 
+    output  araddrchk ;
+    output  arlenchk ;
+    output  arctlchk0 ;
+    output  arctlchk1 ;
+    output  arctlchk2 ;
+    output  arctlchk3 ;
+    input   rid ;
+    input   ridunq ;
+    input   rdata ;
+    input   rtag ;
+    input   rpoison ;
+    input   rresp ;
+    input   rlast ;
+    input   rvalid ;
+    input   rtrace ;
+    input   ruser ;
+    input   ruserchk ;
+    output  rready ;
+    output  awakeup ;
+    output  awakeupchk ;
+    input   rdatachk ;
+    
+    input   rvalidchk;
+    output  rreadychk;
+    input   ridchk;
+    input   rrespchk;
+    input   rlastchk;
+
+    output  ardomain;
+    output  arsnoop;
+    output  arbar;
+    
+    output  rack;
+    output  rackchk;
+    
+    output  awdomain;
+    output  awsnoop;
+    output  awcmo;
+    output  awbar;
+    output  awunique;
+    
+    output  wack;
+    output  wackchk;
+    
+    input   acvalid;
+    input   acwakeup;
+    input   actrace;
+    output  acready;
+    input   acaddr;
+    input   acsnoop;
+    input   acprot;
+    input   acvmidext;
+    input   acvalidchk;
+    output  acreadychk;
+    input   acaddrchk;
+    input   acctlchk;
+    input   acvmidextchk;
+    input   acwakeupchk;
+    
+    output  crvalid;
+    output  crtrace;
+    input   crready;
+    output  crresp;
+    input   crreadychk;
+    output  crvalidchk;
+    output  crrespchk;
+    
+    output  cdvalid;
+    output  cdtrace;
+    input   cdready;
+    output  cddata;
+    output  cdpoison;
+    output  cdlast;
+    output  cddatachk;
+    input   cdreadychk;
+    output  cdvalidchk;
+    output  cdlastchk;
+
+    output tvalid ;
+    output tdata ;
+    output tstrb ;
+    output tkeep ;
+    output tlast ;
+    output tid ;
+    output tdest ;
+    output tuser ;
+    input  tready ;
+
+    //AXI G Read Data Chunking Signal
+    output archunken;
+    input  rchunkv;
+    input  rchunknum;
+    input  rchunkstrb;
+
+    `ifdef SVT_AXI_QVN_ENABLE
+     output      arvnet  ;
+     output      awvnet  ;
+     output      wvnet   ;
+
+     output      varqosvn3   ;
+     output      varvalidvn3 ;
+     input       varreadyvn3 ;
+     output      vawqosvn3   ;
+     output      vawvalidvn3 ;
+     input       vawreadyvn3 ;
+     output      vwvalidvn3  ;
+     input       vwreadyvn3  ;
+   
+     output      varqosvn2   ;
+     output      varvalidvn2 ;
+     input       varreadyvn2 ;
+     output      vawqosvn2   ;
+     output      vawvalidvn2 ;
+     input       vawreadyvn2 ;
+     output      vwvalidvn2  ;
+     input       vwreadyvn2  ;
+   
+     output      varqosvn1   ;
+     output      varvalidvn1 ;
+     input       varreadyvn1 ;
+     output      vawqosvn1   ;
+     output      vawvalidvn1 ;
+     input       vawreadyvn1 ;
+     output      vwvalidvn1  ;
+     input       vwreadyvn1  ;
+   
+     output      varqosvn0   ;
+     output      varvalidvn0 ;
+     input       varreadyvn0 ;
+     output      vawqosvn0   ;
+     output      vawvalidvn0 ;
+     input       vawreadyvn0 ;
+     output      vwvalidvn0  ;
+     input       vwreadyvn0  ;
+    `endif
+
+  endclocking : axi_master_cb
+
+  //-----------------------------------------------------------------------
+  /**
+   * Clocking block that defines the AXI Monitor Interface
+   * signal synchronization and directionality.
+   */
+  clocking axi_monitor_cb @(posedge internal_aclk);
+    default input #`SVT_AXI_MONITOR_IF_SETUP_TIME output #`SVT_AXI_MONITOR_IF_HOLD_TIME;
+    
+    input  aresetn ;
+
+    input   awid ;
+    input   awidunq ;
+    input   awstashnid ;
+    input   awstashnid_en ;
+    input   awstashlpid ;
+    input   awstashlpid_en ;
+    input   awmmusecsid;
+    input   awmmusid;
+    input   awmmussidv;
+    input   awmmussid;
+    input   awatop;
+    input   awmpam;    
+    input   awmmuatst;
+    input   awtagop;
+
+
+    input   awaddr ;
+    input   awregion ;
+    input   awlen ;
+    input   awsize ;
+    input   awburst ;
+    input   awlock ;
+    input   awcache ;
+    input   awprot ;
+    input   awqos ;
+    input   awvalid ;
+    input   awtrace ;
+    input   awuser ;
+    input   awuserchk ;
+    input   awready ;
+
+    input  awvalidchk;
+    input  awreadychk;   
+    input  awidchk;
+    input  awaddrchk;
+    input  awlenchk;
+    input  awctlchk0;
+    input  awctlchk1;
+    input  awctlchk2;
+
+    input   wid ;
+    input   wdata ;
+    input   wtag;
+    input   wstrb ;
+    input   wtagupdate;
+    input   wpoison;
+    input   wlast ;
+    input   wvalid ;
+    input   wtrace ;
+    input   wuser ;
+    input   wuserchk ;
+    input   wready ;
+    input   wdatachk ;
+
+    input   wvalidchk ;
+    input   wreadychk ;
+    input   wstrbchk ;
+    input   wlastchk ;
+    
+    input   bid ;
+    input   bidunq ;
+    input   bresp ;
+    input   btagmatch ;
+    input   bcomp; 
+    input   bvalid ;
+    input   btrace ;
+    input   buser ;
+    input   buserchk ;
+    input   bready ;
+    
+    input   bvalidchk ;
+    input   breadychk ;
+    input   bidchk ;
+    input   brespchk ;
+    
+    input   arid ; 
+    input   aridunq ; 
+    input   araddr ;
+    input   arregion ;
+    input   arlen ;
+    input   arsize ;
+    input   arburst ;
+    input   arlock ;
+    input   arcache ;
+    input   arprot ;
+    input   arqos ;
+    input   arvalid ;
+    input   artagop;
+    input   artrace ;
+    input   armmusecsid; 
+    input   armmusid;  
+    input   armmussidv;
+    input   armmussid; 
+    input   armmuatst; 
+    input   armpam;    
+    input   aruser ;
+    input   aruserchk ;
+    input   arready ;
+    input   arvmidext ;
+ 
+    input   arvalidchk ;
+    input   arreadychk ;
+    input   aridchk ; 
+    input   araddrchk ;
+    input   arlenchk ;
+    input   arctlchk0 ;
+    input   arctlchk1 ;
+    input   arctlchk2 ;
+    input   arctlchk3 ;
+   
+    input   rid ;
+    input   ridunq ;
+    input   rdata ;
+    input   rtag ;
+    input   rpoison ;
+    input   rresp ;
+    input   rlast ;
+    input   rvalid ;
+    input   rtrace ;
+    input   ruser ;
+    input   ruserchk ;
+    input   rready ;
+    input   awakeup ;
+    input   awakeupchk ;
+    input   rdatachk ;
+
+    input   rvalidchk;
+    input   rreadychk;
+    input   ridchk;
+    input   rrespchk;
+    input   rlastchk;
+
+    input   ardomain;
+    input   arsnoop;
+    input   arbar;
+    
+    input   rack;
+    input   rackchk;
+    
+    input   awdomain;
+    input   awsnoop;
+    input   awcmo;
+    input   awbar;
+    input   awunique;
+    
+    input   wack;
+    input   wackchk;
+    
+    input   acvalid;
+    input   acwakeup;
+    input   actrace;
+    input   acready;
+    input   acaddr;
+    input   acsnoop;
+    input   acprot;
+    input   acvmidext;
+    input   acvalidchk;
+    input   acreadychk;
+    input   acaddrchk;
+    input   acctlchk;
+    input   acvmidextchk;
+    input   acwakeupchk;
+    
+    input   crvalid;
+    input   crtrace;
+    input   crready;
+    input   crresp;
+    input   crreadychk;
+    input   crvalidchk;
+    input   crrespchk;
+    
+    input   cdvalid;
+    input   cdtrace;
+    input   cdready;
+    input   cddata;
+    input   cdpoison;
+    input   cdlast;
+    input   cddatachk;
+    input   cdreadychk;
+    input   cdvalidchk;
+    input   cdlastchk;
+
+    input   tvalid ;
+    input   tdata ;
+    input   tstrb ;
+    input   tkeep ;
+    input   tlast ;
+    input   tid ;
+    input   tdest ;
+    input   tuser ;
+    input   tready ;
+
+    //AXI G Read Data Chunking Signal
+    input  archunken;
+    input  rchunkv;
+    input  rchunknum;
+    input  rchunkstrb;
+
+    `ifdef SVT_AXI_SYSCO_IF_ENABLED
+    input   syscoreq ;
+    input   syscoack ;
+    `endif
+
+    `ifdef SVT_AXI_QVN_ENABLE
+     input       arvnet  ;
+     input       awvnet  ;
+     input       wvnet   ;
+
+     input       varqosvn3   ;
+     input       varvalidvn3 ;
+     input       varreadyvn3 ;
+     input       vawqosvn3   ;
+     input       vawvalidvn3 ;
+     input       vawreadyvn3 ;
+     input       vwvalidvn3  ;
+     input       vwreadyvn3  ;
+   
+     input       varqosvn2   ;
+     input       varvalidvn2 ;
+     input       varreadyvn2 ;
+     input       vawqosvn2   ;
+     input       vawvalidvn2 ;
+     input       vawreadyvn2 ;
+     input       vwvalidvn2  ;
+     input       vwreadyvn2  ;
+   
+     input       varqosvn1   ;
+     input       varvalidvn1 ;
+     input       varreadyvn1 ;
+     input       vawqosvn1   ;
+     input       vawvalidvn1 ;
+     input       vawreadyvn1 ;
+     input       vwvalidvn1  ;
+     input       vwreadyvn1  ;
+   
+     input       varqosvn0   ;
+     input       varvalidvn0 ;
+     input       varreadyvn0 ;
+     input       vawqosvn0   ;
+     input       vawvalidvn0 ;
+     input       vawreadyvn0 ;
+     input       vwvalidvn0  ;
+     input       vwreadyvn0  ;
+    `endif
+  endclocking : axi_monitor_cb
+
+`ifndef SVT_AXI_DISABLE_DEBUG_PORTS
+  /**
+   * Clocking block that defines the AXI Debug Interface
+   */
+  clocking axi_debug_cb @(posedge aclk);
+    default input #`SVT_AXI_MASTER_IF_SETUP_TIME output #`SVT_AXI_MASTER_IF_HOLD_TIME;
+    output read_addr_xact_num;
+    output read_data_xact_num;
+    output read_data_xfer_id;
+
+    output write_addr_xact_num;
+    output write_data_xact_num;
+    output write_data_xfer_id;
+    output write_resp_xact_num;
+
+    output snoop_addr_xact_num;
+    output snoop_data_xact_num;
+    output snoop_data_xfer_id;
+    output snoop_resp_xact_num;
+
+    output mon_read_addr_xact_num;
+    output mon_read_data_xact_num;
+    output mon_read_data_xfer_id;
+
+    output mon_write_addr_xact_num;
+    output mon_write_data_xact_num;
+    output mon_write_data_xfer_id;
+    output mon_write_resp_xact_num;
+
+    output mon_snoop_addr_xact_num;
+    output mon_snoop_data_xact_num;
+    output mon_snoop_data_xfer_id;
+    output mon_snoop_resp_xact_num;
+  endclocking : axi_debug_cb
+`endif
+
+  /**
+   * Clocking block that defines the VIP AXI slave Interface
+   * signal synchronization and directionality.
+   */
+  clocking axi_slave_cb @(posedge internal_aclk);
+    default input #`SVT_AXI_SLAVE_IF_SETUP_TIME output #`SVT_AXI_SLAVE_IF_HOLD_TIME;
+  
+    input   aresetn ;
+  
+    input   awid ;
+    input   awidunq ;
+    input   awstashnid ;
+    input   awstashnid_en ;
+    input   awstashlpid ;
+    input   awstashlpid_en ;
+    input   awmmusecsid;
+    input   awmmusid;
+    input   awmmussidv;
+    input   awmmussid;
+    input   awatop;
+    input   awmpam;
+    input   awmmuatst;
+    input   awtagop;
+    
+    input   awaddr ;
+    input   awregion ;
+    input   awlen ;
+    input   awsize ;
+    input   awburst ;
+    input   awlock ;
+    input   awcache ;
+    input   awprot ;
+    input   awqos ;
+    input   awvalid ;
+    input   awtrace ;
+    input   awuser ;
+    input   awuserchk ;
+    output  awready ;
+    
+    input   awvalidchk;
+    output  awreadychk;   
+    input   awidchk;
+    input   awaddrchk;
+    input   awlenchk;
+    input   awctlchk0;
+    input   awctlchk1;
+    input   awctlchk2;
+
+    input   wid ;  
+    input   wdata ;
+    input   wtag;
+    input   wstrb ;
+    input   wtagupdate ;
+    input   wpoison ;
+    input   wlast ;
+    input   wvalid ;
+    input   wtrace ;
+    input   wuser ;
+    input   wuserchk ;
+    input   wdatachk ;
+    output  wready ;
+
+    input   wvalidchk ;
+    output  wreadychk ;
+    input   wstrbchk ;
+    input   wlastchk ;
+   
+    output  bid ;
+    output  bidunq ;
+    output  bresp ;
+    output  btagmatch ;
+    output  bcomp ;
+    output  bvalid ;
+    output  btrace ;
+    output  buser ;
+    output  buserchk ;
+    input   bready ;
+    
+    output  bvalidchk ;
+    input   breadychk ;
+    output  bidchk ;
+    output  brespchk ;
+    
+    input   arid ; 
+    input   aridunq ; 
+    input   araddr ;
+    input   arregion ;
+    input   arlen ;
+    input   arsize ;
+    input   arburst ;
+    input   arlock ;
+    input   arcache ;
+    input   arprot ;
+    input   arqos ;
+    input   arvalid ;
+    input   artagop;
+    input   artrace ;
+    input   armmusecsid;   
+    input   armmusid;     
+    input   armmussidv;   
+    input   armmussid;  
+    input   armmuatst;    
+    input   armpam;   
+
+    input   aruser ;
+    input   aruserchk ;
+    output  arready ;
+    input   arvmidext ;
+    
+    input   arvalidchk ;
+    output  arreadychk ;
+    input   aridchk ; 
+    input   araddrchk ;
+    input   arlenchk ;
+    input   arctlchk0 ;
+    input   arctlchk1 ;
+    input   arctlchk2 ;
+    input   arctlchk3 ;
+                        
+    output  rid ;  
+    output  ridunq ;  
+    output  rdata ;
+    output  rtag ;
+    output  rpoison ;
+    output  rresp ;
+    output  rlast ;
+    output  rvalid ;
+    output  rtrace ;
+    output  ruser ;
+    output  ruserchk ;
+    input   rready ;
+    input   awakeup ;
+    input   awakeupchk ;
+    output  rdatachk ;
+
+    output  rvalidchk;
+    input   rreadychk;
+    output  ridchk;
+    output  rrespchk;
+    output  rlastchk;
+
+    output  acvalid;
+    output  acwakeup;
+    output  actrace;
+    input   acready;
+    output  acaddr;
+    output  acsnoop;
+    output  acprot;
+    output  acvmidext;
+    output  acvalidchk;
+    input   acreadychk;
+    output  acaddrchk;
+    output  acctlchk;
+    output  acvmidextchk;
+    output  acwakeupchk;
+    
+    input   crvalid;
+    input   crtrace;
+    output  crready;
+    input   crresp;
+    output  crreadychk;
+    input   crvalidchk;
+    input   crrespchk;
+    
+    input   cdvalid;
+    input   cdtrace;
+    output  cdready;
+    input   cddata;
+    input   cdpoison;
+    input   cdlast;
+    input   cddatachk;
+    output  cdreadychk;
+    input   cdvalidchk;
+    input   cdlastchk;
+  
+    input   tvalid ;
+    input   tdata ;
+    input   tstrb ;
+    input   tkeep ;
+    input   tlast ;
+    input   tid ;
+    input   tdest ;
+    input   tuser ;
+    output  tready ;
+
+    //AXI G Read Data Chunking Signal
+    input  archunken;
+    output rchunkv;
+    output rchunknum;
+    output rchunkstrb;
+
+    `ifdef SVT_AXI_QVN_ENABLE
+     input        arvnet  ;
+     input        awvnet  ;
+     input        wvnet   ;
+
+     input        varqosvn3   ;
+     input        varvalidvn3 ;
+     output       varreadyvn3 ;
+     input        vawqosvn3   ;
+     input        vawvalidvn3 ;
+     output       vawreadyvn3 ;
+     input        vwvalidvn3  ;
+     output       vwreadyvn3  ;
+   
+     input        varqosvn2   ;
+     input        varvalidvn2 ;
+     output       varreadyvn2 ;
+     input        vawqosvn2   ;
+     input        vawvalidvn2 ;
+     output       vawreadyvn2 ;
+     input        vwvalidvn2  ;
+     output       vwreadyvn2  ;
+   
+     input        varqosvn1   ;
+     input        varvalidvn1 ;
+     output       varreadyvn1 ;
+     input        vawqosvn1   ;
+     input        vawvalidvn1 ;
+     output       vawreadyvn1 ;
+     input        vwvalidvn1  ;
+     output       vwreadyvn1  ;
+   
+     input        varqosvn0   ;
+     input        varvalidvn0 ;
+     output       varreadyvn0 ;
+     input        vawqosvn0   ;
+     input        vawvalidvn0 ;
+     output       vawreadyvn0 ;
+     input        vwvalidvn0  ;
+     output       vwreadyvn0  ;
+    `endif
+
+  endclocking : axi_slave_cb
+
+  //------------------------------------------------------------------------
+  /** Modport used to connect the VIP Master to AXI interface signals. */
+  modport svt_axi_master_modport (clocking axi_master_cb,input aresetn);
+  
+  //-----------------------------------------------------------------------
+  /** Modport used to connect the VIP Monitor to AXI interface signals. */
+  modport svt_axi_monitor_modport (clocking axi_monitor_cb,input aresetn);
+  //-----------------------------------------------------------------------
+  /** Modport used to connect the VIP Interconnect to AXI interface signals. */
+  modport svt_axi_ic_modport (clocking axi_slave_cb,input aresetn);
+
+  //-----------------------------------------------------------------------
+  /**
+   * Asynchronous modport suitable for connecting to a Slave DUT
+   */
+  modport svt_axi_slave_modport ( input awid, 
+                                  input awidunq, 
+                                  input awstashnid, 
+                                  input awstashnid_en,
+                                  input awstashlpid,
+                                  input awstashlpid_en,
+                                  input awmmusecsid,
+                                  input awmmusid,
+                                  input awmmussidv,
+                                  input awmmussid,
+                                  input awatop,
+                                  input awmpam,
+                                  input awtagop,
+                                  input awmmuatst,
+                                  input awaddr, 
+				  input awregion, 
+				  input awlen, 
+                                  input awsize, 
+				  input awburst, 
+				  input awlock, 
+                                  input awcache, 
+				  input awprot, 
+				  input awqos, 
+                                  input awvalid, 
+				  input awtrace,
+                                  input awuser,
+                                  input awuserchk,
+                                  input awvalidchk,
+                                  input awidchk,
+                                  input awaddrchk,
+                                  input awlenchk,
+                                  input awctlchk0,
+                                  input awctlchk1,
+                                  input awctlchk2,
+
+				  input wid,
+                                  input wdata,
+                                  input wtag,
+				  input wstrb,
+				  input wtagupdate,
+	         		  input wpoison,
+                                  input wlast,
+				  input wvalid, 
+                                  input wtrace, 
+                                  input wuser, 
+                                  input wuserchk, 
+				  input wvalidchk, 
+                                  input wdatachk, 
+				  input wstrbchk,
+                                  input wlastchk,
+				  input bready, 
+				  input breadychk, 
+				  input arid, 
+				  input aridunq, 
+                                  input araddr, 
+				  input arregion, 
+				  input arlen, 
+                                  input arsize, 
+				  input arburst, 
+				  input arlock, 
+                                  input arcache, 
+				  input arprot, 
+				  input arqos, 
+                                  input arvalid,
+                                  input artagop, 
+	                          input artrace, 
+                                  input armmusecsid,         		  
+                                  input armmusid,  			  
+                                  input armmussidv,                       
+                                  input armmussid,                  
+                                  input armmuatst,                       
+                                  input armpam,  
+                                  input aruser, 
+                                  input aruserchk, 
+                                  input rready,
+                                  input rreadychk,
+                                  input arvmidext, 
+                                                       
+                                  input arvalidchk, 
+				  input aridchk, 
+                                  input araddrchk, 
+				  input arlenchk, 
+                                  input arctlchk0, 
+                                  input arctlchk1,
+                                  input arctlchk2,
+                                  input arctlchk3,
+                                  
+                                  output aresetn,  			
+                         	  output awready, 
+                                  output awreadychk,   
+				  output wready, 
+				  output wreadychk, 
+				  output bid, 
+				  output bidunq, 
+                                  output bresp, 
+	                          output btagmatch, 
+                                  output bcomp, 
+	           		  output bvalid, 
+	                          output btrace, 
+         			  output buser, 
+         			  output buserchk, 
+				  output bvalidchk, 
+				  output bidchk, 
+                                  output brespchk, 
+				  output arready, 
+				  output arreadychk, 
+                                  output rid, 
+                                  output ridunq, 
+				  output rdata, 
+	                          output rtag, 
+			          output rpoison, 
+                                  output rresp, 
+				  output rlast, 
+                                  output rvalid, 
+	                          output rtrace, 
+	          		  output ruser,
+	          		  output ruserchk,
+                                  output rdatachk,
+                                  output rvalidchk,
+                                  output ridchk,
+                                  output rrespchk,
+                                  output rlastchk,
+			          
+			          // ACE signals
+			          input ardomain, 
+				  input arsnoop, 
+				  input arbar,
+			          input awdomain, 
+				  input awsnoop,
+                                  input awcmo,
+			          input awbar, 
+			          input awunique, 
+				  input acready,
+				  input acreadychk,
+			          input crvalid, 
+				  input crtrace,
+                                  input crresp, 
+			          input crvalidchk, 
+                                  input crrespchk, 
+				  input cdvalid,
+			          input cdtrace,
+                                  input cddata, 
+				  input cdlast, 
+			          input cddatachk, 
+				  input cdvalidchk,
+				  input cdlastchk, 
+				  input cdpoison,
+				  input wack, 
+				  input wackchk, 
+				  input rack,
+				  input rackchk,
+			          
+			          // ACE signals
+			          output acvalid, 
+			          output acwakeup, 
+				  output actrace, 
+                                  output acaddr, 
+				  output acsnoop, 
+				  output acprot, 
+				  output acvmidext, 
+			          output acvalidchk, 
+                                  output acaddrchk, 
+                                  output acctlchk,
+				  output acvmidextchk, 
+			          output acwakeupchk, 
+				  output crready,
+				  output crreadychk,
+                                  output cdready,
+                                  output cdreadychk,
+                                  input  tvalid ,
+                                  input  tdata ,
+                                  input  tstrb ,
+                                  input  tkeep ,
+                                  input  tlast ,
+                                  input  tid ,
+                                  input  tdest ,
+                                  input  tuser ,
+                                  output tready,
+
+                                //AXI G Read Data Chunking Signal
+                                input  archunken,
+                                output rchunkv,
+                                output rchunknum,
+                                output rchunkstrb
+
+		                       `ifdef SVT_AXI_QVN_ENABLE
+				        ,
+                                        input        arvnet  ,
+                                        input        awvnet  ,
+                                        input        wvnet   ,
+
+		                        input        varqosvn3   ,
+		                        input        varvalidvn3 ,
+		                        output       varreadyvn3 ,
+		                        input        vawqosvn3   ,
+		                        input        vawvalidvn3 ,
+		                        output       vawreadyvn3 ,
+		                        input        vwvalidvn3  ,
+		                        output       vwreadyvn3  ,
+		                      
+		                        input        varqosvn2   ,
+		                        input        varvalidvn2 ,
+		                        output       varreadyvn2 ,
+		                        input        vawqosvn2   ,
+		                        input        vawvalidvn2 ,
+		                        output       vawreadyvn2 ,
+		                        input        vwvalidvn2  ,
+		                        output       vwreadyvn2  ,
+		                      
+		                        input        varqosvn1   ,
+		                        input        varvalidvn1 ,
+		                        output       varreadyvn1 ,
+		                        input        vawqosvn1   ,
+		                        input        vawvalidvn1 ,
+		                        output       vawreadyvn1 ,
+		                        input        vwvalidvn1  ,
+		                        output       vwreadyvn1  ,
+		                      
+		                        input        varqosvn0   ,
+		                        input        varvalidvn0 ,
+		                        output       varreadyvn0 ,
+		                        input        vawqosvn0   ,
+		                        input        vawvalidvn0 ,
+		                        output       vawreadyvn0 ,
+		                        input        vwvalidvn0  ,
+		                        output       vwreadyvn0  
+		                       `endif
+
+                                  );
+                          
+  //------------------------------------------------------------------------
+  /**
+   * Asynchronous modport suitable for SV Master Bind interface 
+   */
+  modport  svt_axi_master_async_modport (output   awvalid,
+   			   	         output   awtrace,
+                                         output   awaddr,
+   			   	         output   awlen,
+   			   	         output   awsize,
+   			   	         output   awburst,
+   			   	         output   awlock,
+   			   	         output   awcache,
+   			   	         output   awprot,
+   			   	         output   awid,
+   			   	         output   awidunq,
+       			   	         output   awstashnid,
+  			   	         output   awstashnid_en,
+  			   	         output   awstashlpid,
+  			   	         output   awstashlpid_en,
+                                         output   awmmusecsid,
+                                         output   awmmusid,
+                                         output   awmmussidv,
+                                         output   awmmussid,
+                                         output   awatop,
+                                         output   awmpam,
+                                         output   awtagop,
+                                         output   awmmuatst,
+  			   	         input    awready,
+    			   	         output   awdomain,	
+    			   	         output   awsnoop,
+                                         output   awcmo,	
+    			   	         output   awbar,
+    			   	         output   awunique,
+                                         output   awvalidchk,
+                                         input    awreadychk,
+                                         output   awidchk,
+                                         output   awaddrchk,
+                                         output   awlenchk,
+                                         output   awctlchk0,
+                                         output   awctlchk1,
+                                         output   awctlchk2,
+
+    			   	         output   arvalid,
+                                         output   artagop,
+    			   	         output   artrace,
+                                         output   armmusecsid,   			   	         
+                                         output   armmusid,     			   	         
+                                         output   armmussidv,  			   	         
+                                         output   armmussid,    			   	         
+                                         output   armmuatst,    			   	         
+                                         output   armpam,  			   	                                                  
+                                         output   araddr,
+                                         output   arlen,
+                                         output   arsize,
+                                         output   arburst,
+                                         output   arlock,
+    			   	         output   arcache,
+    			   	         output   arprot,
+    			   	         output   arid,
+    			   	         output   aridunq,
+    			   	         input    arready,
+    			   	         output   ardomain,	
+    			   	         output   arsnoop,	
+    			   	         output   arbar,
+    			   	         output   arvmidext,
+    			   	         output   arvalidchk,
+    			   	         input    arreadychk,
+    			   	         output   aridchk,
+                                         output   araddrchk,
+                                         output   arlenchk,
+                                         output   arctlchk0, 
+                                         output   arctlchk1, 
+                                         output   arctlchk2, 
+                                         output   arctlchk3, 
+    			   	         input    rvalid,
+    			   	         input    rtrace,
+                                         input    rlast,
+    			   	         input    rdata,
+     			   	         input    rtag,
+   			   	         input    rpoison,
+                                         input    rresp,
+    			   	         input    rid,
+    			   	         input    ridunq,
+    			   	         output   rready,
+    			   	         output   rack,
+    			   	         output   rackchk,
+    			   	         input    rdatachk,
+
+                                         input    rvalidchk,
+                                         output   rreadychk,
+                                         input    ridchk,
+                                         input    rrespchk,
+                                         input    rlastchk,
+    			   	         output   wvalid,
+    			   	         output   wtrace,
+                                         output   wlast,
+    			   	         output   wdata,
+                                         output   wtag,
+    			   	         output   wstrb,
+                                         output   wtagupdate,
+    			   	         output   wid,
+    			   	         output   wdatachk,
+    			   	         output   wpoison,
+    			   	         input    wready,
+    			   	         output   wvalidchk,
+    			   	         input    wreadychk,
+    			   	         output   wstrbchk,
+                                         output   wlastchk,
+    			   	         input    bvalid,
+    			   	         input    btrace,
+                                         input    bresp,
+                                         input    btagmatch,
+                                         input    bcomp,
+    			   	         input    bid,
+    			   	         input    bidunq,
+    			   	         output   bready,
+    			   	         input    bvalidchk,
+    			   	         output   breadychk,
+    			   	         input    bidchk,
+                                         input    brespchk,
+    			   	         output   wack,
+    			   	         output   wackchk,
+    			   	         output   awregion,
+    			   	         output   awqos,
+    			   	         output   awuser,
+    			   	         output   awuserchk,
+    			   	         output   arregion,
+    			   	         output   arqos,
+    			   	         output   aruser,
+    			   	         output   aruserchk,
+    			   	         output   wuser,
+    			   	         output   wuserchk,
+    			   	         input    ruser,
+    			   	         input    ruserchk,
+    			   	         input    buser,
+    			   	         input    buserchk,
+   			   	         output   awakeup,
+   			   	         output   awakeupchk,
+    			   	         input    acvalid,	
+    			   	         input    acwakeup,	
+    			   	         input    actrace,
+                                         output   acready,	
+    			   	         input    acaddr,	        
+    			   	         input    acsnoop,	
+    			   	         input    acvmidext,	        
+    			   	         input    acprot,		
+    			   	         input    acvalidchk,	
+                                         output   acreadychk,	
+    			   	         input    acaddrchk,	        
+                                         input    acctlchk,
+    			   	         input    acvmidextchk,	        
+    			   	         input    acwakeupchk,	
+    			   	         output   crvalid,	
+    			   	         output   crtrace,
+                                         input    crready,	
+    			   	         output   crresp,		
+                                         input    crreadychk,	
+    			   	         output   crvalidchk,	
+    			   	         output   crrespchk,		
+    			   	         output   cdvalid,	
+    			   	         output   cdtrace,
+                                         input    cdready,	
+    			   	         output   cddata,		
+    			   	         output   cdlast,
+    			   	         output   cddatachk,		
+                                         input    cdreadychk,	
+    			   	         output   cdvalidchk,	
+    			   	         output   cdlastchk,
+    			   	         output   cdpoison,
+    			   	         output   tvalid,
+    			   	         input    tready,
+    			   	         output   tdata,
+    			   	         output   tstrb,
+    			   	         output   tdest,
+    			   	         output   tkeep,
+    			   	         output   tlast,
+    			   	         output   tid,
+    			   	         output   tuser,
+   			   	         input    is_active,
+
+                    //AXI G Read Data Chunking Signal
+                    output archunken,
+                    input  rchunkv,
+                    input  rchunknum,
+                    input  rchunkstrb
+
+		                       `ifdef SVT_AXI_QVN_ENABLE
+				        ,
+                                        output       arvnet  ,
+                                        output       awvnet  ,
+                                        output       wvnet   ,
+
+		                        output       varqosvn3   ,
+		                        output       varvalidvn3 ,
+		                        input        varreadyvn3 ,
+		                        output       vawqosvn3   ,
+		                        output       vawvalidvn3 ,
+		                        input        vawreadyvn3 ,
+		                        output       vwvalidvn3  ,
+		                        input        vwreadyvn3  ,
+		                      
+		                        output       varqosvn2   ,
+		                        output       varvalidvn2 ,
+		                        input        varreadyvn2 ,
+		                        output       vawqosvn2   ,
+		                        output       vawvalidvn2 ,
+		                        input        vawreadyvn2 ,
+		                        output       vwvalidvn2  ,
+		                        input        vwreadyvn2  ,
+		                      
+		                        output       varqosvn1   ,
+		                        output       varvalidvn1 ,
+		                        input        varreadyvn1 ,
+		                        output       vawqosvn1   ,
+		                        output       vawvalidvn1 ,
+		                        input        vawreadyvn1 ,
+		                        output       vwvalidvn1  ,
+		                        input        vwreadyvn1  ,
+		                      
+		                        output       varqosvn0   ,
+		                        output       varvalidvn0 ,
+		                        input        varreadyvn0 ,
+		                        output       vawqosvn0   ,
+		                        output       vawvalidvn0 ,
+		                        input        vawreadyvn0 ,
+		                        output       vwvalidvn0  ,
+		                        input        vwreadyvn0  
+		                       `endif
+                                );
+
+  //-----------------------------------------------------------------------
+`ifndef SVT_AXI_DISABLE_DEBUG_PORTS
+  /** Modport used to connect the VIP Debug Port. */
+  modport svt_axi_debug_modport (output read_addr_xact_num, 
+                                 output read_data_xact_num, 
+                                 output read_data_xfer_id, 
+                                 output write_addr_xact_num, 
+                                 output write_data_xact_num, 
+                                 output write_data_xfer_id, 
+                                 output write_resp_xact_num,
+				 output snoop_addr_xact_num,
+                                 output snoop_data_xact_num,
+                                 output snoop_data_xfer_id,
+                                 output snoop_resp_xact_num,
+                                 output mon_read_addr_xact_num, 
+                                 output mon_read_data_xact_num, 
+                                 output mon_read_data_xfer_id, 
+                                 output mon_write_addr_xact_num, 
+                                 output mon_write_data_xact_num, 
+                                 output mon_write_data_xfer_id, 
+                                 output mon_write_resp_xact_num,
+				 output mon_snoop_addr_xact_num,
+                                 output mon_snoop_data_xact_num,
+                                 output mon_snoop_data_xfer_id,
+                                 output mon_snoop_resp_xact_num);
+`endif
+
+   /** @cond PRIVATE */
+
+   //-----------------------------------------------------------------------
+   /** function to return Max value for do_is_valid function in 
+    *  svt_axi_port_configuration. The retun value will be either the 
+    *  MAX value macro or parameter value if parameter interface is used.
+    */
+   function int get_max_value(string param_name = "empty");
+
+      if(param_name == "svt_axi_addr_width_val") begin
+	 if(svt_axi_addr_width_val != 0)
+	   get_max_value = svt_axi_addr_width_val;
+	 else
+	   get_max_value = `SVT_AXI_MAX_ADDR_WIDTH;
+      end
+      else if (param_name == "svt_axi_data_width_val") begin
+	 if(svt_axi_data_width_val != 0)
+	   get_max_value = svt_axi_data_width_val;
+	 else
+	   get_max_value = `SVT_AXI_MAX_DATA_WIDTH;
+      end
+      else if(param_name == "svt_axi_id_width_val") begin
+	 if(svt_axi_id_width_val !=0) 
+	   get_max_value = svt_axi_id_width_val;
+	 else
+	   get_max_value = `SVT_AXI_MAX_ID_WIDTH;
+      end
+      else if(param_name == "svt_axi_ace_snoop_addr_width_val") begin
+	 if(svt_axi_ace_snoop_addr_width_val !=0)
+	   get_max_value = svt_axi_ace_snoop_addr_width_val;
+	 else
+	   get_max_value = `SVT_AXI_ACE_SNOOP_ADDR_WIDTH;
+      end
+      else if (param_name == "svt_axi_ace_snoop_data_width_val") begin
+	 if(svt_axi_ace_snoop_data_width_val != 0)
+	   get_max_value = svt_axi_ace_snoop_data_width_val;
+	 else
+	   get_max_value = `SVT_AXI_ACE_SNOOP_DATA_WIDTH;
+      end
+      else if(param_name == "svt_axi_max_tdest_width_val")begin
+	 if(svt_axi_max_tdest_width_val != 0)
+	   get_max_value = svt_axi_max_tdest_width_val;
+	 else
+	   get_max_value = `SVT_AXI_MAX_TDEST_WIDTH;
+      end
+      else if(param_name == "svt_axi_max_tid_width_val") begin
+	 if(svt_axi_max_tid_width_val !=0)
+	   get_max_value = svt_axi_max_tid_width_val;
+	 else
+	   get_max_value = `SVT_AXI_MAX_TID_WIDTH;
+      end
+      else if(param_name == "svt_axi_max_tuser_width_val") begin
+	 if(svt_axi_max_tuser_width_val != 0)
+	   get_max_value = svt_axi_max_tuser_width_val;
+	 else
+	   get_max_value = `SVT_AXI_MAX_TUSER_WIDTH;
+      end
+      else if(param_name == "svt_axi_max_rchunknum_width_val") begin
+	 if(svt_axi_max_rchunknum_width_val != 0)
+	   get_max_value = svt_axi_max_rchunknum_width_val;
+	 else
+	   get_max_value = `SVT_AXI_MAX_CHUNK_NUM_WIDTH;
+      end
+      else if(param_name == "svt_axi_max_rchunkstrb_width_val") begin
+	 if(svt_axi_max_rchunkstrb_width_val != 0)
+	   get_max_value = svt_axi_max_rchunkstrb_width_val;
+	 else
+	   get_max_value = `SVT_AXI_MAX_CHUNK_STROBE_WIDTH;
+      end
+      else begin
+	 $display("svt_axi_master_if::get_max_value(): Unrecognized input string %s", param_name);
+        $finish;
+      end
+      
+   endfunction // get_max_value   
+  /** @endcond */
+
+  /**support for signal logging. */
+`SVT_IF_UTIL_SUPPORT_SIGNAL_LOGGING(1)
+
+endinterface: svt_axi_master_if
+
+`endif // GUARD_SVT_AXI_MASTER_IF_SVI

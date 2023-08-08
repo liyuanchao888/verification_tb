@@ -1,0 +1,65 @@
+
+`ifndef GUARD_SVT_AXI_PORT_MONITOR_CMD_ASSISTANT_OVM_SV
+`define GUARD_SVT_AXI_PORT_MONITOR_CMD_ASSISTANT_OVM_SV
+
+// =============================================================================
+/**
+ * Extends the base OVM command assistant to customize it for the AXI Master
+ * Driver.
+ */
+class svt_axi_port_monitor_cmd_assistant extends svt_ovm_cmd_assistant;
+
+`protected
+3EZa8,(OOJa9+R08]P9S_BDTYYYAY7;G(C0;baC/]:C5#NHDAOe.&)8bF+_27U9N
+]BM;IRJB=(PZ.g+a?^+52IWEC3;b83eJ3@F@^&T5>(>@[Kb\dCU,<dYLbV+OS/@G
+02<3,?.SXNS\OLHHJ)WYND^/Y/AJ8>&7SKX([KC[J&^H[H4B5?Lcd9JKd1Z0,2Lc
+KfM4Q_K#0<\T.Yb)[07AM\4+0,Cg5I-^3PFXN5FL;N\:2=104^=7\cF6O2&e<UUN
+Ngb3#P9V;gT7;)DF^+7fB8VQ;MQCJ86cSXB#G8B>U]\]0M8]U/+_D531&]7_2g])
+L1KAAcZ3O9fGY8..d_>ed@b3f))g7dVb_aWP(^aJSMV\S8&(HG]\9)OZ=#;;;MP1
+I3\#3K&,0dCMR@Q-LYD7U74Q9K);F/MKWd>DbO7f@ObS/=45Af6RQd/O:WD&]2(D
+NK<[;X8C50bQL>P<F#,Y(#[V,:HCLF2#Vf>=4_,.f595Dg,I-[LC2V8;+_5^IJFT
+@gNF264-?(d;Zd4D01_B5BHA;YVfV1RM^X3R1]+&-aO(Q7<[29SNUQPV0+=V5^NJ
+dT4K9]cGMZ8KTAVPdRS.FHLRMc4#\<&^RNS8L1egL)J,ZZKZ,6];7GS;Peac>5)_
+N(US9:5I/A#LcD8,FMaJ3(1(V^K8a(Tg>U]FcJB4=b\BB[KDQO::37/ASP[g.[RM
+QTS/8@TA(aa\1?eQd5P0BU&#2BH]e]#8ZY:66Cc\MF=&;3Da-?^&Wg;Yb32B-K-P
+D]>Y#O2^-IQ+<_I(gXc,.8L;L7b5TbD]6c.Q<;_AH=&<7\d&)&L=F]e,/[OXN7=/
+<;:D?:81U-)Ta]N#:.<Oe\f^:--c_<HY,@Qg\+1<TI&<H$
+`endprotected
+
+
+endclass
+
+`protected
+KO#+^R08Vb:XaIM3fP_Y)&]JEV>0WH/>CB26#L^HA2?_cSN5Da^Y/)X/4+?fM[@Z
+.U,\60ES4KNGgHLI-L:+^LWDb67#gB^;gWFVIc:DPMDN1fF2ZgIaE=G>T1Z>O1T6
+?K+S+gBX^11ESc5-M3CfX4Hg\AX@^F=?XLJO;4(9_P2+NAH(A@eRT7?7g;V(0,CJ
+3IZ&#e;g0-3SB?O^?=BC&RXd-?\(EDTfd<Y](U>?Je]Q(/Q+c95bCB_V6eRaH?/<
+;X3_CKC^Qc?0::09UU=AJ2U^4CDVMMKN12JB4)Y&LRO=e60)59Y7Zf4(Te<XbB:&
+J;.>E)PfL=D71.KfPP:F_/bOD\JWJP[67@WBDCQ6BLSC<0[.@:UACQJEAd<GI<O&
+,,U@0I90/)A?Z5TX<Y?]?CL#CUeF:8IV3/K6N.46_RC<c?&bgf?<g(:1bZ::DOF>
+[9_G=6.J4SYDG)-O<IYJD[;U(O98ZBd[4gQgf:XLODGM=TQ70a/.WZ,8:=ILaE,/
+P1>83O=N;[J^:dVL8)A4bWJKPW<6KAQDIAY-5NC8(L#Z;\\?;:V&+YZJ.2SF1<6#
+Z;^EL:f+;#J_gB^6X_G6@@OLHO273cXQ1(>][@bXA<)VdMPgF6a2(L,/QFL@,^TV
+/9[Mg[-N&JQIX<X;Ra;#=VcDG\(EN5H3fA1/G=Mg\bTNe)2Y,7V23/9Xdc3_+c.Y
+gARFT(9RW;N&L.>.VN.ED\.8JN)A]=E-^;FO.;J0=IN)/Yf/dB<6UeBFd\N(1W^=
+63#MIcXV[X+INX^-/YC31P_PE<E2\.AM]eY@<V,NSOIT/9>3(>5^80CE4a:HB(6,
+=e9#J=U7Mc@cKMIEH-b9+ZHY=^0JO5)Z;+T0BLLRF0[YFFfV?9<Q(((8=O9\<1<J
+EDS^a6J(B(]6aZa?bf__O(4D+&AX?Efg52&<@VN5O6e3D=W2;#6D?T./Cef?]=e#
+NYJ)8.[-@(a6DI6[YSV\V^<YUK@Jg\\G7?PA2[SS-?a4^@2NVV3Z2H6+P6[9g>&D
+:UG9Mf#3JRE#.(UD5#IJGL;OVTQgPOX7BLaDYY&VW+F48PP#e?WC_R(4I42SeOA7
+VHL\U);(\DX[&Q5LYA#Ndf?W-<QJ-MHMB?2R2JC<G#Pe<B:2^K9@4=PY<.0:.-g4
+5+?LB^cX=c7K,BEQ\]5ASDcUe6UW-VI-0_#C,[d]]&>;C[0,Z+1878)_QCO[f/M4
+&(0-INM.T)#UIfTW,C6#fVdDS.VaZ_(6[IS?AgfPVCdc+?^a1,N?R1CY<N.W6-OH
+QSJP=7bQFJX)YcGNfOMR6WPB)[FTCTOU;BDGWBg#/,.:],&eJ</Q[M0=d9BV+>fC
+d^,OXB56-WOg&c5L[W-8V/;GJf\6[M-ee@a?L,Tb,<TdJF,+^CU6=>A+aJ0Gb@ba
+NLRA-,Y:->9DSB/2ITfZ&IJM(;-,^X#H)]4=::&.RAL\IN/-U-&#g#:ARg;dfe7&
+^JD]ZXMGeU#.8g:,1G@?G#NOE>.]POXVgQ?EPQ65Q2L)181DA[1R-?IT1L,U1P?:
+42cH9gV7:RM=bKAa6W79+PZRCJ[aX^.Z?0ENaMK0Ed3,[gGD;^4?2:B2YX1P;d(d
+9KA#X:4Y?[E]7F,,RGS@gC6(8GaT0QTb@<Ke#BgTe4b_&LW>=_0,,\(,dMgQe)+d
+S\ZQ529^U[2_]L^4TH+]BQ<6(_FPd):_PSB>44SLN5WbL.NQW<e8)\Sb_CAL4)^Y
+@LAT4ScMfc^R?(Sc:FWTFJb\1.GF5L3(0367.:9;JX.ZPeY(VN2[/RTIIO49)<g?
+9TC(IVS977+d7e-6:Af][-8f[JV<QD=+4TQA^EDFgG60fRY.E+W6_)TIK$
+`endprotected
+
+
+`endif // GUARD_SVT_AXI_PORT_MONITOR_CMD_ASSISTANT_OVM_SV

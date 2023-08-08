@@ -1,0 +1,134 @@
+
+`ifndef GUARD_SVT_APB_SLAVE_IF_SVI
+`define GUARD_SVT_APB_SLAVE_IF_SVI
+
+`include "svt_apb_defines.svi"
+
+/**
+ * APB Slave Interface provides the SystemVerilog interface which can be used to
+ * connect the Slave VIP to a DUT. A top level interface svt_apb_if is defined. The
+ * top level interface contains the system level pins and an array of slave interfaces.
+ */
+interface svt_apb_slave_if();
+
+  // Parameter describing an interface to be active or passive
+  // If this parameter == 1 then the interface is active otherwise passive
+  // By default the interface is active
+  bit						is_active=1;
+
+//-----------------------------------------------------------------------
+// Interface Signals
+//-----------------------------------------------------------------------
+  // Master Signals
+  logic                                   pclk; 
+  logic                                   presetn; 
+  logic                                   psel; 
+  logic                                   penable; 
+  logic                                   pwrite; 
+  logic [(`SVT_APB_MAX_ADDR_WIDTH - 1):0] paddr; 
+  logic [(`SVT_APB_MAX_DATA_WIDTH - 1):0] pwdata;
+  logic [((`SVT_APB_MAX_DATA_WIDTH/8)-1):0] pstrb;
+  logic [2:0]                             pprot;
+
+  //user defined signals
+  logic[(`SVT_APB_MAX_CONTROL_PUSER_WIDTH -1):0] control_puser;
+
+  // Slave Signals
+  logic [(`SVT_APB_MAX_DATA_WIDTH - 1):0] prdata;
+  logic                                 pready;
+  logic                                 pslverr;
+
+  /** Debug Signals for master driver */
+  logic [31:0]                          xact_id;
+
+  /** Debug Signals for master monitor */
+  logic [31:0]                          mon_xact_id;
+
+
+//-----------------------------------------------------------------------
+// Clocking Blocks
+//-----------------------------------------------------------------------
+  /**
+   * Clocking block that defines VIP APB Slave Interface signal synchronization
+   * and directionality.
+   */
+  clocking apb_slave_cb @(posedge pclk);
+    default input #`SVT_APB_SLAVE_IF_SETUP_TIME output #`SVT_APB_SLAVE_IF_HOLD_TIME;
+
+    input presetn;
+
+    input psel;
+    input penable;
+    input pwrite;
+    input paddr;
+    input pstrb;
+    input pprot;
+    input control_puser;
+
+    output prdata;
+    output pready;
+    output pslverr;
+  endclocking: apb_slave_cb
+
+  //-----------------------------------------------------------------------
+  /**
+   * Clocking block that defines VIP APB System Monitor Interface signal
+   * synchronization and directionality.
+   */
+    clocking apb_monitor_cb @(posedge pclk);
+    default input #`SVT_APB_SLAVE_IF_SETUP_TIME output #`SVT_APB_SLAVE_IF_HOLD_TIME;
+
+    input presetn;
+
+    input psel;
+    input penable;
+    input pwrite;
+    input paddr;
+    input pwdata;
+    input pstrb;
+    input pprot;
+    input control_puser;
+
+    input prdata;
+    input pready;
+    input pslverr;
+  endclocking: apb_monitor_cb
+
+//-----------------------------------------------------------------------
+// Modports
+//-----------------------------------------------------------------------
+  //------------------------------------------------------------------------
+  /** Modport used to connect the VIP Slave to APB interface signals. */
+  modport svt_apb_slave_modport (clocking apb_slave_cb);
+  
+  //-----------------------------------------------------------------------
+  /** Modport used to connect the VIP Monitor to APB interface signals. */
+  modport svt_apb_monitor_modport (clocking apb_monitor_cb,input presetn);
+
+  //-----------------------------------------------------------------------
+  /** Modport used to connect the VIP Debug Port. */
+  modport svt_apb_debug_modport (output xact_id,
+                                 output mon_xact_id);
+
+  //-----------------------------------------------------------------------
+  /** Asynchronous modport suitable for SV Slave Bind interface */
+  modport svt_apb_slave_async_modport (input presetn,
+                                       input psel,
+                                       input penable,
+                                       input pwrite,
+                                       input paddr,
+                                       input pwdata,
+                                       input pstrb,
+                                       input pprot,
+                                       input control_puser,
+                                       output prdata,
+                                       output pready,
+                                       output pslverr
+                                      );
+
+/**support for signal logging. */
+`SVT_IF_UTIL_SUPPORT_SIGNAL_LOGGING(1)
+
+endinterface
+
+`endif // GUARD_SVT_APB_SLAVE_IF_SVI

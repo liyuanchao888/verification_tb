@@ -1,0 +1,18 @@
+
+`ifndef GUARD_SVT_APB_VMM_SOURCE_SVI
+`define GUARD_SVT_APB_VMM_SOURCE_SVI
+
+`include "svt_source.vmm.svi"
+`include "svt_amba_common_source.vmm.svi"
+
+`include "svt_apb_defines.svi"
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_slave_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_slave_addr_range)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_system_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_master_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_slave_transaction)
+
+`endif // GUARD_SVT_APB_VMM_SOURCE_SVI

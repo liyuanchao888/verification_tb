@@ -20,8 +20,15 @@ interface cr_top_interface(input logic clk,input logic rst_n);
   assign axi_if.common_aclk = clk;
   assign axi_if.master_if[0].aresetn = rst_n;
   assign axi_if.slave_if[0].aresetn = rst_n;
+
 //  assign axi_if.master_if[1].aresetn = rst_n;
 //  assign axi_if.slave_if[1].aresetn = rst_n;
+  
+
+  /** TB Interface instance to provide access to the reset signal */
+  axi_reset_if axi_reset_if();
+  assign axi_reset_if.clk = clk;
+
 
   // -------------------------------
   // AXI Interfaces

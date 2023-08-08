@@ -8,9 +8,9 @@
   // DUT
   //-----------------------------------
   /// Number of AXI masters connected to the xbar. (Number of slave ports)
-  parameter int unsigned TbNumMasters        = 32'd2;
+  parameter int unsigned TbNumMasters        = 32'd1;
   /// Number of AXI slaves connected to the xbar. (Number of master ports)
-  parameter int unsigned TbNumSlaves         = 32'd2;
+  parameter int unsigned TbNumSlaves         = 32'd1;
   /// Number of write transactions per master.
   parameter int unsigned TbNumWrites         = 32'd20;
   /// Number of read transactions per master.

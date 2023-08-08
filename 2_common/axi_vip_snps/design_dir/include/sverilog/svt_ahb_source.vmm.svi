@@ -1,0 +1,24 @@
+
+`ifndef GUARD_SVT_AHB_SOURCE_VMM_SVI
+`define GUARD_SVT_AHB_SOURCE_VMM_SVI
+
+`ifndef DESIGNWARE_INCDIR
+  `include "svt_source.vmm.svi"
+`endif
+`include "svt_amba_common_source.vmm.svi"
+
+`include "svt_ahb_defines.svi"
+`include `SVT_SOURCE_MAP_SUITE_SRC_SVI(amba_svt,R-2020.12,svt_ahb_common_monitor_def_cov_util)
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_slave_addr_range)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_master_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_slave_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_bus_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_system_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_master_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_slave_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_bus_status)
+
+`endif // GUARD_SVT_AHB_SOURCE_VMM_SVI

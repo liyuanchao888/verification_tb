@@ -1,0 +1,24 @@
+
+`ifndef GUARD_SVT_AXI_MASTER_AGENT_SOURCE_SVI
+`define GUARD_SVT_AXI_MASTER_AGENT_SOURCE_SVI
+
+`ifdef SVT_UVM_TECHNOLOGY
+`include "svt_axi_component_source.uvm.svi"
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,axi_master_svt,R-2020.12,svt_axi_master_source.uvm)
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_source.uvm)
+`elsif SVT_OVM_TECHNOLOGY
+`include "svt_axi_component_source.ovm.svi"
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,axi_master_svt,R-2020.12,svt_axi_master_source.ovm)
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_source.ovm)
+`endif
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_master_agent_svt,R-2020.12,svt_axi_master_sequence_collection)
+`ifdef SVT_UVM_TECHNOLOGY
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_master_agent_svt,R-2020.12,svt_axi_tlm_generic_payload_sequencer)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_master_agent_svt,R-2020.12,svt_axi_tlm_gp_sequence_collection)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_master_agent_svt,R-2020.12,svt_axi_reg_adapter)
+`endif
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_master_agent_svt,R-2020.12,svt_axi_master_agent)
+
+
+`endif //GUARD_SVT_AXI_MASTER_AGENT_SOURCE_SVI

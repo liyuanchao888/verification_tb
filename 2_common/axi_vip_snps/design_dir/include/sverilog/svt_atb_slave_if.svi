@@ -1,0 +1,282 @@
+
+`ifndef GUARD_SVT_ATB_SLAVE_IF_SVI
+`define GUARD_SVT_ATB_SLAVE_IF_SVI
+
+`include "svt_atb_defines.svi"
+
+/**
+ * <b>General description:</b><p>
+ * The slave interface svt_atb_slave_if defines the ATB signals appropriate
+ * for a single port, along with the modports needed for the ATB slave and
+ * monitor VIP. Debug signals and a debug modport are also defined. The debug
+ * port provides useful information for debugging.
+ *
+ * <b>Clock signal description:</b><br>
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Signal Name </b></th><th bgcolor="#dddddd"> Signal Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> atclk </b></td><td> If all ATB interfaces in the system are expected to run on a different clock, user can use the atclk signal in the port interfaces. Set the configuration parameter svt_atb_system_configuration::common_clock_mode to 0. In this case, connect the atclk signal in each port interface to the appropriate port specific clock in the testbench.</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>Debug port description:</b><br>
+ * In active and passive mode, the VIP assigns a unique number to each
+ * transaction. This number is also displayed in the messages issued by the VIP.
+ * The debug port reflects this unique transaction number. This makes it easy to
+ * fnd a particular transaction on the waveforms, by looking at the debug port
+ * signals. For example, if messages mentions that there is a error on
+ * transaction #100, used can jump to value #100 on debug port signals, to find
+ * the transaction. 
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Signal Name </b></th><th bgcolor="#dddddd"> Signal Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> read_addr_xact_num </b></td><td> Transaction number on read address channel. Used in active mode.</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>ATB signal description:</b><br>
+ * The names of the signals match the names specified in the ATB
+ * specification. Please refer to the ATB specification for specific description
+ * of any of the signals.
+ */
+interface svt_atb_slave_if (input logic common_atclk);
+
+  // Parameter describing an interface to be active or passive
+  // If this parameter == 1 then the interface is active otherwise passive
+  // By default the interface is active
+  bit						is_active=1;
+
+  // Parameter to enable/disable Common Clock Mode
+  // By default this mode will be enabled
+  bit                                           common_clock_mode=1;
+
+  // Indicates if atclken signal should be used for clock gating or not.
+  // ATCLKEN is optional for ATB v1.1
+  bit                                           atclken_enable=1;
+
+  // User clock
+  // In multiple clock mode, user is expected to drive this signal
+  logic                                         atclk;
+
+  // Global Interface signals
+/** @cond PRIVATE */
+  logic                                         internal_atclk=0;
+  logic                                         pre_gated_atclk;
+
+/** @endcond */
+  logic                                         atresetn;
+  logic                                         atclken;
+
+  //-----------------------------------------------------------------------
+  // ATB Interface Signals
+  //-----------------------------------------------------------------------
+  logic [`SVT_ATB_MAX_ID_WIDTH-1:0]                atid;
+  logic [`SVT_ATB_MAX_DATA_VALID_BYTES_WIDTH-1:0]  atbytes;
+  logic [`SVT_ATB_MAX_DATA_WIDTH-1:0]              atdata;
+  logic                                            atvalid;
+  logic                                            atready;
+
+  logic                                            afvalid;
+  logic                                            afready;
+  logic                                            syncreq;
+
+  /** Debug port signals driven in active mode */
+  logic [31:0]                                  atb_xact_num;
+  logic [31:0]                                  atb_xfer_id;
+
+
+  /** Debug port signals driven in passive mode */
+  logic [31:0]                                  mon_atb_xact_num;
+  logic [31:0]                                  mon_atb_xfer_id;
+
+/** @cond PRIVATE */
+   // This bit vector set by svt_atb_slave_param_if, if the parameter value
+   // more than the system constant MAX macro defined in svt_atb_port_defines.svi 
+   // or svt_atb_user_defines.svi. The bit vector is used in svt_atb_slave_agent,
+   // if set slave agent will generate  FATAL error. In environment where slave
+   // parameterized interface is not used, this is equivalent to dead code.
+   
+   // param_check_flag [0]  - SVT_ATB_ID_WIDTH_PARAM          
+   // param_check_flag [1]  - SVT_ATB_DATA_VALID_BYTES_WIDTH_PARAM  
+   // param_check_flag [2]  - SVT_ATB_DATA_WIDTH_PARAM          
+   bit [12:0] 		      param_check_flag;
+
+   // The interger will be updated from svt_atb_slave_param_if with the corresponding
+   // parameter value. This value will be used in do_is_valid() function in
+   // svt_atb_port_configuration.
+   int 			svt_atb_id_width_val =0;
+   int 			svt_atb_data_width_val = 0;
+   int 			svt_atb_data_valid_bytes_width_val = 0;
+
+/** @endcond */
+   
+  // Depending upon the Clock Mode, assign either the User Clock or
+  // Common Clock to the 'pre_gated_atclk' signal
+  assign pre_gated_atclk = (common_clock_mode == 0) ? atclk : common_atclk;
+
+  `ifndef __SVDOC__
+  always @(posedge pre_gated_atclk or negedge pre_gated_atclk)
+    if(pre_gated_atclk) begin
+       if(!atclken_enable | atclken | !atresetn)
+          internal_atclk <= 1'b1;
+       else
+          internal_atclk <= 1'b0;
+    end
+    else
+       internal_atclk <= 1'b0;
+  `endif
+
+  //-----------------------------------------------------------------------
+  /**
+   * Clocking block that defines the ATB Monitor Interface
+   * signal synchronization and directionality.
+   */
+  //-----------------------------------------------------------------------
+  clocking atb_monitor_cb @(posedge internal_atclk);
+    default input #`SVT_ATB_MONITOR_IF_SETUP_TIME output #`SVT_ATB_MONITOR_IF_HOLD_TIME;
+    
+    input  atresetn;
+    input  atclken ;
+
+    input  atid    ;
+    input  atbytes ;
+    input  atdata  ;
+    input  atvalid ;
+    input  atready ;
+
+    input  afvalid ;
+    input  afready ;
+    input  syncreq ;
+  endclocking : atb_monitor_cb
+
+  /**
+   * Clocking block that defines the ATB Debug Interface
+   */
+  clocking atb_debug_cb @(posedge atclk);
+    default input #`SVT_ATB_SLAVE_IF_SETUP_TIME output #`SVT_ATB_SLAVE_IF_HOLD_TIME;
+    output atb_xact_num;
+    output atb_xfer_id;
+  endclocking : atb_debug_cb
+
+  //-----------------------------------------------------------------------
+  /**
+   * Clocking block that defines the VIP ATB slave Interface
+   * signal synchronization and directionality.
+   */
+  //-----------------------------------------------------------------------
+  clocking atb_slave_cb @(posedge internal_atclk);
+    default input #`SVT_ATB_SLAVE_IF_SETUP_TIME output #`SVT_ATB_SLAVE_IF_HOLD_TIME;
+  
+    input  atresetn;
+    input  atclken ;
+
+    input  atid    ;
+    input  atbytes ;
+    input  atdata  ;
+    input  atvalid ;
+    output atready ;
+
+    output afvalid ;
+    input  afready ;
+    output syncreq ;
+  endclocking : atb_slave_cb
+
+
+
+  //------------------------------------------------------------------------
+  /** Modport used to connect the VIP Slave to ATB interface signals. */
+  modport svt_atb_slave_modport (clocking atb_slave_cb);
+  
+  //-----------------------------------------------------------------------
+  /** Modport used to connect the VIP Monitor to ATB interface signals. */
+  modport svt_atb_monitor_modport (clocking atb_monitor_cb);
+
+  //-----------------------------------------------------------------------
+  /**
+   * Asynchronous modport suitable for connecting to a Master DUT
+   */
+  modport svt_atb_master_modport ( input atid, 
+                                  input atbytes, 
+				  input atdata, 
+				  input atvalid, 
+                                  input afready, 
+                                  input atclken, 
+                          
+                                  output atresetn, 
+				  output atready, 
+				  output afvalid, 
+				  output syncreq
+                                  );
+                          
+  //------------------------------------------------------------------------
+  /**
+   * Asynchronous modport suitable for SV Master Bind interface 
+   */
+  modport  svt_atb_master_async_modport (
+                                  output atid, 
+                                  output atbytes, 
+				  output atdata, 
+				  output atvalid, 
+                                  output afready, 
+                                  output atclken, 
+                          
+                                  input  atresetn, 
+				  input  atready, 
+				  input  afvalid, 
+				  input  syncreq
+                                );
+
+  //-----------------------------------------------------------------------
+  /** Modport used to connect the VIP Debug Port. */
+  modport svt_atb_debug_modport (output atb_xact_num, 
+                                 output atb_xfer_id, 
+                                 output mon_atb_xact_num, 
+                                 output mon_atb_xfer_id
+                                );
+
+
+   /** @cond PRIVATE */
+
+   //-----------------------------------------------------------------------
+   /** function to return Max value for do_is_valid function in 
+    *  svt_atb_port_configuration. The retun value will be either the 
+    *  MAX value macro or parameter value if parameter interface is used.
+    */
+   function int get_max_value(string param_name = "empty");
+
+      if(param_name == "svt_atb_id_width_val") begin
+	 if(svt_atb_id_width_val !=0) 
+	   get_max_value = svt_atb_id_width_val;
+	 else
+	   get_max_value = `SVT_ATB_MAX_ID_WIDTH;
+      end
+      else if (param_name == "svt_atb_data_width_val") begin
+	 if(svt_atb_data_width_val != 0)
+	   get_max_value = svt_atb_data_width_val;
+	 else
+	   get_max_value = `SVT_ATB_MAX_DATA_WIDTH;
+      end
+      else if(param_name == "svt_atb_data_valid_bytes_width_val") begin
+	 if(svt_atb_data_valid_bytes_width_val !=0)
+	   get_max_value = svt_atb_data_valid_bytes_width_val;
+	 else
+	   get_max_value = `SVT_ATB_MAX_DATA_VALID_BYTES_WIDTH;
+      end
+      else begin
+	 $display("svt_atb_slave_if::get_max_value(): Unrecognized input string %s", param_name);
+        $finish;
+      end
+      
+   endfunction // get_max_value
+   
+      
+   
+   /** @endcond */
+
+endinterface: svt_atb_slave_if
+
+`endif // GUARD_SVT_ATB_SLAVE_IF_SVI

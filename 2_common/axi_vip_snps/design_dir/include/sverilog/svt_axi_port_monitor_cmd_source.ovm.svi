@@ -1,0 +1,10 @@
+
+`ifndef GUARD_SVT_AXI_PORT_MONITOR_CMD_SOURCE_OVM_SVI
+`define GUARD_SVT_AXI_PORT_MONITOR_CMD_SOURCE_OVM_SVI
+
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_source.ovm)
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_cmd.ovm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_port_monitor_svt,R-2020.12,svt_axi_port_monitor_cmd_assistant.ovm)
+
+`endif //GUARD_SVT_AXI_PORT_MONITOR_CMD_SOURCE_OVM_SVI

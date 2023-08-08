@@ -1,0 +1,28 @@
+
+`ifndef GUARD_SVT_AHB_DEFINES_SVI
+`define GUARD_SVT_AHB_DEFINES_SVI
+
+`ifndef DESIGNWARE_INCDIR
+  `include "svt_defines.svi"
+`endif
+// First read in the user-specified defines (if any), that may take precedence
+// over some of the following defaults...
+`ifdef SVT_AHB_INCLUDE_USER_DEFINES
+  `ifndef SVT_AHB_INCLUDED_USER_DEFINES
+    `define SVT_AHB_INCLUDED_USER_DEFINES
+    `include "svt_ahb_user_defines.svi"
+  `endif
+`endif // SVT_AHB_INCLUDE_USER_DEFINES
+
+`ifndef SVT_AMBA_VERSION
+`define SVT_AMBA_VERSION R-2020.12
+`endif
+
+// Read in the symbolic constants for common values used by the AHB VIP.
+`include "svt_ahb_common_defines.svi"
+
+// Read in the symbolic constants that control signal widths in the HDL wire-frame.
+`include "svt_ahb_port_defines.svi"  
+
+
+`endif // GUARD_SVT_AHB_DEFINES_SVI

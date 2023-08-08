@@ -1,0 +1,24 @@
+
+`ifndef GUARD_SVT_AXI_SYSTEM_ENV_SOURCE_SVI
+`define GUARD_SVT_AXI_SYSTEM_ENV_SOURCE_SVI
+
+`include `SVT_SOURCE_MAP_AGENT_CMD_INCLUDE_SVI(amba_svt,axi_master_agent_svt,R-2020.12,svt_axi_ic_master_agent_source)
+`include `SVT_SOURCE_MAP_AGENT_CMD_INCLUDE_SVI(amba_svt,axi_lp_master_agent_svt,R-2020.12,svt_axi_lp_master_agent_source)
+`include `SVT_SOURCE_MAP_AGENT_CMD_INCLUDE_SVI(amba_svt,axi_slave_agent_svt,R-2020.12,svt_axi_ic_slave_agent_source)
+`include `SVT_SOURCE_MAP_ENV_CMD_INCLUDE_SVI(amba_svt,axi_interconnect_env_svt,R-2020.12,svt_axi_interconnect_env_source)
+`ifdef SVT_UVM_TECHNOLOGY
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,axi_system_monitor_svt,R-2020.12,svt_axi_system_monitor_source.uvm)
+`elsif SVT_OVM_TECHNOLOGY
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,axi_system_monitor_svt,R-2020.12,svt_axi_system_monitor_source.ovm)
+`endif
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_system_sequencer)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_system_sequence_library)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_ace_master_sequence_base)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_ace_master_sequence_collection)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_system_env)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_3_4_interconnect_ts_signal_timing_sequence_collection)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_3_4_interconnect_ts_burst_sequence_collection)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,axi_system_env_svt,R-2020.12,svt_axi_3_4_interconnect_ts_ordering_sequence_collection)
+
+`endif //GUARD_SVT_AXI_SYSTEM_ENV_SOURCE_SVI
