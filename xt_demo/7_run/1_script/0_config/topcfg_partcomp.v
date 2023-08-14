@@ -11,15 +11,20 @@
 //                                                                 
 //===============================================================
                                                                  
-`ifndef CR_DEMO_BUILD__SV
-`define CR_DEMO_BUILD__SV
+`ifndef TOPCFG_PARTCOMP__SV
+`define TOPCFG_PARTCOMP__SV
+config topcfg_partcomp;
 
+      design test_top;
+	  //partition instance uvm_pkg::**
+	  partition instance test_top.DUT;
+	  partition package uvm_pkg;
+	  partition package svt_uvm_pkg;
+	  partition package svt_axi_uvm_pkg;
+	  partition package svt_apb_uvm_pkg;
+	  partition package svt_ahb_uvm_pkg;
+	  partition package svt_amba_common_uvm_pkg;
 
-//m_pcie_subenv = cr_pcie_subenv::type_id::create("m_pcie_subenv",this);
-
-//this.m_ctrl_regmodel0=ral_lpddr_ctl_top::type_id::create("ctl_regmodel0",,get_full_name());
-//this.m_ctrl_regmodel0.configure(this,"");
-//this.m_ctrl_regmodel0.build();
-//this.cpuss_map.add_submap(this.m_ctl_regmodel0.default_map,`DDRCTRL0_APB3_BASE_ADDR);
+endconfig
 
 `endif

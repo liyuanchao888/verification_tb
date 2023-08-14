@@ -42,15 +42,26 @@ fi
 	-xprop "
 
 #---- g++  -----
-[ ${c_cmp} = on ] && CMP_OPT="${CMP_OPT} \
+[ ${c_comp} = on ] && CMP_OPT="${CMP_OPT} \
 	-cpp g++ -cc gcc -sysc +define+SYSTEMC_MODEL +define+DEBUG_MODE "
+
+#---- partcompile  -----
+[ ${partcomp} = off ] && CMP_OPT="${CMP_OPT} \
+	-pcmakeprof -j4 "
+
+if [ ${partcomp} = on ];then
+    CMP_OPT=`echo ${CMP_OPT} | sed 's#-top '${tb_top}'# #g'`
+	CMP_OPT="${CMP_OPT} -partcomp -fastpartcomp=j4 -top topcfg_partcomp ${PROJ_WORK_PATH}/../1_script/0_config/topcfg_partcomp.v -pcmakeprof -partcomp_dir=${PROJ_WORK_PATH}/output/pc_dir "
+fi
+
+
 
 #---- specify output dir  -----
 if [ ${output_dir} = on ];then
     mkdir -p ${PROJ_WORK_PATH}/output
 fi
 [ ${output_dir} = on ] && CMP_OPT="${CMP_OPT} \
-	-o ${PROJ_WORK_PATH}/output/simv \
+	-o ${SIMV_FILE} \
 	-Mdir=${PROJ_WORK_PATH}/output/csrc "
 
 #---- init mem  -----
