@@ -1,6 +1,6 @@
 import subprocess
 member = {
-'liycstart888' : 'liycstart@126.com'
+'liycstart888' : 'e-mail@xxxx.com'
 		}
 #output = subprocess.check_output('whoami',shell=True)
 #name = output.decode().strip()
