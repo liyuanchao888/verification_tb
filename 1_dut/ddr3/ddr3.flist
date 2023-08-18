@@ -1,3 +1,4 @@
++incdir+${VP_PATH}/1_dut/ddr3/ddr_model 
 ./src_v/arty_a7/artix7_pll.v
 ./src_v/arty_a7/reset_gen.v
 ./src_v/ddr3_dfi_seq.v
@@ -7,4 +8,4 @@
 ./src_v/ddr3_axi_retime.v
 ./src_v/ddr3_axi.v
 ./src_v/arty_a7/top.v
-./ddr3.v
+./ddr_model/ddr3.v

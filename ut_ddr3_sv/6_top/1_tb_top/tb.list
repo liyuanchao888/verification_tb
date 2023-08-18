@@ -1,1 +1,7 @@
++incdir+${XILINX_VIVADO}/data/verilog/src 
+${XILINX_VIVADO}/data/verilog/src/glbl.v 
+-y ${XILINX_VIVADO}/data/verilog/src/unimacro 
+-y ${XILINX_VIVADO}/data/verilog/src/unisims +libext+.v 
+-f ${XILINX_VIVADO}/data/secureip/secureip_cell.list.f 
+-top glbl 
 ../../6_top/1_tb_top/test_top.sv
