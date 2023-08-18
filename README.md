@@ -71,7 +71,8 @@ c_seq_axi.sv/c_sqr_axi.sv/c_cfg_axi.sv/c_trans_axi.sv
 			4_cover（语句/功能覆盖）
 			5_assert
 			6_upf（功耗仿真）
-			7_sdf(含有deposit/sdf 等文件)
+			7_sdf(含有deposit/sdf 等文件):w
+
 		7_run
 			1_script
 			2_work(default)
@@ -92,7 +93,8 @@ c_seq_axi.sv/c_sqr_axi.sv/c_cfg_axi.sv/c_trans_axi.sv
 
 	xt_demo    : apb2ahb  + uvm env
 	ut_axi     : axi      + uvm axi(M+S)  
-	ut_axi_noc : axi_xbar + sv  axi(M+S)  ( axi_xbar initial tc for test address )
+	ut_noc_sv  : axi_xbar + sv  axi(M+S)  ( axi_xbar initial tc for test address )
 	ut_noc     : axi_xbar + svt_axi_uvm(M+S)
-    ut_ddr3    : ddr3     + svt_axi_uvm(M) + ddr3
+    ut_ddr3_sv : ddr3     + sv cpu_wr/rd (initial )
+    ut_ddr3    : ddr3+axi + svt_axi_uvm(M) 
 
