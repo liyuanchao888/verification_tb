@@ -1,0 +1,455 @@
+
+`ifndef GUARD_SVT_AXI_SLAVE_PARAM_IF_SVI
+`define GUARD_SVT_AXI_SLAVE_PARAM_IF_SVI
+
+`include "svt_axi_defines.svi"
+
+/**
+ * <b>General description:</b><p>
+ * The slave parameterized interface svt_axi_slave_param_if defines the AXI
+ * signals appropriate for a single port. Slave parameterized interface
+ * connects AXI Slave VIP to DUT. The width of signals within the parameterized
+ * interface can be parameterized to match signal widths of DUT. The default
+ * value of all the parameters are same as the Max signal widths defined in
+ * svt_axi_port_defines.svi. Slave parameterized interface works in conjunction
+ * with top level interface svt_axi_if.
+ *
+ * <b>Clock signal description:</b><br>
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Signal Name </b></th><th bgcolor="#dddddd"> Signal Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> aclk </b></td><td> If all AXI interfaces in the system are expected to run on a different clock, user can use the aclk signal in the port interfaces. Set the configuration parameter svt_axi_system_configuration::common_clock_mode to 0. In this case, connect the aclk signal in each port interface to the appropriate port specific clock in the testbench.</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>Parameter description:</b><br>
+ * The signal width of slave parameterized interface can be parameterized to
+ * match DUT signal widths. The default value of all the parameters are same as
+ * the Max signal widths defined in svt_axi_port_defines.svi. The parameter
+ * values should not exceed the Max signal width values defined in
+ * svt_axi_port_defines.svi, or redefined by user in svt_axi_user_defines.svi.
+ *  
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Parameter Name </b></th><th bgcolor="#dddddd"> Parameter Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> SVT_AXI_ADDR_WIDTH_PARAM </b></td><td> Write and Read Address Channel address width (AxADDR).</b></td><tr>
+ *    <tr><td><b> SVT_AXI_BURST_LENGTH_WIDTH_PARAM </b></td><td> Write and Read Address Channel Burst Length signal (AxLEN) width.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_DATA_WIDTH_PARAM </b></td><td> Write and Read Data channel's data width.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_ID_WIDTH_PARAM </b></td><td> ID width for AWID, ARID, WID, RID, BID.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_ADDR_USER_WIDTH_PARAM </b></td><td> Write and Read Address channel user signal width AxUSER.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_DATA_USER_WIDTH_PARAM </b></td><td> Write and Read Data channel user signal width WUSER, RUSER.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_BRESP_USER_WIDTH_PARAM </b></td><td> Write response channel user signal width, BUSER.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_TDATA_WIDTH_PARAM </b></td><td> Stream interface data width.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_TDEST_WIDTH_PARAM </b></td><td> Stream interface TDEST width.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_TID_WIDTH_PARAM </b></td><td> Stream Channel ID signal width.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_TUSER_WIDTH_PARAM </b></td><td> Stream Channel user signal width.</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>AXI signal description:</b><br>
+ * This sub-interface supports signals for AXI3, AXI4, ACE and AXI4 Stream
+ * protocols. The names of the signals match the names specified in the AXI
+ * specification. Please refer to the AXI specification for specific description
+ * of any of the signals.
+ * </p>
+ */
+
+interface svt_axi_slave_param_if #(is_active=1, int SVT_AXI_ADDR_WIDTH_PARAM           = `SVT_AXI_MAX_ADDR_WIDTH,
+				   int SVT_AXI_BURST_LENGTH_WIDTH_PARAM   = `SVT_AXI_MAX_BURST_LENGTH_WIDTH,
+				   int SVT_AXI_DATA_WIDTH_PARAM           = `SVT_AXI_MAX_DATA_WIDTH,
+				   int SVT_AXI_ID_WIDTH_PARAM             = `SVT_AXI_MAX_ID_WIDTH,
+				   int SVT_AXI_ADDR_USER_WIDTH_PARAM      = `SVT_AXI_MAX_ADDR_USER_WIDTH,
+				   int SVT_AXI_DATA_USER_WIDTH_PARAM      = `SVT_AXI_MAX_DATA_USER_WIDTH,
+				   int SVT_AXI_BRESP_USER_WIDTH_PARAM     = `SVT_AXI_MAX_BRESP_USER_WIDTH,
+				   int SVT_AXI_TDATA_WIDTH_PARAM          = `SVT_AXI_MAX_TDATA_WIDTH,
+				   int SVT_AXI_TDEST_WIDTH_PARAM          = `SVT_AXI_MAX_TDEST_WIDTH,
+				   int SVT_AXI_TID_WIDTH_PARAM            = `SVT_AXI_MAX_TID_WIDTH,
+				   int SVT_AXI_TUSER_WIDTH_PARAM          = `SVT_AXI_MAX_TUSER_WIDTH
+				   ) (svt_axi_slave_if slave_if);
+   
+
+   logic                            aclk;
+   logic 						 aresetn;
+
+   //-----------------------------------------------------------------------
+   // AXI3 Interface Write Address Channel Signals
+   //-----------------------------------------------------------------------
+   logic 						 awvalid;
+   logic [SVT_AXI_ADDR_WIDTH_PARAM-1:0] 		 awaddr;
+   logic [SVT_AXI_BURST_LENGTH_WIDTH_PARAM-1:0] 	 awlen; 
+   logic [`SVT_AXI_SIZE_WIDTH-1:0] 			 awsize;
+   logic [`SVT_AXI_BURST_WIDTH-1:0] 			 awburst;
+   logic [`SVT_AXI_LOCK_WIDTH-1:0] 			 awlock;
+   logic [`SVT_AXI_CACHE_WIDTH-1:0] 			 awcache;
+   logic [`SVT_AXI_PROT_WIDTH-1:0] 			 awprot;
+   logic [SVT_AXI_ID_WIDTH_PARAM-1:0] 			 awid; 
+   logic 						 awready;
+
+   // AXI ACE Extension of Write Address Channel Signals
+   logic [`SVT_AXI_ACE_DOMAIN_WIDTH-1:0] 		 awdomain;	
+   logic [`SVT_AXI_ACE_WSNOOP_WIDTH-1:0] 		 awsnoop;	
+   logic [`SVT_AXI_ACE_BARRIER_WIDTH-1:0] 		 awbar;
+   logic 						 awidunq;
+   
+    logic [`SVT_AXI_MAX_MPAM_WIDTH-1:0]           awmpam;
+   //-----------------------------------------------------------------------
+   // AXI Interface Read Address Channel Signals
+   //-----------------------------------------------------------------------
+   logic 						 arvalid;
+   logic [SVT_AXI_ADDR_WIDTH_PARAM-1:0] 		 araddr; 
+   logic [SVT_AXI_BURST_LENGTH_WIDTH_PARAM-1:0] 	 arlen; 
+   logic [`SVT_AXI_SIZE_WIDTH-1:0] 			 arsize;
+   logic [`SVT_AXI_BURST_WIDTH-1:0] 			 arburst;
+   logic [`SVT_AXI_LOCK_WIDTH-1:0] 			 arlock;
+   logic [`SVT_AXI_CACHE_WIDTH-1:0] 			 arcache;
+   logic [`SVT_AXI_PROT_WIDTH-1:0] 			 arprot;
+   logic [SVT_AXI_ID_WIDTH_PARAM-1:0] 			 arid; 
+   logic 						 arready;
+
+   // AXI ACE Extension of Read Address Channel 
+   logic [`SVT_AXI_ACE_DOMAIN_WIDTH-1:0] 		 ardomain;	
+   logic [`SVT_AXI_ACE_RSNOOP_WIDTH-1:0] 		 arsnoop;	
+   logic [`SVT_AXI_ACE_BARRIER_WIDTH-1:0] 		 arbar;
+   logic 						 aridunq;
+
+   logic [`SVT_AXI_MAX_MPAM_WIDTH-1:0]           armpam;
+   //-----------------------------------------------------------------------
+   // AXI Interface Read Channel Signals
+   //-----------------------------------------------------------------------
+   logic 						 rvalid;
+   logic 						 rlast;
+   logic [SVT_AXI_DATA_WIDTH_PARAM-1:0] 		 rdata; 
+   logic [`SVT_AXI_RESP_WIDTH-1:0] 			 rresp;
+   logic [SVT_AXI_ID_WIDTH_PARAM-1:0] 			 rid; 
+   logic 						 rready;
+
+   // AXI ACE Extension of Read Data Channel
+   logic 						 rack;
+   logic 						 ridunq;
+
+   //-----------------------------------------------------------------------
+   // AXI Interface Write Channel Signals
+   //-----------------------------------------------------------------------
+   logic 						 wvalid;
+   logic 						 wlast;
+   logic [SVT_AXI_DATA_WIDTH_PARAM-1:0] 		 wdata; 
+   logic [SVT_AXI_DATA_WIDTH_PARAM/8-1:0] 		 wstrb; 
+   logic [SVT_AXI_ID_WIDTH_PARAM-1:0] 			 wid; 
+   logic 						 wready;
+   
+   //-----------------------------------------------------------------------
+   // AXI Interface Write Response Channel Signals
+   //-----------------------------------------------------------------------
+   logic 						 bvalid;
+   logic [`SVT_AXI_RESP_WIDTH-1:0] 			 bresp;
+   logic [SVT_AXI_ID_WIDTH_PARAM-1:0] 			 bid; 
+   logic 						 bready;
+
+   // AXI ACE Extension of Write Response Channel
+   logic 						 wack;
+   logic 						 bidunq;
+
+   //-----------------------------------------------------------------------
+   // AXI4 Interface Signals
+   //-----------------------------------------------------------------------
+   logic [`SVT_AXI_REGION_WIDTH-1:0] 			 awregion;
+   logic [`SVT_AXI_QOS_WIDTH-1:0] 			 awqos;
+   logic [SVT_AXI_ADDR_USER_WIDTH_PARAM-1:0] 		 awuser; 
+   
+   logic [`SVT_AXI_REGION_WIDTH-1:0] 			 arregion;
+   logic [`SVT_AXI_QOS_WIDTH-1:0] 			 arqos;
+   logic [SVT_AXI_ADDR_USER_WIDTH_PARAM-1:0] 		 aruser; 
+
+   logic [SVT_AXI_DATA_USER_WIDTH_PARAM-1:0] 		 wuser; 
+   logic [SVT_AXI_DATA_USER_WIDTH_PARAM-1:0] 		 ruser; 
+   logic [SVT_AXI_BRESP_USER_WIDTH_PARAM-1:0] 		 buser; 
+
+   //-----------------------------------------------------------------------
+   // AXI ACE Interface SNOOP Address Channel Signals 
+   //-----------------------------------------------------------------------
+   logic 						 acvalid;	
+   logic        					 acready;	
+   logic [`SVT_AXI_ACE_SNOOP_ADDR_WIDTH-1:0] 		 acaddr;	        
+   logic [`SVT_AXI_ACE_SNOOP_TYPE_WIDTH-1:0] 		 acsnoop;	
+   logic [`SVT_AXI_ACE_SNOOP_PROT_WIDTH-1:0] 		 acprot;		
+   // logic					acbar;  // doesn't appear to be used in spec
+
+   //-----------------------------------------------------------------------
+   // AXI ACE Interface SNOOP Response Channel Signals
+   //-----------------------------------------------------------------------
+   logic 						 crvalid;	
+   logic 						 crready;	
+   logic [`SVT_AXI_ACE_SNOOP_RESP_WIDTH-1:0] 		 crresp;		
+
+   //-----------------------------------------------------------------------
+   // AXI ACE Interface Data Channel Signals
+   //-----------------------------------------------------------------------
+   logic 						 cdvalid;	
+   logic        					 cdready;	
+   logic [`SVT_AXI_ACE_SNOOP_DATA_WIDTH-1:0] 	 cddata;		
+   logic        					 cdlast;
+
+   //-----------------------------------------------------------------------
+   // AXI4 STREAM Interface Signals
+   //-----------------------------------------------------------------------
+   logic 						 tvalid;
+   logic 						 tready;
+   logic [SVT_AXI_TDATA_WIDTH_PARAM-1:0] 		 tdata; 
+   logic [`SVT_AXI_TSTRB_WIDTH-1:0] 			 tstrb;
+   logic [SVT_AXI_TDEST_WIDTH_PARAM-1:0] 		 tdest; 
+   logic [`SVT_AXI_TKEEP_WIDTH-1:0] 			 tkeep;
+   logic 						 tlast;
+   logic [SVT_AXI_TID_WIDTH_PARAM-1:0] 			 tid; 
+   logic [SVT_AXI_TUSER_WIDTH_PARAM-1:0] 		 tuser; 
+
+  //----------------------------------------------------------------------
+  // AXI G Read Data Chunking Interface Siganal
+  //----------------------------------------------------------------------
+  logic                                         archunken;
+  logic                                         rchunkv;
+  logic[`SVT_AXI_MAX_CHUNK_NUM_WIDTH-1:0]       rchunknum;
+  logic[`SVT_AXI_MAX_CHUNK_STROBE_WIDTH-1:0]    rchunkstrb;
+
+`ifndef __SVDOC__ 
+
+
+`ifdef QUESTA
+   always @(*) slave_if.aclk      = aclk;
+   always @(*) slave_if.aresetn   = aresetn;
+`else
+   assign slave_if.aclk           = aclk;
+   assign slave_if.aresetn        = aresetn;
+`endif
+
+
+  //Slave BFM will be drivin slave_if (svt_axi_slave_if)
+  ///////////////////// START OF SLAVE_IF - SLAVE_PARAM_IF CONNECTION //////////////////
+  //////////////////////////////////////////////////////////////////////////////////////
+`ifdef SVT_MULTI_SIM_PROCEDURAL_COMBINATORIAL_DRIVE
+
+  always @(*) 
+  begin
+  // Inputs
+    slave_if.awvalid  =  awvalid;
+    slave_if.awaddr   =  awaddr;
+    slave_if.awlen    =  awlen;
+    slave_if.awsize   =  awsize;
+    slave_if.awburst  =  awburst;
+    slave_if.awlock   =  awlock;
+    slave_if.awcache  =  awcache;
+    slave_if.awprot   =  awprot;
+    slave_if.awid     =  awid;
+    slave_if.awdomain =  awdomain;
+    slave_if.awsnoop  =  awsnoop;
+    slave_if.awbar    =  awbar;
+    slave_if.arvalid  =  arvalid;
+    slave_if.araddr   =  araddr;
+    slave_if.arlen    =  arlen;
+    slave_if.arsize   =  arsize;
+    slave_if.arburst  =  arburst;
+    slave_if.arlock   =  arlock;
+    slave_if.arcache  =  arcache;
+    slave_if.arprot   =  arprot;
+    slave_if.arid     =  arid;
+    slave_if.ardomain =  ardomain;
+    slave_if.arsnoop  =  arsnoop;
+    slave_if.arbar    =  arbar;
+    slave_if.rready   =  rready;
+    slave_if.rack     =  rack;
+    slave_if.wvalid   =  wvalid;
+    slave_if.wlast    =  wlast;
+    slave_if.wdata    =  wdata;
+    slave_if.wstrb    =  wstrb;
+    slave_if.wid      =  wid;
+    slave_if.bready   =  bready;
+    slave_if.wack     =  wack;
+    slave_if.awregion =  awregion;
+    slave_if.awqos    =  awqos;
+    slave_if.awuser   =  awuser;
+    slave_if.arregion =  arregion;
+    slave_if.arqos    =  arqos;
+    slave_if.aruser   =  aruser;
+    slave_if.wuser    =  wuser;
+    slave_if.acready  =  acready;
+    slave_if.crvalid  =  crvalid;
+    slave_if.crresp   =  crresp;
+    slave_if.cdvalid  =  cdvalid;
+    slave_if.cdready  =  cdready;
+    slave_if.cddata   =  cddata;
+    slave_if.cdlast   =  cdlast;
+    slave_if.tvalid   =  tvalid;
+    slave_if.tdata    =  tdata;
+    slave_if.tstrb    =  tstrb;
+    slave_if.tdest    =  tdest;
+    slave_if.tkeep    =  tkeep;
+    slave_if.tlast    =  tlast;
+    slave_if.tid      =  tid;
+    slave_if.tuser    =  tuser;
+    slave_if.archunken    =  archunken;
+    slave_if.awidunq  =  awidunq;
+    slave_if.aridunq  =  aridunq;
+    slave_if.awmpam  =  awmpam;
+    slave_if.armpam  =  armpam;
+
+  end
+`else
+  // Inputs
+  assign slave_if.awvalid  =  awvalid;
+  assign slave_if.awaddr   =  awaddr;
+  assign slave_if.awlen    =  awlen;
+  assign slave_if.awsize   =  awsize;
+  assign slave_if.awburst  =  awburst;
+  assign slave_if.awlock   =  awlock;
+  assign slave_if.awcache  =  awcache;
+  assign slave_if.awprot   =  awprot;
+  assign slave_if.awid     =  awid;
+  assign slave_if.awdomain =  awdomain;
+  assign slave_if.awsnoop  =  awsnoop;
+  assign slave_if.awbar    =  awbar;
+  assign slave_if.arvalid  =  arvalid;
+  assign slave_if.araddr   =  araddr;
+  assign slave_if.arlen    =  arlen;
+  assign slave_if.arsize   =  arsize;
+  assign slave_if.arburst  =  arburst;
+  assign slave_if.arlock   =  arlock;
+  assign slave_if.arcache  =  arcache;
+  assign slave_if.arprot   =  arprot;
+  assign slave_if.arid     =  arid;
+  assign slave_if.ardomain =  ardomain;
+  assign slave_if.arsnoop  =  arsnoop;
+  assign slave_if.arbar    =  arbar;
+  assign slave_if.rready   =  rready;
+  assign slave_if.rack     =  rack;
+  assign slave_if.wvalid   =  wvalid;
+  assign slave_if.wlast    =  wlast;
+  assign slave_if.wdata    =  wdata;
+  assign slave_if.wstrb    =  wstrb;
+  assign slave_if.wid      =  wid;
+  assign slave_if.bready   =  bready;
+  assign slave_if.wack     =  wack;
+  assign slave_if.awregion =  awregion;
+  assign slave_if.awqos    =  awqos;
+  assign slave_if.awuser   =  awuser;
+  assign slave_if.arregion =  arregion;
+  assign slave_if.arqos    =  arqos;
+  assign slave_if.aruser   =  aruser;
+  assign slave_if.wuser    =  wuser;
+  assign slave_if.acready  =  acready;
+  assign slave_if.crvalid  =  crvalid;
+  assign slave_if.crresp   =  crresp;
+  assign slave_if.cdvalid  =  cdvalid;
+  assign slave_if.cdready  =  cdready;
+  assign slave_if.cddata   =  cddata;
+  assign slave_if.cdlast   =  cdlast;
+  assign slave_if.tvalid   =  tvalid;
+  assign slave_if.tdata    =  tdata;
+  assign slave_if.tstrb    =  tstrb;
+  assign slave_if.tdest    =  tdest;
+  assign slave_if.tkeep    =  tkeep;
+  assign slave_if.tlast    =  tlast;
+  assign slave_if.tid      =  tid;
+  assign slave_if.tuser    =  tuser;
+  assign slave_if.archunken    =  archunken;
+  assign slave_if.awidunq  =  awidunq;
+  assign slave_if.aridunq  =  aridunq;
+  assign slave_if.awmpam  =  awmpam;
+  assign slave_if.armpam  =  armpam;
+
+`endif  
+  
+generate
+  // inouts
+  // If slave is Active
+  if(is_active == 1) begin: isactive
+    assign awready  =  slave_if.awready;
+    assign arready  =  slave_if.arready;
+    assign rvalid   =  slave_if.rvalid;
+    assign rlast    =  slave_if.rlast;
+    assign rdata    =  slave_if.rdata;
+    assign rresp    =  slave_if.rresp;
+    assign rid      =  slave_if.rid;
+    assign wready   =  slave_if.wready;
+    assign bvalid   =  slave_if.bvalid;
+    assign bresp    =  slave_if.bresp;
+    assign bid      =  slave_if.bid;
+    assign ruser    =  slave_if.ruser;
+    assign buser    =  slave_if.buser;
+    assign acvalid  =  slave_if.acvalid;
+    assign acaddr   =  slave_if.acaddr;
+    assign acsnoop  =  slave_if.acsnoop;
+    assign acprot   =  slave_if.acprot;
+    assign crready  =  slave_if.crready;
+    assign tready   =  slave_if.tready;
+    assign rchunkv  = slave_if.rchunkv;
+    assign rchunknum    = slave_if.rchunknum;
+    assign rchunkstrb   = slave_if.rchunkstrb;
+    assign bidunq   =  slave_if.bidunq;
+    assign ridunq   =  slave_if.ridunq;
+  end
+  else begin: isactive
+    always @(*)
+      begin
+        // If slave is Passive : inout will be inputs for passive components
+       //if(is_active == 0) begin
+         slave_if.awready  =  awready;
+         slave_if.arready  =  arready;
+         slave_if.rvalid   =  rvalid;
+         slave_if.rlast    =  rlast;
+         slave_if.rdata    =  rdata;
+         slave_if.rresp    =  rresp;
+         slave_if.rid      =  rid;
+         slave_if.wready   =  wready;
+         slave_if.bvalid   =  bvalid;
+         slave_if.bresp    =  bresp;
+         slave_if.bid      =  bid;
+         slave_if.ruser    =  ruser;
+         slave_if.buser    =  buser;
+         slave_if.acvalid  =  acvalid;
+         slave_if.acaddr   =  acaddr;
+         slave_if.acsnoop  =  acsnoop;
+         slave_if.acprot   =  acprot;
+         slave_if.crready  =  crready;
+         slave_if.tready   =  tready;
+         slave_if.rchunkv  =  rchunkv;
+         slave_if.rchunknum  =  rchunknum;
+         slave_if.rchunkstrb =  rchunkstrb;
+         slave_if.ridunq   =  ridunq;
+         slave_if.bidunq   =  bidunq;
+       //end
+    end
+  end
+endgenerate
+  ///////////////////// END OF SLAVE_IF - SLAVE_PARAM_IF CONNECTION ///////////////////
+
+
+`protect
+   initial begin
+      slave_if.param_check_flag = 13'd0;
+      
+      if( SVT_AXI_ADDR_WIDTH_PARAM           > `SVT_AXI_MAX_ADDR_WIDTH)         begin slave_if.param_check_flag [0]  = 1'b1; end
+      if( SVT_AXI_BURST_LENGTH_WIDTH_PARAM   > `SVT_AXI_MAX_BURST_LENGTH_WIDTH) begin slave_if.param_check_flag [1]  = 1'b1; end
+      if( SVT_AXI_DATA_WIDTH_PARAM           > `SVT_AXI_MAX_DATA_WIDTH)         begin slave_if.param_check_flag [2]  = 1'b1; end
+      if( SVT_AXI_ID_WIDTH_PARAM             > `SVT_AXI_MAX_ID_WIDTH)           begin slave_if.param_check_flag [3]  = 1'b1; end
+      if( SVT_AXI_ADDR_USER_WIDTH_PARAM      > `SVT_AXI_MAX_ADDR_USER_WIDTH)    begin slave_if.param_check_flag [4]  = 1'b1; end
+      if( SVT_AXI_DATA_USER_WIDTH_PARAM      > `SVT_AXI_MAX_DATA_USER_WIDTH)    begin slave_if.param_check_flag [5]  = 1'b1; end
+      if( SVT_AXI_BRESP_USER_WIDTH_PARAM     > `SVT_AXI_MAX_BRESP_USER_WIDTH)   begin slave_if.param_check_flag [6]  = 1'b1; end
+      if( SVT_AXI_TDATA_WIDTH_PARAM          > `SVT_AXI_MAX_TDATA_WIDTH)        begin slave_if.param_check_flag [9]  = 1'b1; end
+      if( SVT_AXI_TDEST_WIDTH_PARAM          > `SVT_AXI_MAX_TDEST_WIDTH)        begin slave_if.param_check_flag [10] = 1'b1; end
+      if( SVT_AXI_TID_WIDTH_PARAM            > `SVT_AXI_MAX_TID_WIDTH)          begin slave_if.param_check_flag [11] = 1'b1; end
+      if( SVT_AXI_TUSER_WIDTH_PARAM          > `SVT_AXI_MAX_TUSER_WIDTH)        begin slave_if.param_check_flag [12] = 1'b1; end
+
+      slave_if.svt_axi_addr_width_val = SVT_AXI_ADDR_WIDTH_PARAM;
+      slave_if.svt_axi_data_width_val = SVT_AXI_DATA_WIDTH_PARAM;
+      slave_if.svt_axi_id_width_val   = SVT_AXI_ID_WIDTH_PARAM;
+   end
+`endprotect
+`endif
+   
+endinterface: svt_axi_slave_param_if
+
+`endif // GUARD_SVT_AXI_SLAVE_PARAM_IF_SVI
+

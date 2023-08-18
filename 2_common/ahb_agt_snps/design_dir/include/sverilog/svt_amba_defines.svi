@@ -1,0 +1,32 @@
+
+`ifndef GUARD_SVT_AMBA_DEFINES_SVI
+`define GUARD_SVT_AMBA_DEFINES_SVI
+
+`ifndef DESIGNWARE_INCDIR
+  `include "svt_defines.svi"
+`endif
+// First read in the user-specified defines (if any), that may take precedence
+// over some of the following defaults...
+`ifdef SVT_AMBA_INCLUDE_USER_DEFINES
+`include "svt_amba_user_defines.svi"
+`endif // SVT_AMBA_INCLUDE_USER_DEFINES
+
+// Read in the symbolic constants for common values used by the AMBA VIP.
+`include "svt_amba_common_defines.svi"
+
+`include "svt_axi_defines.svi"
+`include "svt_ahb_defines.svi"
+`include "svt_apb_defines.svi"
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`ifndef SVT_AMBA_MAX_ADDR_WIDTH
+`define SVT_AMBA_MAX_ADDR_WIDTH ((`SVT_AXI_MAX_ADDR_WIDTH>=`SVT_AHB_MAX_ADDR_WIDTH)?(`SVT_AXI_MAX_ADDR_WIDTH):(`SVT_AHB_MAX_ADDR_WIDTH))
+`endif
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_MAX_DATA_WIDTH ((`SVT_AXI_MAX_DATA_WIDTH>=`SVT_AHB_MAX_DATA_WIDTH)?(`SVT_AXI_MAX_DATA_WIDTH):(`SVT_AHB_MAX_DATA_WIDTH))
+
+`endif // GUARD_SVT_AMBA_DEFINES_SVI

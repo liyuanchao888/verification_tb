@@ -1,0 +1,10 @@
+./src_v/arty_a7/artix7_pll.v
+./src_v/arty_a7/reset_gen.v
+./src_v/ddr3_dfi_seq.v
+./src_v/phy/xc7/ddr3_dfi_phy.v
+./src_v/ddr3_core.v
+./src_v/ddr3_axi_pmem.v
+./src_v/ddr3_axi_retime.v
+./src_v/ddr3_axi.v
+./src_v/arty_a7/top.v
+./ddr3.v

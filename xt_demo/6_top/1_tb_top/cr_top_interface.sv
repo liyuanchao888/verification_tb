@@ -14,7 +14,7 @@
 `ifndef CR_TOP_INTERFACE__SV
 `define CR_TOP_INTERFACE__SV
 
-interface cr_top_interface(input logic clk);
+interface cr_top_interface(input logic clk,input logic rst_n);
 
     ahb_interface  AHB_INF (clk);
     apb_interface  APB_INF (clk);

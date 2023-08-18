@@ -4,35 +4,14 @@
 //`timescale 1ns/1ns
 import uvm_pkg::*;
 `include "uvm_macros.svh"
-
-//module clk_rst(output reg clk,output reg rst_n);
-//    parameter TIME_PERIOD = 10;	
-//    initial begin
-//      clk       = 0;
-//      rst_n     = 0;
-//      #22 rst_n = 1;
-//    end
-//    always #(TIME_PERIOD/2) clk = !clk; //100Mhz , 10ms(5ms)
-//endmodule
-
 //testbench Top
-import uvm_pkg :: *;
-`include "uvm_macros.svh"
 module test_top();
-    reg clk  ;
-    reg rst_n;
-
-    parameter TIME_PERIOD = 10;	
-	initial begin
-      clk       = 0;
-      rst_n     = 0;
-      #22 rst_n = 1;
-    end
-    always #(TIME_PERIOD/2) clk = !clk; //100Mhz , 10ms(5ms)
-    
+    `include "simulation.vh"
    // import ahb_apb_bridge_pkg :: *;
 //	clk_rst             m_clk_rst(clk,rst_n) ; //clk & reset generator
-    cr_top_interface top_if(clk);   //interface
+    `CLOCK_GEN(clk,10) // cycle=10 (if time unit is 1ns , freq=100Mhz)
+    `RESET_N_GEN(rst_n,1000) //after delay=1000 , rst_n release from 0 to 1 
+    cr_top_interface top_if(clk,rst_n);   //interface
     tb_top           TB(top_if);    //testbench top
 	`include "dut_top.sv"
 	//dut instance //dut_top u_top(.*);  

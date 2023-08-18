@@ -1,9 +1,0 @@
-*design* DebussyLib (btIdent Verdi_R-2020.12-SP1)
-Command arguments:  -full64  -elab  /tools/proj/verification_platform/ut_noc/7_run/2_work/output/simv.daidir/kdb.elab++  -l  /tools/proj/verification_platform/ut_noc/7_run/2_work/directed_test/directed_test_12345678.verdi.log 
-
-*Warn* Unknown argument -full64
-*design* DebussyLib (btIdent Verdi_R-2020.12-SP1)
-
-*Warning* Unknown argument -l
-
-Total	0 error(s),   2 warning(s)

@@ -1,0 +1,29 @@
+
+`ifndef GUARD_SVT_ATB_SOURCE_SVI
+`define GUARD_SVT_ATB_SOURCE_SVI
+
+`ifdef SVT_UVM_TECHNOLOGY
+//`include "svt_uvm_source.svi"
+  `ifndef DESIGNWARE_INCDIR
+    `include "svt_source.uvm.svi"
+  `endif
+`include "svt_amba_common_source.uvm.svi"
+`elsif SVT_OVM_TECHNOLOGY
+  `ifndef DESIGNWARE_INCDIR
+    `include "svt_source.ovm.svi"
+  `endif  
+`include "svt_amba_common_source.ovm.svi"
+`elsif SVT_VMM_TECHNOLOGY
+  `ifndef DESIGNWARE_INCDIR
+    `include "svt_source.vmm.svi"
+  `endif 
+`include "svt_amba_common_source.vmm.svi"
+`endif
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_atb_port_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_atb_system_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_atb_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_atb_master_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_atb_slave_transaction)
+
+`endif // GUARD_SVT_ATB_SOURCE_SVI

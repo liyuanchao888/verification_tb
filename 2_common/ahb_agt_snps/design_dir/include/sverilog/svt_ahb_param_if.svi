@@ -1,0 +1,206 @@
+
+`ifndef GUARD_SVT_AHB_PARAM_IF_SVI
+`define GUARD_SVT_AHB_PARAM_IF_SVI
+
+`include "svt_ahb_port_defines.svi"
+
+/**
+ * <b>General description:</b><p>
+ * AHB VIP provides the SystemVerilog parametrized interface which can be used
+ * to connect the VIP to the DUT. A top level parametrized interface svt_ahb_param_if
+ * is defined. The top level parametrized interface contains the reset signal, clock
+ * signal and the multiplexed signals from the AHB Bus.
+ * 
+ *
+ * <b>Clock signal description:</b><br>
+ *
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Signal Name </b></th><th bgcolor="#dddddd"> Signal Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> hclk    </b></td><td> This clock signal belongs to the top
+ *    level AHB Parameterized Interface. User is expected to connect clock 
+ *    signal in testbench to this hclk signal in the top level parametrized 
+ *    interface. This clock is used by all the AHB master and slave VIP 
+ *    components when common clock mode is enabled. This is also used by the
+ *    system Monitor, bus VIP components.</b></td><tr>
+ *   </tbody>
+ *  </table>
+ * 
+ * <b>Clock connection examples:</b><br>
+ * assign ahb_param_if.hclk = SystemClock;<br>
+ *
+ * <b>Reset signal description:</b><br>
+ *
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Signal Name </b></th><th bgcolor="#dddddd"> Signal Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> hresetn    </b></td><td> This reset signal belongs to the top
+ *    level AHB Parameterized Interface. User is expected to connect reset signal
+ *    in testbench to this hresetn signal in the top level parametrized interface.
+ *    This reset is used by all the AHB master and slave VIP components when common
+ *    reset mode is enabled. This is also used by the system Monitor, bus VIP 
+ *    components.</b></td><tr>
+ *   </tbody>
+ *  </table>
+ * 
+ * <b>Reset connection examples:</b><br>
+ * assign ahb_param_if.hresetn = SystemResetn;<br>
+ *
+ * <b>Parameter description:</b><br>
+ * The signal width of AHB parameterized interface can be parameterized to
+ * match DUT signal widths. The default value of all the parameters are same as
+ * the MAX signal widths defined in svt_ahb_port_defines.svi or svt_ahb_user_defines.svi.
+ * The parameter values should not exceed the MAX signal width values defined in
+ * svt_ahb_port_defines.svi or redefined by user in svt_ahb_user_defines.svi.
+ *  
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Parameter Name </b></th><th bgcolor="#dddddd"> Parameter Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> SVT_AHB_HADDR_PORT_WIDTH_PARAM </b></td><td> Address width (HADDR).</b></td><tr>
+ *    <tr><td><b> SVT_AHB_DATA_WIDTH_PARAM </b></td><td> Read and Write data width (HRDATA,HWDATA).</b></td><tr>
+ *    <tr><td><b> SVT_AHB_CONTROL_HUSER_PORT_WIDTH_PARAM </b></td><td> Control user signal width (CONTROL_HUSER).</b></td><tr>
+ *    <tr><td><b> SVT_AHB_HRESP_PORT_WIDTH_PARAM </b></td><td> Response signal width (HRESP).</b></td><tr>
+ *    <tr><td><b> SVT_AHB_HBURST_PORT_WIDTH_PARAM </b></td><td> Burst Type signal width (HBURST).</b></td><tr>
+ *    <tr><td><b> SVT_AHB_HPROT_PORT_WIDTH_PARAM </b></td><td> Protection signal width (HPROT).</b></td><tr>
+ *    <tr><td><b> SVT_AHB_HSIZE_PORT_WIDTH_PARAM </b></td><td> Burst size signal width (HSIZE).</b></td><tr>
+ *    <tr><td><b> SVT_AHB_HTRANS_PORT_WIDTH_PARAM </b></td><td> Trans type signal width (HTRANS).</b></td><tr>
+ *    <tr><td><b> SVT_AHB_HMASTER_PORT_WIDTH_PARAM </b></td><td> hmaster signal width (HMASTER).</b></td><tr>
+ *    <tr><td><b> SVT_AHB_HSPLIT_PORT_WIDTH_PARAM </b></td><td> hsplit signal width (HSPLIT).</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ *
+ */
+
+interface svt_ahb_param_if #(int SVT_AHB_HADDR_PORT_WIDTH_PARAM = `SVT_AHB_MAX_ADDR_WIDTH,
+                             int SVT_AHB_DATA_WIDTH_PARAM = `SVT_AHB_MAX_DATA_WIDTH,
+                             int SVT_AHB_CONTROL_HUSER_PORT_WIDTH_PARAM = `SVT_AHB_MAX_USER_WIDTH,
+                             int SVT_AHB_HRESP_PORT_WIDTH_PARAM = `SVT_AHB_HRESP_PORT_WIDTH,
+                             int SVT_AHB_HBURST_PORT_WIDTH_PARAM = `SVT_AHB_HBURST_PORT_WIDTH,
+                             int SVT_AHB_HPROT_PORT_WIDTH_PARAM = `SVT_AHB_HPROT_PORT_WIDTH,
+                             `ifdef SVT_AHB_V6_ENABLE
+                             int SVT_AHB_HBSTRB_PORT_WIDTH_PARAM =`SVT_AHB_HBSTRB_PORT_WIDTH,
+                             `endif
+                             int SVT_AHB_HSIZE_PORT_WIDTH_PARAM = `SVT_AHB_HSIZE_PORT_WIDTH,
+                             int SVT_AHB_HTRANS_PORT_WIDTH_PARAM = `SVT_AHB_HTRANS_PORT_WIDTH,
+                             int SVT_AHB_HMASTER_PORT_WIDTH_PARAM = `SVT_AHB_HMASTER_PORT_WIDTH,
+                             int SVT_AHB_HSPLIT_PORT_WIDTH_PARAM = `SVT_AHB_MAX_NUM_MASTERS,
+                             int SVT_AHB_DATA_HUSER_PORT_WIDTH_PARAM = `SVT_AHB_MAX_DATA_USER_WIDTH
+                          )(svt_ahb_if ahb_if);
+  logic hclk;
+  logic hresetn;
+
+  /** Bus: Slave to Master Mux signals */
+  logic [(SVT_AHB_DATA_WIDTH_PARAM - 1):0] hrdata_bus;
+  logic hready_bus;
+  logic [(SVT_AHB_HRESP_PORT_WIDTH_PARAM - 1):0] hresp_bus;
+  
+  /** Bus: Master to Slave Mux signals */
+  logic [(SVT_AHB_HADDR_PORT_WIDTH_PARAM - 1):0] haddr_bus;
+  `ifdef SVT_AHB_V6_ENABLE
+  logic [(SVT_AHB_HBSTRB_PORT_WIDTH_PARAM -1):0] hbstrb_bus;
+  logic hunalign_bus;
+  `endif
+  logic [(SVT_AHB_HBURST_PORT_WIDTH_PARAM - 1):0] hburst_bus;
+  logic [(SVT_AHB_HPROT_PORT_WIDTH_PARAM - 1):0] hprot_bus;
+  logic hnonsec_bus;
+  logic [(SVT_AHB_HSIZE_PORT_WIDTH_PARAM - 1):0] hsize_bus;
+  logic [(SVT_AHB_HTRANS_PORT_WIDTH_PARAM - 1):0] htrans_bus;
+  logic [(SVT_AHB_DATA_WIDTH_PARAM - 1):0] hwdata_bus;
+  logic hwrite_bus;
+  logic [(SVT_AHB_CONTROL_HUSER_PORT_WIDTH_PARAM -1):0] control_huser_bus;
+
+  /** Bus: Following signals from bus to slave are common, generated by bus */
+  logic [(SVT_AHB_HMASTER_PORT_WIDTH_PARAM - 1):0] hmaster_bus;
+  logic hmastlock_bus;
+  logic [(SVT_AHB_HSPLIT_PORT_WIDTH_PARAM - 1):0] hsplit_bus;
+  logic [(SVT_AHB_DATA_HUSER_PORT_WIDTH_PARAM -1):0] hwdata_huser_bus;
+  logic [(SVT_AHB_DATA_HUSER_PORT_WIDTH_PARAM -1):0] hrdata_huser_bus;
+
+`ifndef __SVDOC__ 
+
+`ifdef QUESTA
+   always@(*) ahb_if.hclk = hclk;
+   always@(*) ahb_if.hresetn = hresetn;
+`else
+   assign ahb_if.hclk = hclk;
+   assign ahb_if.hresetn = hresetn;
+`endif
+
+`ifndef VCS
+   always@(*) ahb_if.hrdata_bus[SVT_AHB_DATA_WIDTH_PARAM-1:0]                         = hrdata_bus;
+   always@(*) ahb_if.hresp_bus[SVT_AHB_HRESP_PORT_WIDTH_PARAM-1:0]                    = hresp_bus;
+   always@(*) ahb_if.haddr_bus[(SVT_AHB_HADDR_PORT_WIDTH_PARAM - 1):0]                = haddr_bus;
+   `ifdef SVT_AHB_V6_ENABLE
+   always@(*) ahb_if.hbstrb_bus[(SVT_AHB_HBSTRB_PORT_WIDTH_PARAM -1):0]               = hbstrb_bus;
+   always@(*) ahb_if.hunalign_bus                                                     = hunalign_bus;
+   `endif
+   always@(*) ahb_if.hburst_bus[(SVT_AHB_HBURST_PORT_WIDTH_PARAM - 1):0]              = hburst_bus;
+   always@(*) ahb_if.hprot_bus[(SVT_AHB_HPROT_PORT_WIDTH_PARAM - 1):0]                = hprot_bus;
+   always@(*) ahb_if.hnonsec_bus                                                      = hnonsec_bus;
+   always@(*) ahb_if.hsize_bus[(SVT_AHB_HSIZE_PORT_WIDTH_PARAM - 1):0]                = hsize_bus;
+   always@(*) ahb_if.htrans_bus[(SVT_AHB_HTRANS_PORT_WIDTH_PARAM - 1):0]              = htrans_bus;
+   always@(*) ahb_if.hwdata_bus[(SVT_AHB_DATA_WIDTH_PARAM - 1):0]                     = hwdata_bus;
+   always@(*) ahb_if.control_huser_bus[(SVT_AHB_CONTROL_HUSER_PORT_WIDTH_PARAM -1):0] = control_huser_bus;
+   always@(*) ahb_if.hmaster_bus[(SVT_AHB_HMASTER_PORT_WIDTH_PARAM - 1):0]            = hmaster_bus;
+   always@(*) ahb_if.hsplit_bus[(SVT_AHB_HSPLIT_PORT_WIDTH_PARAM - 1):0]              = hsplit_bus;
+   always@(*) ahb_if.hready_bus                                                       = hready_bus;
+   always@(*) ahb_if.hwrite_bus                                                       = hwrite_bus;
+   always@(*) ahb_if.hmastlock_bus                                                    = hmastlock_bus;
+   always@(*) ahb_if.hwdata_huser_bus[(SVT_AHB_DATA_HUSER_PORT_WIDTH_PARAM -1):0]     = hwdata_huser_bus;
+   always@(*) ahb_if.hrdata_huser_bus[(SVT_AHB_DATA_HUSER_PORT_WIDTH_PARAM -1):0]     = hrdata_huser_bus;
+`else
+   assign ahb_if.hrdata_bus[SVT_AHB_DATA_WIDTH_PARAM-1:0]                             = hrdata_bus;
+   assign ahb_if.hresp_bus[SVT_AHB_HRESP_PORT_WIDTH_PARAM-1:0]                        = hresp_bus;
+   assign ahb_if.haddr_bus[(SVT_AHB_HADDR_PORT_WIDTH_PARAM - 1):0]                    = haddr_bus;
+   `ifdef SVT_AHB_V6_ENABLE
+   assign ahb_if.hbstrb_bus[(SVT_AHB_HBSTRB_PORT_WIDTH_PARAM -1):0]                   = hbstrb_bus; 
+   assign ahb_if.hunalign_bus                                                         = hunalign_bus;
+   `endif
+   assign ahb_if.hburst_bus[(SVT_AHB_HBURST_PORT_WIDTH_PARAM - 1):0]                  = hburst_bus;
+   assign ahb_if.hprot_bus[(SVT_AHB_HPROT_PORT_WIDTH_PARAM - 1):0]                    = hprot_bus;
+   assign ahb_if.hnonsec_bus                                                          = hnonsec_bus;
+   assign ahb_if.hsize_bus[(SVT_AHB_HSIZE_PORT_WIDTH_PARAM - 1):0]                    = hsize_bus;
+   assign ahb_if.htrans_bus[(SVT_AHB_HTRANS_PORT_WIDTH_PARAM - 1):0]                  = htrans_bus;
+   assign ahb_if.hwdata_bus[(SVT_AHB_DATA_WIDTH_PARAM - 1):0]                         = hwdata_bus;
+   assign ahb_if.control_huser_bus[(SVT_AHB_CONTROL_HUSER_PORT_WIDTH_PARAM -1):0]     = control_huser_bus;
+   assign ahb_if.hmaster_bus[(SVT_AHB_HMASTER_PORT_WIDTH_PARAM - 1):0]                = hmaster_bus;
+   assign ahb_if.hsplit_bus[(SVT_AHB_HSPLIT_PORT_WIDTH_PARAM - 1):0]                  = hsplit_bus;
+   assign ahb_if.hready_bus                                                           = hready_bus;
+   assign ahb_if.hwrite_bus                                                           = hwrite_bus;
+   assign ahb_if.hmastlock_bus                                                        = hmastlock_bus;
+   assign ahb_if.hwdata_huser_bus[(SVT_AHB_DATA_HUSER_PORT_WIDTH_PARAM -1):0]         = hwdata_huser_bus;
+   assign ahb_if.hrdata_huser_bus[(SVT_AHB_DATA_HUSER_PORT_WIDTH_PARAM -1):0]         = hrdata_huser_bus;
+`endif
+
+`protect
+   initial begin
+      ahb_if.param_check_flag = 11'd0;
+      
+      if( SVT_AHB_HADDR_PORT_WIDTH_PARAM         > `SVT_AHB_MAX_ADDR_WIDTH)         begin ahb_if.param_check_flag [0]  = 1'b1; end
+      if( SVT_AHB_DATA_WIDTH_PARAM               > `SVT_AHB_MAX_DATA_WIDTH)         begin ahb_if.param_check_flag [1]  = 1'b1; end
+      if( SVT_AHB_CONTROL_HUSER_PORT_WIDTH_PARAM > `SVT_AHB_MAX_USER_WIDTH)         begin ahb_if.param_check_flag [2]  = 1'b1; end
+      if( SVT_AHB_HRESP_PORT_WIDTH_PARAM         > `SVT_AHB_HRESP_PORT_WIDTH)       begin ahb_if.param_check_flag [3]  = 1'b1; end
+      if( SVT_AHB_HBURST_PORT_WIDTH_PARAM        > `SVT_AHB_HBURST_PORT_WIDTH)      begin ahb_if.param_check_flag [4]  = 1'b1; end
+      if( SVT_AHB_HPROT_PORT_WIDTH_PARAM         > `SVT_AHB_HPROT_PORT_WIDTH)       begin ahb_if.param_check_flag [5]  = 1'b1; end
+      if( SVT_AHB_HSIZE_PORT_WIDTH_PARAM         > `SVT_AHB_HSIZE_PORT_WIDTH)       begin ahb_if.param_check_flag [6]  = 1'b1; end
+      if( SVT_AHB_HTRANS_PORT_WIDTH_PARAM        > `SVT_AHB_HTRANS_PORT_WIDTH)      begin ahb_if.param_check_flag [7]  = 1'b1; end
+      if( SVT_AHB_HMASTER_PORT_WIDTH_PARAM       > `SVT_AHB_HMASTER_PORT_WIDTH)     begin ahb_if.param_check_flag [8]  = 1'b1; end
+      if( SVT_AHB_HSPLIT_PORT_WIDTH_PARAM        > `SVT_AHB_MAX_NUM_MASTERS)        begin ahb_if.param_check_flag [9]  = 1'b1; end
+      if( SVT_AHB_DATA_HUSER_PORT_WIDTH_PARAM    > `SVT_AHB_MAX_DATA_USER_WIDTH)    begin ahb_if.param_check_flag [10] = 1'b1; end
+
+   end
+`endprotect
+`endif
+
+endinterface: svt_ahb_param_if
+
+`endif // GUARD_SVT_AHB_PARAM_IF_SVI
+
+

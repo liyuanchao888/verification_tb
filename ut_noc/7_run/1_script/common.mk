@@ -6,7 +6,7 @@ default: help
 help:
 	@bash help.sh 
 
-get_flist:
+get_dut:
 	@bash ${GET_FILELIST}
 
 gen_run:

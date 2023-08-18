@@ -1,0 +1,285 @@
+//=======================================================================
+// COPYRIGHT (C) 2013 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//
+//-----------------------------------------------------------------------
+
+`ifndef GUARD_SVT_CHI_RN_BIND_IF_SVI
+`define GUARD_SVT_CHI_RN_BIND_IF_SVI
+
+`include "svt_chi_port_defines.svi"
+
+/**
+    @grouphdr Interfaces svt_chi_rn_bind_if CHI Request Node SV Bind interface.
+ */
+
+/**
+ * @groupname svt_chi_rn_bind_if 
+ * <b>General description:</b><p>
+ * Bind interface is an interface which contains directional signals for CHI. 
+ * Users can connect DUT signals to these directional signals. 
+ * Bind interfaces provided with VIP are svt_chi_rn_bind_if and svt_chi_sn_bind_if.
+ * To use bind interface, user still needs to instantiate the non-bind interface, 
+ * and then connect bind interface to the non-bind interface. 
+ * 
+ * VIP provides RN and SN connector modules to connect the VIP bind interface to VIP non-bind interface.
+ * User needs to instantiate a connector module corresponding to each instance of VIP RN and SN, and pass
+ * the bind interface and non-bind interface instance to this connector module.
+ *
+ * The connector module is parameterized in order to distinguish between Active and Passive connection.
+ * Based on the value of the parameter(Active or Passive) passed from the TB while instantiating the 
+ * connector module the corresponding signal connections are made between RN IF and RN BIND IF.
+ *
+ * The RN Bind interface svt_chi_rn_bind_if defines the CHI signals appropriate
+ * for a fully coherent Request Node, along with the Parametrized RN connector module (svt_chi_rn_connector)
+ * which is used to connect the VIP bind interface to VIP non-bind interface in either Active or Passive mode
+ * depending on the value of the parameter passed.
+ */
+interface svt_chi_rn_bind_if (
+  // Link Activation Status Signals
+  inout TXSACTIVE,
+  input RXSACTIVE,
+  
+  // Link Activation Status Signals
+  inout TXLINKACTIVEREQ,
+  input TXLINKACTIVEACK,
+  input RXLINKACTIVEREQ,
+  inout RXLINKACTIVEACK,
+  
+  // System Coherency Interface Signals
+  `ifdef SVT_CHI_ISSUE_B_ENABLE
+  inout SYSCOREQ,
+  input SYSCOACK,
+  `endif
+
+  // TX Request Virtual Channel
+  inout TXREQFLITPEND,
+  inout TXREQFLITV,
+  inout [`SVT_CHI_MAX_REQ_FLIT_WIDTH-1:0] TXREQFLIT,
+  input TXREQLCRDV,
+  
+  // RX Response Virtual Channel
+  input RXRSPFLITPEND,
+  input RXRSPFLITV,
+  input [`SVT_CHI_MAX_RSP_FLIT_WIDTH-1:0] RXRSPFLIT,
+  inout RXRSPLCRDV,
+  
+  // RX Dat Virtual Channel
+  input RXDATFLITPEND,
+  input RXDATFLITV,
+  input [`SVT_CHI_MAX_DAT_FLIT_WIDTH-1:0] RXDATFLIT,
+  inout RXDATLCRDV,
+  
+  // RX Snoop Virtual Channel
+  input RXSNPFLITPEND,
+  input RXSNPFLITV,
+  input [`SVT_CHI_MAX_SNP_FLIT_WIDTH-1:0] RXSNPFLIT,
+  inout RXSNPLCRDV,
+  
+  // TX Response Virtual Channel
+  inout TXRSPFLITPEND,
+  inout TXRSPFLITV,
+  inout [`SVT_CHI_MAX_RSP_FLIT_WIDTH-1:0] TXRSPFLIT,
+  input TXRSPLCRDV,
+  
+  // TX Dat Virtual Channel
+  inout TXDATFLITPEND,
+  inout TXDATFLITV,
+  inout [`SVT_CHI_MAX_DAT_FLIT_WIDTH-1:0] TXDATFLIT,
+  input TXDATLCRDV
+
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+  `ifdef SVT_CHI_INTERFACE_PARITY_ENABLE
+  
+  //Check signals for Link Activation Status Signals
+  , inout TXSACTIVECHK,
+  input RXSACTIVECHK,
+  
+  //Check signals for Link Activation Status Signals
+  inout TXLINKACTIVEREQCHK,
+  input TXLINKACTIVEACKCHK,
+  input RXLINKACTIVEREQCHK,
+  inout RXLINKACTIVEACKCHK,
+  
+  //Check signals for TX Request Virtual Channel
+  inout TXREQFLITPENDCHK,
+  inout TXREQFLITVCHK,
+  inout [`SVT_CHI_IF_PARITY_REQ_FLIT_CHK_WIDTH -1:0] TXREQFLITCHK,
+  input TXREQLCRDVCHK,
+  
+  //Check signals for RX Response Virtual Channel
+  input RXRSPFLITPENDCHK,
+  input RXRSPFLITVCHK,
+  input [`SVT_CHI_IF_PARITY_RSP_FLIT_CHK_WIDTH -1:0] RXRSPFLITCHK,
+  inout RXRSPLCRDVCHK,
+  
+  //Check signals for RX Dat Virtual Channel
+  input RXDATFLITPENDCHK,
+  input RXDATFLITVCHK,
+  input [`SVT_CHI_IF_PARITY_DAT_FLIT_CHK_WIDTH -1:0] RXDATFLITCHK,
+  inout RXDATLCRDVCHK,
+  
+  //Check signals for RX Snoop Virtual Channel
+  input RXSNPFLITPENDCHK,
+  input RXSNPFLITVCHK,
+  input [`SVT_CHI_IF_PARITY_SNP_FLIT_CHK_WIDTH -1:0] RXSNPFLITCHK,
+  inout RXSNPLCRDVCHK,
+  
+  //Check signals for TX Response Virtual Channel
+  inout TXRSPFLITPENDCHK,
+  inout TXRSPFLITVCHK,
+  inout [`SVT_CHI_IF_PARITY_RSP_FLIT_CHK_WIDTH -1:0] TXRSPFLITCHK,
+  input TXRSPLCRDVCHK,
+  
+  //Check signals for TX Dat Virtual Channel
+  inout TXDATFLITPENDCHK,
+  inout TXDATFLITVCHK,
+  inout [`SVT_CHI_IF_PARITY_DAT_FLIT_CHK_WIDTH -1:0] TXDATFLITCHK,
+  input TXDATLCRDVCHK
+  `endif
+`endif
+);
+
+endinterface: svt_chi_rn_bind_if
+
+//=======================================================================
+module svt_chi_rn_connector #(is_active=1) (svt_chi_rn_if rn_if, svt_chi_rn_bind_if rn_bind_if);
+
+  always @(*) 
+  begin
+  // Inputs
+    rn_if.RXSACTIVE       = rn_bind_if.RXSACTIVE;
+    rn_if.TXLINKACTIVEACK = rn_bind_if.TXLINKACTIVEACK;
+    rn_if.RXLINKACTIVEREQ = rn_bind_if.RXLINKACTIVEREQ;
+    `ifdef SVT_CHI_ISSUE_B_ENABLE
+    rn_if.SYSCOACK        = rn_bind_if.SYSCOACK;
+    `endif
+    rn_if.TXREQLCRDV      = rn_bind_if.TXREQLCRDV;
+    rn_if.RXRSPFLITPEND   = rn_bind_if.RXRSPFLITPEND;
+    rn_if.RXRSPFLITV      = rn_bind_if.RXRSPFLITV;
+    rn_if.RXRSPFLIT       = rn_bind_if.RXRSPFLIT;
+    rn_if.RXDATFLITPEND   = rn_bind_if.RXDATFLITPEND;
+    rn_if.RXDATFLITV      = rn_bind_if.RXDATFLITV;
+    rn_if.RXDATFLIT       = rn_bind_if.RXDATFLIT;
+    rn_if.RXSNPFLITPEND   = rn_bind_if.RXSNPFLITPEND;
+    rn_if.RXSNPFLITV      = rn_bind_if.RXSNPFLITV;
+    rn_if.RXSNPFLIT       = rn_bind_if.RXSNPFLIT;
+    rn_if.TXRSPLCRDV      = rn_bind_if.TXRSPLCRDV;
+    rn_if.TXDATLCRDV      = rn_bind_if.TXDATLCRDV;
+  `ifdef SVT_CHI_ISSUE_D_ENABLE
+    `ifdef SVT_CHI_INTERFACE_PARITY_ENABLE
+    rn_if.RXSACTIVECHK       = rn_bind_if.RXSACTIVECHK;
+    rn_if.TXLINKACTIVEACKCHK = rn_bind_if.TXLINKACTIVEACKCHK;
+    rn_if.RXLINKACTIVEREQCHK = rn_bind_if.RXLINKACTIVEREQCHK;
+    rn_if.TXREQLCRDVCHK      = rn_bind_if.TXREQLCRDVCHK;
+    rn_if.RXRSPFLITPENDCHK   = rn_bind_if.RXRSPFLITPENDCHK;
+    rn_if.RXRSPFLITVCHK      = rn_bind_if.RXRSPFLITVCHK;
+    rn_if.RXRSPFLITCHK       = rn_bind_if.RXRSPFLITCHK;
+    rn_if.RXDATFLITPENDCHK   = rn_bind_if.RXDATFLITPENDCHK;
+    rn_if.RXDATFLITVCHK      = rn_bind_if.RXDATFLITVCHK;
+    rn_if.RXDATFLITCHK       = rn_bind_if.RXDATFLITCHK;
+    rn_if.RXSNPFLITPENDCHK   = rn_bind_if.RXSNPFLITPENDCHK;
+    rn_if.RXSNPFLITVCHK      = rn_bind_if.RXSNPFLITVCHK;
+    rn_if.RXSNPFLITCHK       = rn_bind_if.RXSNPFLITCHK;
+    rn_if.TXRSPLCRDVCHK      = rn_bind_if.TXRSPLCRDVCHK;
+    rn_if.TXDATLCRDVCHK      = rn_bind_if.TXDATLCRDVCHK;
+    `endif
+  `endif
+  end
+
+  // inouts
+  // If RN is Active
+  assign rn_bind_if.TXSACTIVE       = (is_active == 0) ? 'bz : rn_if.TXSACTIVE;
+  assign rn_bind_if.TXLINKACTIVEREQ = (is_active == 0) ? 'bz : rn_if.TXLINKACTIVEREQ;
+  assign rn_bind_if.RXLINKACTIVEACK = (is_active == 0) ? 'bz : rn_if.RXLINKACTIVEACK;
+  `ifdef SVT_CHI_ISSUE_B_ENABLE
+  assign rn_bind_if.SYSCOREQ        = (is_active == 0) ? 'bz : rn_if.SYSCOREQ;
+  `endif
+  assign rn_bind_if.TXREQFLITPEND   = (is_active == 0) ? 'bz : rn_if.TXREQFLITPEND;
+  assign rn_bind_if.TXREQFLITV      = (is_active == 0) ? 'bz : rn_if.TXREQFLITV;
+  assign rn_bind_if.TXREQFLIT       = (is_active == 0) ? 'bz : rn_if.TXREQFLIT;
+  assign rn_bind_if.RXRSPLCRDV      = (is_active == 0) ? 'bz : rn_if.RXRSPLCRDV;
+  assign rn_bind_if.RXDATLCRDV      = (is_active == 0) ? 'bz : rn_if.RXDATLCRDV;
+  assign rn_bind_if.RXSNPLCRDV      = (is_active == 0) ? 'bz : rn_if.RXSNPLCRDV;
+  assign rn_bind_if.TXRSPFLITPEND   = (is_active == 0) ? 'bz : rn_if.TXRSPFLITPEND;
+  assign rn_bind_if.TXRSPFLITV      = (is_active == 0) ? 'bz : rn_if.TXRSPFLITV;
+  assign rn_bind_if.TXRSPFLIT       = (is_active == 0) ? 'bz : rn_if.TXRSPFLIT;
+  assign rn_bind_if.TXDATFLITPEND   = (is_active == 0) ? 'bz : rn_if.TXDATFLITPEND;
+  assign rn_bind_if.TXDATFLITV      = (is_active == 0) ? 'bz : rn_if.TXDATFLITV;
+  assign rn_bind_if.TXDATFLIT       = (is_active == 0) ? 'bz : rn_if.TXDATFLIT;
+
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+  `ifdef SVT_CHI_INTERFACE_PARITY_ENABLE
+  assign rn_bind_if.TXSACTIVECHK       = (is_active == 0) ? 'bz : rn_if.TXSACTIVECHK;
+  assign rn_bind_if.TXLINKACTIVEREQCHK = (is_active == 0) ? 'bz : rn_if.TXLINKACTIVEREQCHK;
+  assign rn_bind_if.RXLINKACTIVEACKCHK = (is_active == 0) ? 'bz : rn_if.RXLINKACTIVEACKCHK;
+  assign rn_bind_if.TXREQFLITPENDCHK   = (is_active == 0) ? 'bz : rn_if.TXREQFLITPENDCHK;
+  assign rn_bind_if.TXREQFLITVCHK      = (is_active == 0) ? 'bz : rn_if.TXREQFLITVCHK;
+  assign rn_bind_if.TXREQFLITCHK       = (is_active == 0) ? 'bz : rn_if.TXREQFLITCHK;
+  assign rn_bind_if.RXRSPLCRDVCHK      = (is_active == 0) ? 'bz : rn_if.RXRSPLCRDVCHK;
+  assign rn_bind_if.RXDATLCRDVCHK      = (is_active == 0) ? 'bz : rn_if.RXDATLCRDVCHK;
+  assign rn_bind_if.RXSNPLCRDVCHK      = (is_active == 0) ? 'bz : rn_if.RXSNPLCRDVCHK;
+  assign rn_bind_if.TXRSPFLITPENDCHK   = (is_active == 0) ? 'bz : rn_if.TXRSPFLITPENDCHK;
+  assign rn_bind_if.TXRSPFLITVCHK      = (is_active == 0) ? 'bz : rn_if.TXRSPFLITVCHK;
+  assign rn_bind_if.TXRSPFLITCHK       = (is_active == 0) ? 'bz : rn_if.TXRSPFLITCHK;
+  assign rn_bind_if.TXDATFLITPENDCHK   = (is_active == 0) ? 'bz : rn_if.TXDATFLITPENDCHK;
+  assign rn_bind_if.TXDATFLITVCHK      = (is_active == 0) ? 'bz : rn_if.TXDATFLITVCHK;
+  assign rn_bind_if.TXDATFLITCHK       = (is_active == 0) ? 'bz : rn_if.TXDATFLITCHK;
+  `endif
+`endif
+  always @(*) 
+    begin
+      // If RN is Passive
+      if (is_active == 0) begin
+        rn_if.TXSACTIVE       = rn_bind_if.TXSACTIVE;
+        rn_if.TXLINKACTIVEREQ = rn_bind_if.TXLINKACTIVEREQ;
+        rn_if.RXLINKACTIVEACK = rn_bind_if.RXLINKACTIVEACK;
+        `ifdef SVT_CHI_ISSUE_B_ENABLE
+        rn_if.SYSCOREQ        = rn_bind_if.SYSCOREQ;
+        rn_if.SYSCOACK        = rn_bind_if.SYSCOACK;
+        `endif
+        rn_if.TXREQFLITPEND   = rn_bind_if.TXREQFLITPEND;
+        rn_if.TXREQFLITV      = rn_bind_if.TXREQFLITV;
+        rn_if.TXREQFLIT       = rn_bind_if.TXREQFLIT;
+        rn_if.RXRSPLCRDV      = rn_bind_if.RXRSPLCRDV;
+        rn_if.RXDATLCRDV      = rn_bind_if.RXDATLCRDV;
+        rn_if.RXSNPLCRDV      = rn_bind_if.RXSNPLCRDV;
+        rn_if.TXRSPFLITPEND   = rn_bind_if.TXRSPFLITPEND;
+        rn_if.TXRSPFLITV      = rn_bind_if.TXRSPFLITV;
+        rn_if.TXRSPFLIT       = rn_bind_if.TXRSPFLIT;
+        rn_if.TXDATFLITPEND   = rn_bind_if.TXDATFLITPEND;
+        rn_if.TXDATFLITV      = rn_bind_if.TXDATFLITV;
+        rn_if.TXDATFLIT       = rn_bind_if.TXDATFLIT;
+      `ifdef SVT_CHI_ISSUE_D_ENABLE
+        `ifdef SVT_CHI_INTERFACE_PARITY_ENABLE
+        rn_if.TXSACTIVECHK       = rn_bind_if.TXSACTIVECHK;
+        rn_if.TXLINKACTIVEREQCHK = rn_bind_if.TXLINKACTIVEREQCHK;
+        rn_if.RXLINKACTIVEACKCHK = rn_bind_if.RXLINKACTIVEACKCHK;
+        rn_if.TXREQFLITPENDCHK   = rn_bind_if.TXREQFLITPENDCHK;
+        rn_if.TXREQFLITVCHK      = rn_bind_if.TXREQFLITVCHK;
+        rn_if.TXREQFLITCHK       = rn_bind_if.TXREQFLITCHK;
+        rn_if.RXRSPLCRDVCHK      = rn_bind_if.RXRSPLCRDVCHK;
+        rn_if.RXDATLCRDVCHK      = rn_bind_if.RXDATLCRDVCHK;
+        rn_if.RXSNPLCRDVCHK      = rn_bind_if.RXSNPLCRDVCHK;
+        rn_if.TXRSPFLITPENDCHK   = rn_bind_if.TXRSPFLITPENDCHK;
+        rn_if.TXRSPFLITVCHK      = rn_bind_if.TXRSPFLITVCHK;
+        rn_if.TXRSPFLITCHK       = rn_bind_if.TXRSPFLITCHK;
+        rn_if.TXDATFLITPENDCHK   = rn_bind_if.TXDATFLITPENDCHK;
+        rn_if.TXDATFLITVCHK      = rn_bind_if.TXDATFLITVCHK;
+        rn_if.TXDATFLITCHK       = rn_bind_if.TXDATFLITCHK;
+        `endif
+      `endif
+      end
+    end
+
+endmodule
+
+`endif // GUARD_SVT_CHI_RN_BIND_IF_SVI

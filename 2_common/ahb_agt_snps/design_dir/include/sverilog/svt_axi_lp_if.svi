@@ -1,0 +1,69 @@
+
+`ifndef GUARD_SVT_AXI_LP_IF_SVI
+`define GUARD_SVT_AXI_LP_IF_SVI
+
+`include "svt_axi_defines.svi"
+
+/**
+ * <b>General description:</b><p>
+ * The low power interface svt_axi_lp_if defines the AXI low power signals appropriate
+ * for a single port, along with the modports needed for the 
+ * monitor VIP. 
+ *
+ */
+interface svt_axi_lp_if ();
+
+
+  // User clock
+  // user is expected to drive this signal
+  logic                                         aclk;
+
+  //reset 
+  // user is expected to drive this signal
+  logic                                         aresetn;
+
+  // Global Interface signals
+
+  //-----------------------------------------------------------------------
+  // AXI low power interface Signals
+  //-----------------------------------------------------------------------
+  logic                                         cactive;
+  logic                                         csysreq;
+  logic                                         csysack;
+
+  // AXI low power Clocking blocks
+  //-----------------------------------------------------------------------
+
+  //-----------------------------------------------------------------------
+  /**
+   * Clocking block that defines the AXI  low power monitor Interface
+   * signal synchronization and directionality.
+   */
+  clocking axi_lp_monitor_cb @(posedge aclk);
+    default input #`SVT_AXI_MONITOR_IF_SETUP_TIME output #`SVT_AXI_MONITOR_IF_HOLD_TIME;
+    
+    input   aresetn;
+    input   cactive;
+    input   csysreq;
+    input   csysack;
+  endclocking : axi_lp_monitor_cb
+
+  /** Modport used to connect the VIP Monitor to AXI interface signals. */
+  modport svt_axi_lp_monitor_modport (clocking axi_lp_monitor_cb,input aresetn, input cactive, input csysreq, input csysack);
+  //-----------------------------------------------------------------------
+
+  /**
+   * Asynchronous modport 
+   */
+  modport svt_axi_lp_async_modport ( input cactive, 
+                                  input csysreq, 
+				  input csysack, 
+				  input aclk,
+                  input aresetn
+                                  );
+                          
+
+endinterface: svt_axi_lp_if
+
+`endif // GUARD_SVT_AXI_MASTER_IF_SVI
+

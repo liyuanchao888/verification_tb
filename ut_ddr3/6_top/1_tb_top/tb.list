@@ -1,0 +1,6 @@
+../../6_top/1_tb_top/tb_define.svh
+../../2_bfm/1_interface/mem_if.sv
+../../6_top/1_tb_top/cr_top_interface.sv
+../../6_top/1_tb_top/tb_top.sv
+//../../6_top/1_tb_top/dut_top.sv
+../../6_top/1_tb_top/test_top.sv

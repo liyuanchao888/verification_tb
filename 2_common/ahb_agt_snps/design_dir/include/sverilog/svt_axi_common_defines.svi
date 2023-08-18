@@ -1,0 +1,3897 @@
+
+`ifndef GUARD_SVT_AXI_COMMON_DEFINES_SVI
+`define GUARD_SVT_AXI_COMMON_DEFINES_SVI
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifdef SVT_AXI_SVC_USE_MODEL
+`ifndef SVT_AXI_SVC_INTERNAL_TESTING
+`define SVT_AXI_SVC_NO_CFG_IN_XACT
+`define SVT_AXI_SVC_SINGLE_INTERFACE
+`ifndef SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`define SVT_AXI_MAX_AXI3_GENERIC_DELAY 1024
+`endif
+`else
+`ifndef SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`define SVT_AXI_MAX_AXI3_GENERIC_DELAY 16
+`endif
+`endif
+`else
+`ifndef SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`define SVT_AXI_MAX_AXI3_GENERIC_DELAY 16 
+`endif
+`endif
+
+`ifdef SVT_AXI3_4_PERF_MODE
+`define SVT_AXI3_4_CONSTRAINTS_PERF_MODE
+`define SVT_AXI3_4_AGENT_PERF_MODE
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+//Generic macro used to define derivative macros
+`define SVT_AXI_SET_UNIQ_VALUED_DEFINE(var,val) \
+ `define var``_``val
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+//Generic macro used to define derivative macros
+`define IGNORE_BINS(var,val)\
+ `define var``_``val
+
+// User controllable
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_TRANSACTION_IDLE_CYCLES
+ `define SVT_AXI_MAX_TRANSACTION_IDLE_CYCLES 16
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_NUM_EXCLUSIVE_ACCESS
+ `define SVT_AXI_MAX_NUM_EXCLUSIVE_ACCESS 4 
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_NUM_OUTSTANDING_XACT
+ `define SVT_AXI_MAX_NUM_OUTSTANDING_XACT            128
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_NUM_OUTSTANDING_ATOMIC_XACT
+ `define SVT_AXI_MAX_NUM_OUTSTANDING_ATOMIC_XACT            128
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_NUM_OUTSTANDING_SNOOP_XACT
+ `define SVT_AXI_MAX_NUM_OUTSTANDING_SNOOP_XACT      10
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_READ_FIFO_DRAIN_RATE
+  `define SVT_AXI_MAX_READ_FIFO_DRAIN_RATE 1000 
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_WRITE_FIFO_FILL_RATE
+  `define SVT_AXI_MAX_WRITE_FIFO_FILL_RATE 1000 
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_READ_FIFO_FULL_LEVEL
+  // drain_rate * max_num_outstanding
+  `define SVT_AXI_MAX_READ_FIFO_FULL_LEVEL 8192 
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_WRITE_FIFO_FULL_LEVEL
+  // drain_rate * max_num_outstanding
+  `define SVT_AXI_MAX_WRITE_FIFO_FULL_LEVEL 8192 
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_SLAVE_TRAFFIC_PROFILE_RATE
+  `define SVT_AXI_MAX_SLAVE_TRAFFIC_PROFILE_RATE 64
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_SLAVE_TRAFFIC_PROFILE_XACT_SIZE 
+  `define SVT_AXI_MAX_SLAVE_TRAFFIC_PROFILE_XACT_SIZE 64
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_WR_INTERLEAVE_DEPTH
+ `define SVT_AXI_MAX_WR_INTERLEAVE_DEPTH 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_STREAM_INTERLEAVE_DEPTH
+ `define SVT_AXI_MAX_STREAM_INTERLEAVE_DEPTH 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_READ_DATA_REORDERING_DEPTH
+//  If no cfg in xact, default value must match
+// max value, since that is checked in is_valid
+// Hence setting MAX to default value.
+`ifdef SVT_AXI_SVC_NO_CFG_IN_XACT 
+ `define SVT_AXI_MAX_READ_DATA_REORDERING_DEPTH 1
+`elsif SVT_AMBA_ALTERNATE_DEFAULT_VALUE
+ `define SVT_AXI_MAX_READ_DATA_REORDERING_DEPTH 16
+`else 
+ `define SVT_AXI_MAX_READ_DATA_REORDERING_DEPTH 8 
+`endif
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_WRITE_RESP_REORDERING_DEPTH
+//  If no cfg in xact, default value must match
+// max value, since that is checked in is_valid
+// Hence setting MAX to default value.
+`ifdef SVT_AXI_SVC_NO_CFG_IN_XACT 
+`define SVT_AXI_MAX_WRITE_RESP_REORDERING_DEPTH 1
+`else
+`define SVT_AXI_MAX_WRITE_RESP_REORDERING_DEPTH 8
+`endif
+
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_READ_DATA_INTERLEAVE_SIZE
+ `define SVT_AXI_MAX_READ_DATA_INTERLEAVE_SIZE 4
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_ADDR_DELAY
+ `define SVT_AXI_MAX_ADDR_DELAY `SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_WREADY_DELAY
+ `define SVT_AXI_MAX_WREADY_DELAY `SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_IDLE_WREADY_DELAY
+ `define SVT_AXI_MAX_IDLE_WREADY_DELAY `SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_IDLE_WREADY_DELAY_ARR_SIZE
+ `define SVT_AXI_MAX_IDLE_WREADY_DELAY_ARR_SIZE 16
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_RVALID_DELAY
+ `define SVT_AXI_MAX_RVALID_DELAY `SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MIN_WRITE_RESP_DELAY
+ `define SVT_AXI_MIN_WRITE_RESP_DELAY 0
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_WRITE_RESP_DELAY
+ `define SVT_AXI_MAX_WRITE_RESP_DELAY `SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_IDLE_BREADY_DELAY
+ `define SVT_AXI_MAX_IDLE_BREADY_DELAY `SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_IDLE_BREADY_DELAY_ARR_SIZE
+ `define SVT_AXI_MAX_IDLE_BREADY_DELAY_ARR_SIZE 16
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_ADDR_VALID_DELAY
+ `define SVT_AXI_MAX_ADDR_VALID_DELAY `SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_IDLE_ADDR_READY_DELAY
+ `define SVT_AXI_MAX_IDLE_ADDR_READY_DELAY `SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_IDLE_ADDR_READY_DELAY_ARR_SIZE
+ `define SVT_AXI_MAX_IDLE_ADDR_READY_DELAY_ARR_SIZE 16
+`endif
+
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_WVALID_DELAY
+ `define SVT_AXI_MAX_WVALID_DELAY `SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_RREADY_DELAY
+ `define SVT_AXI_MAX_RREADY_DELAY `SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_IDLE_RREADY_DELAY
+ `define SVT_AXI_MAX_IDLE_RREADY_DELAY `SVT_AXI_MAX_AXI3_GENERIC_DELAY
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_IDLE_RREADY_DELAY_ARR_SIZE
+ `define SVT_AXI_MAX_IDLE_RREADY_DELAY_ARR_SIZE 16
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_TVALID_DELAY
+ `define SVT_AXI_MAX_TVALID_DELAY 16
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_ACREADY_DELAY
+ `define SVT_AXI_MAX_ACREADY_DELAY 16
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_CDVALID_DELAY
+ `define SVT_AXI_MAX_CDVALID_DELAY 16
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_ACVALID_TO_CRVALID_DELAY
+ `define SVT_AXI_MAX_ACVALID_TO_CRVALID_DELAY (`SVT_AXI_MAX_ACREADY_DELAY+`SVT_AXI_MAX_CDVALID_DELAY)
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef MIN_UPPER_BOUND
+ `define MIN_UPPER_BOUND (`SVT_AXI_MAX_ACVALID_TO_CRVALID_DELAY/3)
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_CRVALID_DELAY
+ `define SVT_AXI_MAX_CRVALID_DELAY 16
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_ACVALID_DELAY
+ `define SVT_AXI_MAX_ACVALID_DELAY 10
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_CRREADY_DELAY
+ `define SVT_AXI_MAX_CRREADY_DELAY 10
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_CDREADY_DELAY
+ `define SVT_AXI_MAX_CDREADY_DELAY 10
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_RACK_DELAY
+ `define SVT_AXI_MAX_RACK_DELAY 16
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_WACK_DELAY
+ `define SVT_AXI_MAX_WACK_DELAY 16
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_TREADY_DELAY
+ `define SVT_AXI_MAX_TREADY_DELAY 16
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_DVM_COMPLETE_DELAY
+ `define SVT_AXI_MAX_DVM_COMPLETE_DELAY 250
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_STREAM_BURST_LENGTH
+ `define SVT_AXI_MAX_STREAM_BURST_LENGTH 256
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_ADDR_TAG_ATTRIBUTES_WIDTH
+ `define SVT_AXI_ADDR_TAG_ATTRIBUTES_WIDTH 2
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_TAGGED_ADDR_WIDTH 
+ `define SVT_AXI_MAX_TAGGED_ADDR_WIDTH (`SVT_AXI_MAX_ADDR_WIDTH + `SVT_AXI_ADDR_TAG_ATTRIBUTES_WIDTH)
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_VMIDEXT_WIDTH 
+ `define SVT_AXI_MAX_VMIDEXT_WIDTH 4
+`endif
+
+
+/**
+ * The following is provided for backwards compatibility. SVT_AXI_QVN_ENABLE
+ * and SVT_AXI_QVN_SLV_ENABLE are now the correct defines for QVN.
+ */
+`ifdef QVN_ENABLE
+`ifndef SVT_AXI_QVN_ENABLE
+`define SVT_AXI_QVN_ENABLE
+`endif
+`endif
+`ifdef QVN_SLV_ENABLE
+`ifndef SVT_AXI_QVN_SLV_ENABLE
+`define SVT_AXI_QVN_SLV_ENABLE
+`endif
+`endif
+
+`ifdef SVT_AXI_QVN_ENABLE
+//-------------------------------------------------
+//------------------ QVN DEFINES ------------------
+//-------------------------------------------------
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_ARVNET_WIDTH
+ `define SVT_AXI_QVN_ARVNET_WIDTH 4
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_AWVNET_WIDTH
+ `define SVT_AXI_QVN_AWVNET_WIDTH 4
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_WVNET_WIDTH
+ `define SVT_AXI_QVN_WVNET_WIDTH 4
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_QVN_QOS_VALUE
+ `define SVT_AXI_MAX_QVN_QOS_VALUE 15
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_QVN_NUM_QOS_UPGRADE
+ `define SVT_AXI_MAX_QVN_NUM_QOS_UPGRADE 4
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_QVN_QOS_UPGRADE_DELAY_RANGE
+ `define SVT_AXI_MAX_QVN_QOS_UPGRADE_DELAY_RANGE [2:32]
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_QVN_NUM_ADDR_TOKEN_REQUEST
+ `define SVT_AXI_MAX_QVN_NUM_ADDR_TOKEN_REQUEST 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_QVN_NUM_DATA_TOKEN_REQUEST
+ `define SVT_AXI_MAX_QVN_NUM_DATA_TOKEN_REQUEST 544
+`endif
+
+// --------------- port configuration ---------------
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_MAX_NUM_VIRTUAL_NETWORK
+ `define SVT_AXI_QVN_MAX_NUM_VIRTUAL_NETWORK 4
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_NUM_MIN_ALLOWED_UNUSED_TOKEN
+ `define SVT_AXI_QVN_NUM_MIN_ALLOWED_UNUSED_TOKEN 4
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_NUM_MAX_ALLOWED_UNUSED_TOKEN
+ `define SVT_AXI_QVN_NUM_MAX_ALLOWED_UNUSED_TOKEN 4
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_MAX_NUM_OUTSTANDING_TOKEN_REQUEST
+ `define SVT_AXI_QVN_MAX_NUM_OUTSTANDING_TOKEN_REQUEST 2
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_MIN_TOKEN_USAGE_TIMELIMIT
+ `define SVT_AXI_QVN_MIN_TOKEN_USAGE_TIMELIMIT 2000
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_MAX_TOKEN_USAGE_TIMELIMIT
+ `define SVT_AXI_QVN_MAX_TOKEN_USAGE_TIMELIMIT 5000
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_MAX_NUM_AR_PRE_ALLOCATED_TOKEN
+ `define SVT_AXI_QVN_MAX_NUM_AR_PRE_ALLOCATED_TOKEN 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_MAX_NUM_AW_PRE_ALLOCATED_TOKEN
+ `define SVT_AXI_QVN_MAX_NUM_AW_PRE_ALLOCATED_TOKEN 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_MAX_NUM_W_PRE_ALLOCATED_TOKEN
+`define SVT_AXI_QVN_MAX_NUM_W_PRE_ALLOCATED_TOKEN 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_MIN_NUM_AR_PRE_ALLOCATED_TOKEN
+ `define SVT_AXI_QVN_MIN_NUM_AR_PRE_ALLOCATED_TOKEN 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_MIN_NUM_AW_PRE_ALLOCATED_TOKEN
+ `define SVT_AXI_QVN_MIN_NUM_AW_PRE_ALLOCATED_TOKEN 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_MIN_NUM_W_PRE_ALLOCATED_TOKEN
+ `define SVT_AXI_QVN_MIN_NUM_W_PRE_ALLOCATED_TOKEN 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_SLAVE_MIN_NUM_RD_ADDR_TOKEN
+ `define SVT_AXI_QVN_SLAVE_MIN_NUM_RD_ADDR_TOKEN 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_SLAVE_MIN_NUM_WR_ADDR_TOKEN
+ `define SVT_AXI_QVN_SLAVE_MIN_NUM_WR_ADDR_TOKEN 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_SLAVE_MIN_NUM_WR_DATA_TOKEN
+ `define SVT_AXI_QVN_SLAVE_MIN_NUM_WR_DATA_TOKEN 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_SLAVE_MAX_NUM_RD_ADDR_TOKEN
+ `define SVT_AXI_QVN_SLAVE_MAX_NUM_RD_ADDR_TOKEN 10
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_SLAVE_MAX_NUM_WR_ADDR_TOKEN
+`define SVT_AXI_QVN_SLAVE_MAX_NUM_WR_ADDR_TOKEN 10
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_SLAVE_MAX_NUM_WR_DATA_TOKEN
+ `define SVT_AXI_QVN_SLAVE_MAX_NUM_WR_DATA_TOKEN 10
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_SLAVE_AR_TOKEN_MAX_SIZE
+ `define SVT_AXI_QVN_SLAVE_AR_TOKEN_MAX_SIZE 5
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_SLAVE_AW_TOKEN_MAX_SIZE
+ `define SVT_AXI_QVN_SLAVE_AW_TOKEN_MAX_SIZE 5
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_SLAVE_W_TOKEN_MAX_SIZE
+ `define SVT_AXI_QVN_SLAVE_W_TOKEN_MAX_SIZE 5
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_SLAVE_AR_TOKEN_SIZE_FOR_VN_RANGE
+ `define SVT_AXI_QVN_SLAVE_AR_TOKEN_SIZE_FOR_VN_RANGE [5:10]
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_SLAVE_AW_TOKEN_SIZE_FOR_VN_RANGE
+ `define SVT_AXI_QVN_SLAVE_AW_TOKEN_SIZE_FOR_VN_RANGE [5:10]
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_SLAVE_W_TOKEN_SIZE_FOR_VN_RANGE
+ `define SVT_AXI_QVN_SLAVE_W_TOKEN_SIZE_FOR_VN_RANGE [5:10]
+`endif
+
+// end of macros for SVT_AXI_QVN_ENABLE
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_AR_TOKEN_REQUEST_READY_MAX_TIMEOUT
+`ifdef QVN_AR_TOKEN_REQUEST_READY_MAX_TIMEOUT
+/** The following is added for backwards compatibility */
+ `define SVT_AXI_QVN_AR_TOKEN_REQUEST_READY_MAX_TIMEOUT `QVN_AR_TOKEN_REQUEST_READY_MAX_TIMEOUT
+`else
+ `define SVT_AXI_QVN_AR_TOKEN_REQUEST_READY_MAX_TIMEOUT 10
+`endif
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_AW_TOKEN_REQUEST_READY_MAX_TIMEOUT
+`ifdef QVN_AW_TOKEN_REQUEST_READY_MAX_TIMEOUT
+/** The following is added for backwards compatibility */
+ `define SVT_AXI_QVN_AW_TOKEN_REQUEST_READY_MAX_TIMEOUT `QVN_AW_TOKEN_REQUEST_READY_MAX_TIMEOUT
+`else
+ `define SVT_AXI_QVN_AW_TOKEN_REQUEST_READY_MAX_TIMEOUT 10
+`endif
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_QVN_W_TOKEN_REQUEST_READY_MAX_TIMEOUT
+`ifdef QVN_W_TOKEN_REQUEST_READY_MAX_TIMEOUT
+/** The following is added for backwards compatibility */
+ `define SVT_AXI_QVN_W_TOKEN_REQUEST_READY_MAX_TIMEOUT `QVN_W_TOKEN_REQUEST_READY_MAX_TIMEOUT
+`else
+ `define SVT_AXI_QVN_W_TOKEN_REQUEST_READY_MAX_TIMEOUT 10
+`endif
+`endif
+
+// Defines for qvn transaction type
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_QVN_TRANSACTION_TYPE_READ_ADDR   0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_QVN_TRANSACTION_TYPE_WRITE_ADDR  1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_QVN_TRANSACTION_TYPE_WRITE_DATA  2
+
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_QVN_AW_TOKEN_DELAY_RANGE
+ `define SVT_AXI_MAX_QVN_AW_TOKEN_DELAY_RANGE [2:(`SVT_AXI_QVN_AW_TOKEN_REQUEST_READY_MAX_TIMEOUT-1)]
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_QVN_W_TOKEN_DELAY_RANGE
+ `define SVT_AXI_MAX_QVN_W_TOKEN_DELAY_RANGE [2:(`SVT_AXI_QVN_W_TOKEN_REQUEST_READY_MAX_TIMEOUT-1)]
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_QVN_AR_TOKEN_DELAY_RANGE
+ `define SVT_AXI_MAX_QVN_AR_TOKEN_DELAY_RANGE [2:(`SVT_AXI_QVN_AR_TOKEN_REQUEST_READY_MAX_TIMEOUT-1)]
+`endif
+
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define REPORT_OBJ \
+  `ifdef SVT_UVM_TECHNOLOGY  \
+     reporter  \
+  `elsif SVT_OVM_TECHNOLOGY  \
+     reporter  \
+  `else  \
+     log  \
+  `endif
+
+
+
+// -------------------------------------
+// defines for setting coverage options
+// -------------------------------------
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_AWVALID_to_AWREADY_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_AWVALID_to_AWREADY_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_WVALID_to_WREADY_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_WVALID_to_WREADY_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI4_STREAM_trans_TVALID_to_TREADY_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI4_STREAM_trans_TVALID_to_TREADY_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_BVALID_to_BREADY_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_BVALID_to_BREADY_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_AWVALID_to_prev_AWVALID_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_AWVALID_to_prev_AWVALID_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI4_STREAM_trans_TVALID_to_prev_TVALID_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI4_STREAM_trans_TVALID_to_prev_TVALID_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_WVALID_to_prev_WVALID_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_WVALID_to_prev_WVALID_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_AWVALID_to_first_WVALID_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_AWVALID_to_first_WVALID_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_last_wdata_handshake_to_BVALID_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_last_wdata_handshake_to_BVALID_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_axi_snoop_ACVALID_to_ACREADY_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_axi_snoop_ACVALID_to_ACREADY_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_axi_snoop_ACVALID_to_CRVALID_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_axi_snoop_ACVALID_to_CRVALID_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_axi_snoop_CRVALID_to_CRREADY_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_axi_snoop_CRVALID_to_CRREADY_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_axi_snoop_CDVALID_to_CDREADY_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_axi_snoop_CDVALID_to_CDREADY_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_axi_snoop_ACVALID_to_prev_ACVALID_Delay_COV_OPTION_AT_LEAST_VAL 
+  `define SVT_AXI_trans_axi_snoop_ACVALID_to_prev_ACVALID_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_axi_snoop_CRVALID_to_prev_CRVALID_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_axi_snoop_CRVALID_to_prev_CRVALID_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_axi_snoop_CDVALID_to_prev_CDVALID_Delay_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_axi_snoop_CDVALID_to_prev_CDVALID_Delay_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_axi_snoop_ACVALID_before_ACREADY_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_axi_snoop_ACVALID_before_ACREADY_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_axi_snoop_ACREADY_before_ACVALID_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_axi_snoop_ACREADY_before_ACVALID_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_axi_snoop_CRVALID_before_CRREADY_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_axi_snoop_CRVALID_before_CRREADY_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_axi_snoop_CRREADY_before_CRVALID_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_axi_snoop_CRREADY_before_CRVALID_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_axi_snoop_CDVALID_before_CDREADY_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_axi_snoop_CDVALID_before_CDREADY_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_axi_snoop_CDREADY_before_CDVALID_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_axi_snoop_CDREADY_before_CDVALID_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_AWVALID_before_AWREADY_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_AWVALID_before_AWREADY_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_AWREADY_before_AWVALID_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_AWREADY_before_AWVALID_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_BVALID_before_BREADY_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_BVALID_before_BREADY_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_BREADY_before_BVALID_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_BREADY_before_BVALID_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_WVALID_before_WREADY_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_WVALID_before_WREADY_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_WREADY_before_WVALID_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_WREADY_before_WVALID_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI4_STREAM_trans_TVALID_before_TREADY_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI4_STREAM_trans_TVALID_before_TREADY_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI4_STREAM_trans_TREADY_before_TVALID_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI4_STREAM_trans_TREADY_before_TVALID_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_AWVALID_before_WREADY_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_AWVALID_before_WREADY_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_WREADY_before_AWVALID_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_WREADY_before_AWVALID_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_AWREADY_before_WVALID_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_AWREADY_before_WVALID_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_WVALID_before_AWREADY_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_WVALID_before_AWREADY_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_AWVALID_before_WVALID_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_AWVALID_before_WVALID_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_trans_meta_axi_write_WVALID_before_AWVALID_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_trans_meta_axi_write_WVALID_before_AWVALID_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_system_axi_master_to_slave_access_axi_master_to_slave_access_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AXI_system_axi_master_to_slave_access_axi_master_to_slave_access_COV_OPTION_AT_LEAST_VAL 3
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef IGNORE_BINS_CG_system_axi_master_to_slave_access_CP_master_to_slave_pair_id  
+  `define IGNORE_BINS_CG_system_axi_master_to_slave_access_CP_master_to_slave_pair_id  
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef IGNORE_BINS_CG_trans_cross_axi_ooo_write_response_depth_CP_ooo_write_response_depth
+  `define IGNORE_BINS_CG_trans_cross_axi_ooo_write_response_depth_CP_ooo_write_response_depth
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef IGNORE_BINS_CG_trans_cross_axi_ooo_write_response_depth_CP_ooo_write_response
+  `define IGNORE_BINS_CG_trans_cross_axi_ooo_write_response_depth_CP_ooo_write_response
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef IGNORE_BINS_CG_trans_cross_axi_ooo_read_response_depth_CP_ooo_read_response_depth
+  `define IGNORE_BINS_CG_trans_cross_axi_ooo_read_response_depth_CP_ooo_read_response_depth
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef IGNORE_BINS_CG_trans_cross_axi_ooo_read_response_depth_CP_ooo_read_response
+  `define IGNORE_BINS_CG_trans_cross_axi_ooo_read_response_depth_CP_ooo_read_response
+`endif
+
+// -------------------------------------
+
+// Following macro represents number of lsb bits in order to define the address boundary
+// which shouldn't be crossed by any single axi transaction 
+//
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_TRANSACTION_ADDR_RANGE_NUM_LSB_BITS
+ `define SVT_AXI_TRANSACTION_ADDR_RANGE_NUM_LSB_BITS 12
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_TRANSACTION_4K_ADDR_RANGE 
+ `define SVT_AXI_TRANSACTION_4K_ADDR_RANGE   (1 << `SVT_AXI_TRANSACTION_ADDR_RANGE_NUM_LSB_BITS)
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_BURST_SIZE_8    0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_BURST_SIZE_16   1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_BURST_SIZE_32   2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_BURST_SIZE_64   3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_BURST_SIZE_128  4
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_BURST_SIZE_256  5
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_BURST_SIZE_512  6
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_BURST_SIZE_1024 7
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_BURST_SIZE_2048 8
+
+// Defines for Burst type
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_BURST_FIXED  0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_BURST_INCR   1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_BURST_WRAP   2
+
+// Define for Atomic access
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_NORMAL    0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_EXCLUSIVE 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_LOCKED    2
+
+// Defines for the interface type.
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INTERFACE_AXI3        0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INTERFACE_AXI4        1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INTERFACE_AXI4_LITE   2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INTERFACE_AXI4_STREAM 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INTERFACE_ACE         4
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INTERFACE_ACE_LITE    5
+
+// Defines for the interface category
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_READ_WRITE 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_READ_ONLY  1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WRITE_ONLY 2
+
+// Defines for the memory type
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_SV_BASED_SVT_MEM 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_C_BASED_SVT_MEM 1
+
+// Defines for the generator source
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_NO_SOURCE 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_ATOMIC_GEN_SOURCE 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SCENARIO_GEN_SOURCE 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SIMPLE_RESPONSE_GEN_SOURCE 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MEMORY_RESPONSE_GEN_SOURCE 5
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_USER_RESPONSE_GEN_SOURCE 7
+
+// Defines for snoop response generator source
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_CACHE_SNOOP_RESPONSE_GEN_SOURCE 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_USER_SNOOP_RESPONSE_GEN_SOURCE 1
+
+// Defines for transaction type
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_TYPE_READ     0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_TYPE_WRITE    1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_TYPE_IDLE     2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_TYPE_COHERENT 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_DATA_STREAM   4
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_TYPE_ATOMIC   5
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_TYPE_READ_WRITE     6
+
+
+// Defines for phase type
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_PHASE_TYPE_WR_ADDR     0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_PHASE_TYPE_WR_DATA    1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_PHASE_TYPE_WR_RESP    2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_PHASE_TYPE_RD_ADDR   3 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_PHASE_TYPE_RD_DATA   4
+
+// Defines for transmitted channel type
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSMITTED_CHANNEL_TYPE_READ     0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSMITTED_CHANNEL_TYPE_WRITE    1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define  SVT_AXI_TRANSMITTED_CHANNEL_TYPE_IDLE    2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSMITTED_CHANNEL_TYPE_COHERENT  3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSMITTED_CHANNEL_TYPE_DATA_STREAM   4
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSMITTED_CHANNEL_TYPE_READ_WRITE    5
+
+//Defines for Atomic transaction types 
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define  SVT_AXI_ATOMIC_TYPE_NON_ATOMIC    0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define  SVT_AXI_ATOMIC_TYPE_STORE   1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define  SVT_AXI_ATOMIC_TYPE_LOAD  2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define  SVT_AXI_ATOMIC_TYPE_SWAP  3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define  SVT_AXI_ATOMIC_TYPE_COMPARE  4
+ /**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define   SVT_AXI_ATOMIC_XACT_TYPE_ATOMICSTORE_ADD 0 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define  SVT_AXI_ATOMIC_XACT_TYPE_ATOMICSTORE_CLR 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define  SVT_AXI_ATOMIC_XACT_TYPE_ATOMICSTORE_EOR 2     
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_ATOMIC_XACT_TYPE_ATOMICSTORE_SET  3   
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define  SVT_AXI_ATOMIC_XACT_TYPE_ATOMICSTORE_SMAX  4
+   
+ /**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_ATOMIC_XACT_TYPE_ATOMICSTORE_SMIN  5
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define  SVT_AXI_ATOMIC_XACT_TYPE_ATOMICSTORE_UMAX 6
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define  SVT_AXI_ATOMIC_XACT_TYPE_ATOMICSTORE_UMIN  7    
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define  SVT_AXI_ATOMIC_XACT_TYPE_ATOMICLOAD_ADD  8  
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define   SVT_AXI_ATOMIC_XACT_TYPE_ATOMICLOAD_CLR 9
+ /**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define  SVT_AXI_ATOMIC_XACT_TYPE_ATOMICLOAD_EOR 10 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define  SVT_AXI_ATOMIC_XACT_TYPE_ATOMICLOAD_SET 11
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define  SVT_AXI_ATOMIC_XACT_TYPE_ATOMICLOAD_SMAX  12   
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define  SVT_AXI_ATOMIC_XACT_TYPE_ATOMICLOAD_SMIN  13   
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define   SVT_AXI_ATOMIC_XACT_TYPE_ATOMICLOAD_UMAX   14 
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define  SVT_AXI_ATOMIC_XACT_TYPE_ATOMICLOAD_UMIN   15 
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define  SVT_AXI_ATOMIC_XACT_TYPE_ATOMICSWAP    16 
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define  SVT_AXI_ATOMIC_XACT_TYPE_ATOMICCOMPARE  17  
+
+
+// Define for Cache Size and different Cache types
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_3_NON_CACHEABLE_NON_BUFFERABLE            0 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_3_BUFFERABLE_OR_MODIFIABLE_ONLY           1 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_3_CACHEABLE_BUT_NO_ALLOC                  2 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_3_CACHEABLE_BUFFERABLE_BUT_NO_ALLOC       3 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_3_CACHEABLE_WR_THRU_ALLOC_ON_RD_ONLY      6 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_3_CACHEABLE_WR_BACK_ALLOC_ON_RD_ONLY      7 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_3_CACHEABLE_WR_THRU_ALLOC_ON_WR_ONLY      10 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_3_CACHEABLE_WR_BACK_ALLOC_ON_WR_ONLY      11 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_3_CACHEABLE_WR_THRU_ALLOC_ON_BOTH_RD_WR   14 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_3_CACHEABLE_WR_BACK_ALLOC_ON_BOTH_RD_WR   15 
+
+// Define for Cache Different ARCACHE types
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_ARCACHE_DEVICE_NON_BUFFERABLE                  0 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_ARCACHE_DEVICE_BUFFERABLE                      1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_ARCACHE_NORMAL_NON_CACHABLE_NON_BUFFERABLE     2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_ARCACHE_NORMAL_NON_CACHABLE_BUFFERABLE         3 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_ARCACHE_WRITE_THROUGH_NO_ALLOCATE             10   
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_ARCACHE_WRITE_THROUGH_READ_ALLOCATE           14
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_ARCACHE_WRITE_THROUGH_WRITE_ALLOCATE          10
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_ARCACHE_WRITE_THROUGH_READ_AND_WRITE_ALLOCATE 14
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_ARCACHE_WRITE_BACK_NO_ALLOCATE                11
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_ARCACHE_WRITE_BACK_READ_ALLOCATE              15  
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_ARCACHE_WRITE_BACK_WRITE_ALLOCATE             11
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_ARCACHE_WRITE_BACK_READ_AND_WRITE_ALLOCATE    15   
+
+// Define for Cache Different AWCACHE types
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_AWCACHE_DEVICE_NON_BUFFERABLE                  0 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_AWCACHE_DEVICE_BUFFERABLE                      1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_AWCACHE_NORMAL_NON_CACHABLE_NON_BUFFERABLE     2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_AWCACHE_NORMAL_NON_CACHABLE_BUFFERABLE         3 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_AWCACHE_WRITE_THROUGH_NO_ALLOCATE              6   
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_AWCACHE_WRITE_THROUGH_READ_ALLOCATE            6
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_AWCACHE_WRITE_THROUGH_WRITE_ALLOCATE          14
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_AWCACHE_WRITE_THROUGH_READ_AND_WRITE_ALLOCATE 14
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_AWCACHE_WRITE_BACK_NO_ALLOCATE                 7
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_AWCACHE_WRITE_BACK_READ_ALLOCATE               7  
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_AWCACHE_WRITE_BACK_WRITE_ALLOCATE             15
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_4_AWCACHE_WRITE_BACK_READ_AND_WRITE_ALLOCATE    15
+
+// Protection unit different types
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_DATA_SECURE_NORMAL                  3'b000 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_DATA_SECURE_PRIVILEGED              3'b001 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_DATA_NON_SECURE_NORMAL              3'b010
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_DATA_NON_SECURE_PRIVILEGED          3'b011 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INSTRUCTION_SECURE_NORMAL           3'b100 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INSTRUCTION_SECURE_PRIVILEGED       3'b101 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INSTRUCTION_NON_SECURE_NORMAL       3'b110 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INSTRUCTION_NON_SECURE_PRIVILEGED   3'b111
+
+// Responses
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_OKAY_RESPONSE   2'b00
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_EXOKAY_RESPONSE 2'b01
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLVERR_RESPONSE 2'b10
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_DECERR_RESPONSE 2'b11
+
+// Reordering Algorithm types
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_REORDERING_ROUND_ROBIN  0 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_REORDERING_RANDOM       1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_REORDERING_PRIORITIZED  2
+
+// Reordering Window types
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_REORDERING_WINDOW_STATIC          0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_REORDERING_WINDOW_MOVING          1
+           
+// Burst Length
+// Moved to svt_axi_port_defines
+//`ifndef SVT_AXI3_MAX_BURST_LENGTH
+//`define SVT_AXI3_MAX_BURST_LENGTH                      16
+//`endif
+//`define SVT_AXI4_MAX_BURST_LENGTH                      256
+
+// Fixed Id for AXI 4 lite mode
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI4_LITE_FIXED_ID                     1
+
+// Defines the default value of WSTRB when WVALID is not high.
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WSTRB_INACTIVE_LOW  0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WSTRB_INACTIVE_PREV 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WSTRB_INACTIVE_HIGH 2
+
+// Defines for the default value of signals in the idle state.
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INACTIVE_CHAN_LOW_VAL  0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INACTIVE_CHAN_HIGH_VAL 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INACTIVE_CHAN_PREV_VAL 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INACTIVE_CHAN_X_VAL    3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INACTIVE_CHAN_Z_VAL    4
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INACTIVE_CHAN_RAND_VAL 5
+
+// Defines for the default value of signals in the inactive wdata bytes.
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INACTIVE_WDATA_BYTE_LOW_VAL  0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INACTIVE_WDATA_BYTE_HIGH_VAL 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INACTIVE_WDATA_BYTE_X_VAL    2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INACTIVE_WDATA_BYTE_Z_VAL    3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INACTIVE_WDATA_BYTE_RAND_VAL 4
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INACTIVE_WDATA_BYTE_UNCHANGED_VAL 5
+
+
+// Defines for conversion types from AXI4 to AXI4-Lite transactions
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SIMPLE_CONVERSION_WITH_PROTECTION 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_FULL_PROTECTION                   1
+
+// Defines for actual start of write data.
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WRITE_DATA_FREE_XMIT 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WRITE_DATA_WAIT_FOR_ADDR 1
+
+// Defines for the port kind
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE  1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_GP_MASTER  2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_GP_SLAVE  3
+
+// Defines AXI Pattern Sequence
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_BARRIER_PAIR_WR_AFTER_RD_PATTERN_SEQ 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_BARRIER_PAIR_RD_AFTER_WR_PATTERN_SEQ 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_LOCKED_FOLLOWED_BY_EXCL_XACT_SEQ 2 
+
+// Defines for hitting bin barrier_pair_simultaneous_rd_wr_seq of
+// trans_ace_barrier_pair_sequence covergroup
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_BARRIER_PAIR_SIMULTAENOUS_RD_WR_PATTERN_SEQ 0
+
+//Defines for OOO xact Coverage
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WRITE_OOO 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_READ_OOO 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WRITE_OOO_SAME_ID_AS_READ 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_READ_OOO_SAME_ID_AS_WRITE 1
+
+//Defines for back-to-back read xact Coverage
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_BACK_TO_BACK_READ_BURST_SEQ 1
+
+//Defines for back-to-back write xact Coverage
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_BACK_TO_BACK_WRITE_BURST_SEQ 1
+
+//Defines for four state RR/WR xact coverage
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_RD_RD_RD_RD_SEQ 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_RD_RD_RD_WR_SEQ 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_RD_RD_WR_WR_SEQ 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_RD_WR_RD_WR_SEQ 5
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WR_RD_WR_RD_SEQ 10
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WR_WR_RD_RD_SEQ 12
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WR_WR_WR_RD_SEQ 14
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WR_WR_WR_WR_SEQ 15
+
+//Defines for four Exclusive/Normal xact coverage
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_NR_NR_NR_EX_SEQ 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_NR_NR_EX_NR_SEQ 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_NR_NR_EX_EX_SEQ 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_NR_EX_NR_NR_SEQ 4
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_NR_EX_NR_EX_SEQ 5
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_NR_EX_EX_NR_SEQ 6
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_NR_EX_EX_EX_SEQ 7
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_EX_NR_NR_NR_SEQ 8
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_EX_NR_NR_EX_SEQ 9
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_EX_NR_EX_NR_SEQ 10
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_EX_NR_EX_EX_SEQ 11
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_EX_EX_NR_NR_SEQ 12
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_EX_EX_NR_EX_SEQ 13
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_EX_EX_EX_NR_SEQ 14
+
+//Defines for wstrb unaligned addr xact Coverage
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WSTRB_UNALIGNED_START_ADDR 1
+
+// Defines for setting a component as active/passive.
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_ACTIVE 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_PASSIVE 1
+
+// States of the transactions
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_STATE_INITAL                 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_STATE_TRANSFER_IN_PROGRESS   1 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_STATE_TRANSFER_COMPLETE      2 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_STATE_TRANSACTION_COMPLETE   3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_STATE_TRANSACTION_ABORTED    4
+
+// Interleave block pattern defines
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_INTERLEAVE_EQUAL_BLOCK       0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANASCTION_INTERLEAVE_RANDOM_BLOCK      1
+
+// Master Address delay Reference define
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_PREV_ADDR_VALID_REF             0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_PREV_ADDR_HANDSHAKE_REF         1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_FIRST_WVALID_DATA_BEFORE_ADDR   2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_FIRST_DATA_HANDSHAKE_DATA_BEFORE_ADDR 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_PREV_LAST_DATA_HANDSHAKE 4
+
+// Master Data delay Reference define
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_WRITE_ADDR_VALID_REF                            0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_WRITE_ADDR_HANDSHAKE_REF                        1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_PREV_WRITE_DATA_HANDSHAKE_REF 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_PREV_WVALID_REF                                 3   
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_PREV_WRITE_HANDSHAKE_REF                        4  
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_RVALID_REF                                      5
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_MANUAL_RREADY_REF                               6 
+
+// Master Data stream delay Reference define
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_PREV_TVALID_TREADY_HANDSHAKE_REF       0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_PREV_TVALID_REF                        1
+
+// Master Response delay Reference define
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_BVALID_REF                                      0 
+
+// Slave Address delay Reference define
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_ADDR_VALID_REF               0  
+
+// Slave Data delay Reference define
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_READ_ADDR_VALID_REF          0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_READ_ADDR_HANDSHAKE_REF      1 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_PREV_RVALID_REF              2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_PREV_READ_HANDSHAKE_REF      3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_WVALID_REF                   4 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_MANUAL_WREADY_REF            5
+ 
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_FIRST_WVALID_REF             6 
+
+// Slave Response delay Reference define
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_LAST_DATA_HANDSHAKE_REF      0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_ADDR_HANDSHAKE_REF           1
+
+// ACE Coherent transaction type defines
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_READNOSNOOP     0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_READONCE      1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_READSHARED      2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_READCLEAN     3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_READNOTSHAREDDIRTY    4
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_READUNIQUE      5
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_CLEANUNIQUE     6
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_MAKEUNIQUE      7
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_CLEANSHARED     8
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_CLEANINVALID      9
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_MAKEINVALID     10
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_DVMCOMPLETE     11
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_DVMMESSAGE      12
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_READBARRIER     13
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_WRITENOSNOOP      14
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_WRITEUNIQUE     15
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_WRITELINEUNIQUE   16
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_WRITECLEAN      17
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_WRITEBACK     18
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_EVICT       19
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_WRITEBARRIER      20
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_WRITEEVICT                    21
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`ifdef SVT_AXI_CUSTNV_ENV 
+ `define SVT_AXI_CUSTNV_L3PREFETCH  22
+`endif
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_CLEANSHAREDPERSIST     30
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_READONCECLEANINVALID   28
+`define SVT_AXI_COHERENT_TRANSACTION_TYPE_READONCEMAKEINVALID    29
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_COHERENT_TRANSACTION_TYPE_WRITEUNIQUEPTLSTASH   23
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_COHERENT_TRANSACTION_TYPE_WRITEUNIQUEFULLSTASH  24
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_COHERENT_TRANSACTION_TYPE_STASHONCESHARED       25  
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_COHERENT_TRANSACTION_TYPE_STASHONCEUNIQUE       26
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_COHERENT_TRANSACTION_TYPE_STASHTRANSLATION      27
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_COHERENT_TRANSACTION_TYPE_CMO     31 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_COHERENT_TRANSACTION_TYPE_WRITEPTL_CMO      32
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_COHERENT_TRANSACTION_TYPE_WRITEFULL_CMO      33
+
+ /**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_CMO_CLEANINVALID_ON_WRITE    0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_CMO_CLEANSHARED_ON_WRITE      1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_CMO_CLEANSHAREDPERSIST_ON_WRITE      2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_CMO_CLEANSHAREDDEEPPERSIST_ON_WRITE      3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_WRITENOSNPFULL_CLEANSHARED_WRITE_WITH_CMO_XACT_TYPE 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+  `define SVT_AXI_WRITENOSNPFULL_CLEANINVALID_WRITE_WITH_CMO_XACT_TYPE 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+ `define SVT_AXI_WRITENOSNPFULL_CLEANSHAREDPERSIST_WRITE_WITH_CMO_XACT_TYPE 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+ `define SVT_AXI_WRITENOSNPFULL_CLEANSHAREDDEEPPERSIST_WRITE_WITH_CMO_XACT_TYPE 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+ `define SVT_AXI_WRITENOSNPPTL_CLEANSHARED_WRITE_WITH_CMO_XACT_TYPE 4
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+ `define SVT_AXI_WRITENOSNPPTL_CLEANINVALID_WRITE_WITH_CMO_XACT_TYPE 5
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WRITENOSNPPTL_CLEANSHAREDPERSIST_WRITE_WITH_CMO_XACT_TYPE 6
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WRITENOSNPPTL_CLEANSHAREDDEEPPERSIST_WRITE_WITH_CMO_XACT_TYPE 7
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WRITEUNIQUEULL_CLEANSHARED_WRITE_WITH_CMO_XACT_TYPE 8
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WRITEUNIQUEFULL_CLEANINVALID_WRITE_WITH_CMO_XACT_TYPE 9
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WRITEUNIQUEFULL_CLEANSHAREDPERSIST_WRITE_WITH_CMO_XACT_TYPE 10
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WRITEUNIQUEFULL_CLEANSHAREDDEEPPERSIST_WRITE_WITH_CMO_XACT_TYPE 11
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WRITEUNIQUEPTL_CLEANSHARED_WRITE_WITH_CMO_XACT_TYPE 12
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+ `define SVT_AXI_WRITEUNIQUEPTL_CLEANINVALID_WRITE_WITH_CMO_XACT_TYPE 13
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_WRITEUNIQUEPTL_CLEANSHAREDPERSIST_WRITE_WITH_CMO_XACT_TYPE 14
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+ `define SVT_AXI_WRITEUNIQUEPTL_CLEANSHAREDDEEPPERSIST_WRITE_WITH_CMO_XACT_TYPE 15
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_STREAM_TYPE_BYTE_STREAM 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_STREAM_TYPE_CONTINUOUS_ALIGNED_STREAM 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_STREAM_TYPE_CONTINUOUS_UNALIGNED_STREAM 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_STREAM_TYPE_SPARSE_STREAM 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_STREAM_TYPE_USER_STREAM 4
+
+// ACE Shareability domain defines
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_DOMAIN_TYPE_NONSHAREABLE        0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_DOMAIN_TYPE_INNERSHAREABLE        1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_DOMAIN_TYPE_OUTERSHAREABLE        2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_DOMAIN_TYPE_SYSTEMSHAREABLE       3
+
+// ACE Barrier transaction type defines
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_NORMAL_ACCESS_RESPECT_BARRIER                           0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MEMORY_BARRIER                                          1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_NORMAL_ACCESS_IGNORE_BARRIER                            2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SYNC_BARRIER                                            3
+
+// ACE Coherent transaction read response type defines
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_RESP_TYPE_UNIQUE_CLEAN       0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_RESP_TYPE_UNIQUE_DIRTY       1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_RESP_TYPE_SHARED_CLEAN       2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_RESP_TYPE_SHARED_DIRTY       3
+
+// ACE Read acknoledgement delay reference define
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_LAST_READ_DATA_HANDSHAKE_REF 0
+
+// ACE Write acknoledgement delay reference define
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_WRITE_RESP_HANDSHAKE_REF 0
+
+// ACE Snoop transaction type
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_TYPE_READONCE              0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_TYPE_READSHARED            1 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_TYPE_READCLEAN             2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_TYPE_READNOTSHAREDDIRTY    3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_TYPE_READUNIQUE            7
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_TYPE_CLEANSHARED           8
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_TYPE_CLEANINVALID          9
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_TYPE_MAKEINVALID           13  
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_TYPE_DVMCOMPLETE           14  
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_TYPE_DVMMESSAGE            15
+
+// ACE Snoop snoop transfer size defines
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_BURST_LENGTH_1_BEAT                    1    
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_BURST_LENGTH_2_BEATS                   2 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_BURST_LENGTH_4_BEATS                   4 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_BURST_LENGTH_8_BEATS                   8 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_BURST_LENGTH_16_BEATS                  16 
+
+// ACE defines for acready delay reference event 
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_ACVALID             0
+
+// ACE snoop address ready delay reference define
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_SNOOP_ADDR_HANDSHAKE 0 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_SNOOP_RESP_VALID 1 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_SNOOP_RESP_HANDSHAKE 2 
+
+// ACE snoop response valid delay reference define
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_SNOOP_TRANSACTION_LAST_ADDR_PHASE_REF         0
+
+// ACE first snoop data valid delay reference defines
+
+// ACE subsequent snoop data valid delay reference defines
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_PREV_SNOOP_DATA_VALID 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_PREV_SNOOP_DATA_HANDSHAKE  1
+
+// log_base_2 corresponding to the minimum data width (8)
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_LOG_BASE_2_MIN_DATA_WIDTH 3
+
+// log_base_2 corresponding to the minimum atomic data width (8)
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_LOG_BASE_2_MIN_ATOMIC_DATA_WIDTH 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_CACHE_FULLY_ASSOCIATIVE   1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_CACHE_DIRECT_MAPPED       2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_CACHE_TWO_WAY_ASSOCIATIVE 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_EXCL_ACCESS_INITIAL 0 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_EXCL_ACCESS_PASS    1 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_EXCL_ACCESS_FAIL    2
+
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_EXCL_MON_INVALID 0 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_EXCL_MON_SET     1 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_EXCL_MON_RESET   2  
+
+// Value from write transaction count should begin
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_WRITE_XACT_COUNT_BASE
+ `define SVT_AXI_WRITE_XACT_COUNT_BASE 100000
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_CACHE_LINE_SIZE
+ `define SVT_AXI_MAX_CACHE_LINE_SIZE         2048 
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_BYTE_BOUNDARY_FOR_MASTER_XACT_SPLIT 
+ `define SVT_AXI_MAX_BYTE_BOUNDARY_FOR_MASTER_XACT_SPLIT 32 
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MAX_NUM_CACHE_LINES
+ `define SVT_AXI_MAX_NUM_CACHE_LINES         1024 
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_MIN_NUM_CACHE_LINES
+ `define SVT_AXI_MIN_NUM_CACHE_LINES         1 
+`endif
+
+// MSB indicates whether cache line is valid
+// bit 1 indicates if cache line is unique
+// bit 0 indicates if cache line is clean
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_CACHE_LINE_STATE_INVALID       3'b000
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_CACHE_LINE_STATE_SHAREDDIRTY    3'b100
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_CACHE_LINE_STATE_SHAREDCLEAN   3'b101
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_CACHE_LINE_STATE_UNIQUEDIRTY   3'b110
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_CACHE_LINE_STATE_UNIQUECLEAN   3'b111
+
+// Barrier transaction association defines
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_RANDOM_BARRIER_XACT_ASSOCIATION        0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_USER_DEFINED_BARRIER_XACT_ASSOCIATION  1
+
+// Reset related defines
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_EXCLUDE_UNSTARTED_XACT 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_RESET_ALL_XACT 1
+
+// DVM Complete transaction generator source defines
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_AUTO_DVM_COMPLETE_GEN_SOURCE 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_USER_DVM_COMPLETE_GEN_SOURCE 1
+
+// Snoop response data transfer type
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_RESP_DATA_TRANSFER_USING_CDDATA 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_RESP_DATA_TRANSFER_USING_WB_WC 1
+
+// Defines for permissible cache line state changes
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_RECOMMENDED_CACHE_LINE_STATE_CHANGE 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_LEGAL_WITH_SNOOP_FILTER_CACHE_LINE_STATE_CHANGE 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_LEGAL_WITHOUT_SNOOP_FILTER_CACHE_LINE_STATE_CHANGE 2
+
+//Defines where a given block of data is specified
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_LSB 1'b0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MSB 1'b1
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AMBA_MEM_MODE_WIDTH
+ `define SVT_AMBA_MEM_MODE_WIDTH 2
+`endif
+
+`protect
+
+`ifdef SVT_AXI_SVC_USE_MODEL
+
+`ifdef SVT_AXI_SVC_SINGLE_INTERFACE
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_IC_SLAVE_MODPORT svt_axi_slave_modport
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_IC_MASTER_MODPORT svt_axi_master_modport
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_IF svt_axi_port_if
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_IF svt_axi_port_if
+`else
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_IC_SLAVE_MODPORT svt_axi_ic_modport
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_IC_MASTER_MODPORT svt_axi_ic_modport
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_IF svt_axi_slave_if
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_IF svt_axi_master_if
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_TYPE svt_axi_transaction
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_TYPE svt_axi_transaction
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_SCENARIO_TYPE svt_axi_transaction_scenario
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_SCENARIO_TYPE svt_axi_transaction_scenario
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_SCENARIO_GEN_TYPE svt_axi_transaction_scenario_gen
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_SCENARIO_GEN_CALLBACKS svt_axi_transaction_scenario_gen_callbacks
+
+`else // not SVT_AXI_SVC_USE_MODEL
+
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_IC_SLAVE_MODPORT svt_axi_ic_modport
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_IC_MASTER_MODPORT svt_axi_ic_modport
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_IF svt_axi_slave_if
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_IF svt_axi_master_if
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_TYPE svt_axi_master_transaction
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_TYPE svt_axi_slave_transaction
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_MASTER_TRANSACTION_SCENARIO_TYPE svt_axi_master_transaction_scenario
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_SCENARIO_TYPE svt_axi_slave_transaction_scenario
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_SCENARIO_GEN_TYPE svt_axi_slave_transaction_scenario_gen
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SLAVE_TRANSACTION_SCENARIO_GEN_CALLBACKS svt_axi_slave_transaction_scenario_gen_callbacks
+`endif //SVT_AXI_SVC_USE_MODEL
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_NUM_BLOCKED_XACTS_ALLOWED 64
+
+
+`ifdef SVT_ACE5_ENABLE
+/** --------------- MPAM realted macros --------------*/
+/**
+  @groupname AMBAUSERMODIFIABLE
+  Default value of port configuration attribute enable_mpam.
+  User can change this value to MPAM_9_1 to enable the feature. 
+*/
+`ifndef SVT_AXI_PORT_CFG_DEFAULT_ENABLE_MPAM
+  `define SVT_AXI_PORT_CFG_DEFAULT_ENABLE_MPAM MPAM_FALSE
+`endif
+
+/** 
+  @groupname AMBAUSERNONMODIFIABLE
+  Width of MPAM fields. User is not expected to change values of these macros.
+*/
+  // MPAM_PARTID field width
+  `define SVT_AXI_MAX_MPAM_PARTID_WIDTH 9
+  // MPAM PerfMonGroup field width
+  `define SVT_AXI_MAX_MPAM_PERFMONGROUP_WIDTH 1
+  //MPAM NS field width
+  `define SVT_AXI_MPAM_NS_WIDTH 1
+
+`endif //SVT_ACE5_ENABLE
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define svt_axi_print_phase_info(arg1,arg2) \
+if (cfg.display_xact_phase_messages) \
+`svt_note(arg1,arg2); \
+else \
+`svt_debug(arg1,arg2);
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_PRINT_PREFIX(function_name, xact) \
+$sformatf("%0s('d%0d) : {TYPE(%0s) ID('h%0x) ADDR('h%0x)}",\
+          `SVT_DATA_UTIL_ARG_TO_STRING(function_name),\
+          ((xact != null)?xact.object_id:-1),\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?xact.id:0),\
+          ((xact != null)?xact.addr:0))
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`ifdef SVT_ACE5_ENABLE 
+`define SVT_AXI_MINI_PRINT(xact) \
+$sformatf("{OBJECT_NUM('d%0d) PORT_ID('d%0d) PORT_NAME(%0s) TYPE(%0s) COHERENT_XACT_TYPE(%0s) ATOMIC_XACT_OP_TYPE(%0s) WRITE_WITH_CMO_XACT_TYPE(%0s) ID('h%0x) SECURE('d%0d) ADDR('h%0x) } ",\
+          ((xact != null)?xact.object_id:-1),\
+          ((xact != null)?xact.port_id:-1),\
+          (((xact != null)&&(xact.port_cfg!=null))?xact.port_cfg.get_port_name():""),\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?((xact.xact_type == svt_axi_transaction::COHERENT)?xact.coherent_xact_type.name:""):"null"),\
+          ((xact != null)?((xact.xact_type == svt_axi_transaction::ATOMIC)?xact.atomic_xact_op_type.name:""):"null"),\
+          ((xact != null)?((xact.xact_type == svt_axi_transaction::COHERENT && (xact.coherent_xact_type == svt_axi_transaction::WRITEPTLCMO || xact.coherent_xact_type == svt_axi_transaction::WRITEFULLCMO))?xact.write_with_cmo_xact_type.name:""):"null"),\
+          ((xact != null)?xact.id:0),\
+          ((xact != null)?!xact.prot_type[1]:0),\
+          ((xact != null)?xact.addr:0))
+`else
+`define SVT_AXI_MINI_PRINT(xact) \
+$sformatf("{OBJECT_NUM('d%0d) PORT_ID('d%0d) PORT_NAME(%0s) TYPE(%0s) COHERENT_XACT_TYPE(%0s) ID('h%0x) SECURE('d%0d) ADDR('h%0x) } ",\
+          ((xact != null)?xact.object_id:-1),\
+          ((xact != null)?xact.port_id:-1),\
+          (((xact != null)&&(xact.port_cfg!=null))?xact.port_cfg.get_port_name():""),\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?xact.coherent_xact_type.name:"null"),\
+          ((xact != null)?xact.id:0),\
+          ((xact != null)?!xact.prot_type[1]:0),\
+          ((xact != null)?xact.addr:0))
+`endif
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`ifndef SVT_AXI_DISABLE_DISPLAY_COHERENT_XACT_TYPE
+`ifdef SVT_ACE5_ENABLE
+`define SVT_AXI_PRINT_PREFIX1(xact) \
+$sformatf("{OBJECT_NUM('d%0d) PORT_ID('d%0d) PORT_NAME(%0s) TYPE(%0s) COHERENT_XACT_TYPE(%0s) ATOMIC_XACT_OP_TYPE(%0s) WRITE_WITH_CMO_XACT_TYPE(%0s)  ID('h%0x) SECURE('d%0d) ADDR('h%0x) CACHE_TYPE('d%0d) %0s%0s%0s} ",\
+          ((xact != null)?xact.object_id:-1),\
+          ((xact != null)?xact.port_id:-1),\
+          (((xact != null)&&(xact.port_cfg!=null))?xact.port_cfg.get_port_name():""),\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?((xact.xact_type == svt_axi_transaction::COHERENT)?xact.coherent_xact_type.name:""):"null"),\
+          ((xact != null)?((xact.xact_type == svt_axi_transaction::ATOMIC)?xact.atomic_xact_op_type.name:""):"null"),\
+          ((xact != null)?((xact.xact_type == svt_axi_transaction::COHERENT && (xact.coherent_xact_type == svt_axi_transaction::WRITEPTLCMO || xact.coherent_xact_type ==svt_axi_transaction:: WRITEFULLCMO))?xact.write_with_cmo_xact_type.name:""):"null"),\
+          ((xact != null)?xact.id:0),\
+          ((xact != null)?!xact.prot_type[1]:0),\
+          ((xact != null)?xact.addr:0),\
+          ((xact != null)?xact.cache_type:0),\
+          ((xact != null)?(xact.atomic_type==svt_axi_transaction::EXCLUSIVE)?"EXCL":"":""),\
+          ((xact != null)?((xact.get_begin_time()==-1)?"":($sformatf(" START_TIME(%0t)",xact.get_begin_realtime()))):""),\
+          ((xact != null)?((xact.get_end_time()==-1)?"":($sformatf(" END_TIME(%0t)",xact.get_end_realtime()))):""))
+`else 
+`define SVT_AXI_PRINT_PREFIX1(xact) \
+$sformatf("{OBJECT_NUM('d%0d) PORT_ID('d%0d) PORT_NAME(%0s) TYPE(%0s) COHERENT_XACT_TYPE(%0s) ID('h%0x) SECURE('d%0d) ADDR('h%0x) CACHE_TYPE('d%0d) %0s%0s%0s} ",\
+          ((xact != null)?xact.object_id:-1),\
+          ((xact != null)?xact.port_id:-1),\
+          (((xact != null)&&(xact.port_cfg!=null))?xact.port_cfg.get_port_name():""),\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?xact.coherent_xact_type.name:"null"),\
+          ((xact != null)?xact.id:0),\
+          ((xact != null)?!xact.prot_type[1]:0),\
+          ((xact != null)?xact.addr:0),\
+          ((xact != null)?xact.cache_type:0),\
+          ((xact != null)?(xact.atomic_type==svt_axi_transaction::EXCLUSIVE)?"EXCL":"":""),\
+          ((xact != null)?((xact.get_begin_time()==-1)?"":($sformatf(" START_TIME(%0t)",xact.get_begin_realtime()))):""),\
+          ((xact != null)?((xact.get_end_time()==-1)?"":($sformatf(" END_TIME(%0t)",xact.get_end_realtime()))):""))
+
+`endif
+`else
+`ifdef SVT_ACE5_ENABLE
+`define SVT_AXI_PRINT_PREFIX1(xact)  \
+$sformatf("{OBJECT_NUM('d%0d) PORT_ID('d%0d) PORT_NAME(%0s) TYPE(%0s) ATOMIC_XACT_OP_TYPE(%0s) WRITE_WITH_CMO_XACT_TYPE(%0s) ID('h%0x) ADDR('h%0x) CACHE_TYPE('d%0d) %0s%0s%0s} ",\
+          ((xact != null)?xact.object_id:-1),\
+          ((xact != null)?xact.port_id:-1),\
+          (((xact != null)&&(xact.port_cfg!=null))?xact.port_cfg.get_port_name():""),\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?((xact.xact_type == svt_axi_transaction::ATOMIC)?xact.atomic_xact_op_type.name:""):"null"),\
+          ((xact != null)?((xact.xact_type == svt_axi_transaction::COHERENT && (xact.coherent_xact_type == svt_axi_transaction::WRITEPTLCMO || xact.coherent_xact_type == svt_axi_transaction::WRITEFULLCMO))?xact.write_with_cmo_xact_type.name:""):"null"),\
+          ((xact != null)?xact.id:0),\
+          ((xact != null)?xact.addr:0),\
+          ((xact != null)?xact.cache_type:0),\
+          ((xact != null)?(xact.atomic_type==svt_axi_transaction::EXCLUSIVE)?"EXCL":"":""),\
+          ((xact != null)?((xact.get_begin_time()==-1)?"":($sformatf(" START_TIME(%0t)",xact.get_begin_realtime()))):""),\
+          ((xact != null)?((xact.get_end_time()==-1)?"":($sformatf(" END_TIME(%0t)",xact.get_end_realtime()))):""))
+`else 
+`define SVT_AXI_PRINT_PREFIX1(xact) \
+$sformatf("{OBJECT_NUM('d%0d) PORT_ID('d%0d) PORT_NAME(%0s) TYPE(%0s) ID('h%0x) ADDR('h%0x) CACHE_TYPE('d%0d) %0s%0s%0s} ",\
+          ((xact != null)?xact.object_id:-1),\
+          ((xact != null)?xact.port_id:-1),\
+          (((xact != null)&&(xact.port_cfg!=null))?xact.port_cfg.get_port_name():""),\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?xact.id:0),\
+          ((xact != null)?xact.addr:0),\
+          ((xact != null)?xact.cache_type:0),\
+          ((xact != null)?(xact.atomic_type==svt_axi_transaction::EXCLUSIVE)?"EXCL":"":""),\
+          ((xact != null)?((xact.get_begin_time()==-1)?"":($sformatf(" START_TIME(%0t)",xact.get_begin_realtime()))):""),\
+          ((xact != null)?((xact.get_end_time()==-1)?"":($sformatf(" END_TIME(%0t)",xact.get_end_realtime()))):""))
+`endif
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`ifdef SVT_ACE5_ENABLE
+`define SVT_AXI_PHASE_PRINT_PREFIX(xact) \
+$sformatf("{OBJECT_NUM('d%0d) PORT_ID('d%0d) PORT_NAME(%0s) TYPE(%0s) COHERENT_XACT_TYPE(%0s) ATOMIC_XACT_OP_TYPE(%0s) WRITE_WITH_CMO_XACT_TYPE(%0s) ID('h%0x) PROT_TYPE(%0s) ADDR('h%0x) LENGTH('d%0d) SIZE(%0s) BURST_TYPE(%0s) CACHE_TYPE('d%0d)}",\
+          ((xact != null)?xact.object_id:-1),\
+          ((xact != null)?xact.port_id:-1),\
+          (((xact != null)&&(xact.port_cfg!=null))?xact.port_cfg.get_port_name():""),\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?((xact.xact_type == svt_axi_transaction::COHERENT)?xact.coherent_xact_type.name:""):"null"),\
+          ((xact != null)?((xact.xact_type == svt_axi_transaction::ATOMIC)?xact.atomic_xact_op_type.name:""):"null"),\
+          ((xact != null)?((xact.xact_type == svt_axi_transaction::COHERENT && (xact.coherent_xact_type == svt_axi_transaction::WRITEPTLCMO || xact.coherent_xact_type == svt_axi_transaction::WRITEFULLCMO))?xact.write_with_cmo_xact_type.name:""):"null"),\
+          ((xact != null)?xact.id:0),\
+          ((xact != null)?xact.prot_type.name:"null"),\
+          ((xact != null)?xact.addr:0),\
+          ((xact != null)?xact.burst_length:0),\
+          ((xact != null)?xact.burst_size.name:"null"),\
+          ((xact != null)?xact.burst_type.name:"null"),\
+          ((xact != null)?xact.cache_type:0))
+`else
+`define SVT_AXI_PHASE_PRINT_PREFIX(xact) \
+$sformatf("{OBJECT_NUM('d%0d) PORT_ID('d%0d) PORT_NAME(%0s) TYPE(%0s) COHERENT_XACT_TYPE(%0s) ID('h%0x) PROT_TYPE(%0s) ADDR('h%0x) LENGTH('d%0d) SIZE(%0s) BURST_TYPE(%0s) CACHE_TYPE('d%0d)}",\
+          ((xact != null)?xact.object_id:-1),\
+          ((xact != null)?xact.port_id:-1),\
+          (((xact != null)&&(xact.port_cfg!=null))?xact.port_cfg.get_port_name():""),\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?xact.coherent_xact_type.name:"null"),\
+          ((xact != null)?xact.id:0),\
+          ((xact != null)?xact.prot_type.name:"null"),\
+          ((xact != null)?xact.addr:0),\
+          ((xact != null)?xact.burst_length:0),\
+          ((xact != null)?xact.burst_size.name:"null"),\
+          ((xact != null)?xact.burst_type.name:"null"),\
+          ((xact != null)?xact.cache_type:0))
+`endif
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_ACE_PRINT_PREFIX(xact) \
+$sformatf("{OBJECT_NUM('d%0d) PORT_ID('d%0d) PORT_NAME(%0s) TYPE(%0s) ADDR('h%0x) SECURE('d%0d) RESP('h%0x)} ",\
+          ((xact != null)?xact.object_id:-1),\
+          (((xact != null)&&(xact.port_cfg!=null))?xact.port_cfg.port_id:-1),\
+          (((xact != null)&&(xact.port_cfg!=null))?xact.port_cfg.get_port_name():""),\
+          ((xact != null)?xact.snoop_xact_type.name:"null"),\
+          ((xact != null)?xact.snoop_addr:0), \
+          ((xact != null)?!xact.snoop_prot[1]:0), \
+          ((xact != null)?{xact.get_crresp_value()}:0))
+
+/** @groupname AMBAUSERNONMODIFIABLE */
+`define SVT_AXI_STREAM_PRINT_PREFIX(xact) \
+$sformatf("{OBJECT_NUM('d%0d) PORT_ID('d%0d) PORT_NAME(%0s) TYPE(%0s) TDEST('h%0x) TID('d%0d) LEN('d%0d)} ",\
+          ((xact != null)?xact.object_id:-1),\
+          (((xact != null)&&(xact.port_cfg!=null))?xact.port_cfg.port_id:-1),\
+          (((xact != null)&&(xact.port_cfg!=null))?xact.port_cfg.get_port_name():""),\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?xact.tdest:0), \
+          ((xact != null)?xact.tid:0), \
+          ((xact != null)?xact.stream_burst_length:0))
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_READ \
+(xact_type == COHERENT) && \
+( \
+  (coherent_xact_type == READNOSNOOP) || \
+  (coherent_xact_type == READONCE) || \
+  (coherent_xact_type == READONCECLEANINVALID) || \
+  (coherent_xact_type == READONCEMAKEINVALID) || \
+  (coherent_xact_type == READSHARED) || \
+  (coherent_xact_type == READCLEAN) || \
+  (coherent_xact_type == READNOTSHAREDDIRTY) || \
+  (coherent_xact_type == READUNIQUE) || \
+  (coherent_xact_type == CLEANUNIQUE) || \
+  (coherent_xact_type == MAKEUNIQUE) || \
+  (coherent_xact_type == CLEANSHARED) || \
+  (coherent_xact_type == CLEANINVALID) || \
+  (coherent_xact_type == MAKEINVALID) || \
+  (coherent_xact_type == DVMCOMPLETE) || \
+  (coherent_xact_type == DVMMESSAGE) || \
+  (coherent_xact_type == READBARRIER)  || \
+  (coherent_xact_type == CLEANSHAREDPERSIST) \
+)
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_WRITE \
+(xact_type == COHERENT) && \
+( \
+  (coherent_xact_type == WRITENOSNOOP) || \
+  (coherent_xact_type == WRITEUNIQUE) || \
+`ifdef SVT_ACE5_ENABLE \
+   (coherent_xact_type == WRITEUNIQUEPTLSTASH) || \
+   (coherent_xact_type == WRITEUNIQUEFULLSTASH) || \
+   (coherent_xact_type == STASHONCEUNIQUE) || \
+   (coherent_xact_type == STASHONCESHARED) || \
+   (coherent_xact_type == STASHTRANSLATION) || \
+   (coherent_xact_type == CMO) || \
+   (coherent_xact_type == WRITEPTLCMO) || \
+   (coherent_xact_type == WRITEFULLCMO) || \
+`endif \
+  (coherent_xact_type == WRITELINEUNIQUE) || \
+  (coherent_xact_type == WRITEBACK) || \
+  (coherent_xact_type == WRITECLEAN) || \
+  (coherent_xact_type == WRITEBARRIER) || \
+  (coherent_xact_type == WRITEEVICT) || \
+  (coherent_xact_type == EVICT) \
+)
+
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_XACT_BYTES_LESS_THAN_CACHE_LINE_SIZE_ERROR 0
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INVALID_BURST_TYPE_FOR_COHERENT_XACT_ERROR 1
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INVALID_BAR_DOMAIN_SNOOP_ERROR 2
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_POST_COHERENT_XACT_CACHE_LINE_STATE_CORRUPTION 3
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_AWUNIQUE_ERROR 4
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_RESPONSE_TO_SAME_CACHELINE_DURING_MEMORY_UPDATE_ERROR 5
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_EXC_USER_DEFINED_ERROR 6
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_TRANSACTION_EXC_NO_OP_ERROR 7
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_GENERATE_READS_FOR_WRITE_ONLY_INTERFACE_ERROR 8
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_GENERATE_WRITES_FOR_READ_ONLY_INTERFACE_ERROR 9
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_GENERATE_EXCLUSIVE_ACCESS_FOR_WRITE_ONLY_INTERFACE_ERROR 10
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_GENERATE_EXCLUSIVE_ACCESS_FOR_READ_ONLY_INTERFACE_ERROR 11
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_INVALID_START_STATE_CACHE_LINE_ERROR 12
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_POST_SNOOP_XACT_CACHE_LINE_STATE_CORRUPTION 0
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_EXC_USER_DEFINED_ERROR 1
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_SNOOP_TRANSACTION_EXC_NO_OP_ERROR 2
+
+/* @groupname AMBAUSERMODIFIABLE */
+`ifndef SVT_AXI_RESET_TYPE
+`define SVT_AXI_RESET_TYPE EXCLUDE_UNSTARTED_XACT
+`endif
+
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_IS_TRANSMITTED_CHANNEL_READ(obj) \
+  ((obj.xact_type == svt_axi_transaction::READ) || \
+   ((obj.xact_type == svt_axi_transaction::COHERENT) && \
+    ((obj.coherent_xact_type == svt_axi_transaction::READNOSNOOP) || \
+     (obj.coherent_xact_type == svt_axi_transaction::READONCE) || \
+     (obj.coherent_xact_type == svt_axi_transaction::READSHARED) || \
+     (obj.coherent_xact_type == svt_axi_transaction::READCLEAN) || \
+     (obj.coherent_xact_type == svt_axi_transaction::READNOTSHAREDDIRTY) || \
+     (obj.coherent_xact_type == svt_axi_transaction::READUNIQUE) || \
+     (obj.coherent_xact_type == svt_axi_transaction::CLEANUNIQUE) || \
+     (obj.coherent_xact_type == svt_axi_transaction::MAKEUNIQUE) || \
+     (obj.coherent_xact_type == svt_axi_transaction::CLEANSHARED) || \
+     (obj.coherent_xact_type == svt_axi_transaction::CLEANSHAREDPERSIST) || \
+     (obj.coherent_xact_type == svt_axi_transaction::READONCECLEANINVALID) || \
+     (obj.coherent_xact_type == svt_axi_transaction::READONCEMAKEINVALID) || \
+     (obj.coherent_xact_type == svt_axi_transaction::CLEANINVALID) || \
+     (obj.coherent_xact_type == svt_axi_transaction::MAKEINVALID) || \
+     (obj.coherent_xact_type == svt_axi_transaction::DVMCOMPLETE) || \
+     (obj.coherent_xact_type == svt_axi_transaction::DVMMESSAGE) || \
+     (obj.coherent_xact_type == svt_axi_transaction::READBARRIER ) \
+    ) \
+   ) \
+  )
+ 
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_IS_TRANSMITTED_CHANNEL_WRITE(obj) \
+  ((obj.xact_type == svt_axi_transaction::WRITE) || \
+   ((obj.xact_type == svt_axi_transaction::COHERENT) && \
+    ((obj.coherent_xact_type == svt_axi_transaction::WRITENOSNOOP) || \
+     (obj.coherent_xact_type == svt_axi_transaction::WRITEUNIQUE) || \
+`ifdef SVT_ACE5_ENABLE \
+     (obj.coherent_xact_type == svt_axi_transaction::WRITEUNIQUEPTLSTASH) || \
+     (obj.coherent_xact_type == svt_axi_transaction::WRITEUNIQUEFULLSTASH) || \
+     (obj.coherent_xact_type == svt_axi_transaction::STASHONCESHARED) || \
+     (obj.coherent_xact_type == svt_axi_transaction::STASHONCEUNIQUE) || \
+     (obj.coherent_xact_type == svt_axi_transaction::STASHTRANSLATION) || \
+`endif \
+     (obj.coherent_xact_type == svt_axi_transaction::WRITELINEUNIQUE) || \
+     (obj.coherent_xact_type == svt_axi_transaction::WRITECLEAN) || \
+     (obj.coherent_xact_type == svt_axi_transaction::WRITEBACK) || \
+     (obj.coherent_xact_type == svt_axi_transaction::WRITEEVICT) || \
+     (obj.coherent_xact_type == svt_axi_transaction::EVICT) || \
+     (obj.coherent_xact_type == svt_axi_transaction::WRITEBARRIER) \
+    ) \
+   ) \
+  ) 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_IS_TRANSMITTED_CHANNEL_DATA_STREAM(obj) \
+  (obj.get_xact_type() == svt_axi_transaction::DATA_STREAM)
+
+          
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_XACT_STATUS_ENDED(this_xact) \
+( \
+  ( \
+    ( \
+      (this_xact.port_cfg.axi_interface_type == svt_axi_port_configuration::AXI_ACE) || \
+      (this_xact.port_cfg.axi_interface_type == svt_axi_port_configuration::ACE_LITE) \
+    ) && \
+    (this_xact.is_coherent_xact_dropped == 1) \
+  ) || \
+  ( \
+    (this_xact.port_cfg.axi_interface_type == svt_axi_port_configuration::AXI_ACE) && \
+    ( \
+      (this_xact.ack_status == svt_axi_transaction::ACCEPT) || \
+      (this_xact.ack_status == svt_axi_transaction::ABORTED) \
+    ) \
+  ) || \
+  ( \
+    (this_xact.port_cfg.axi_interface_type != svt_axi_port_configuration::AXI_ACE) && \
+    (`SVT_AXI_IS_TRANSMITTED_CHANNEL_WRITE(this_xact)) && \
+    ( \
+      ( \
+        (this_xact.write_resp_status == svt_axi_transaction::ACCEPT) || \
+        (this_xact.write_resp_status == svt_axi_transaction::ABORTED) \
+      ) \
+    ) \
+  ) || \
+  ( \
+    (this_xact.port_cfg.axi_interface_type != svt_axi_port_configuration::AXI_ACE) && \
+    (`SVT_AXI_IS_TRANSMITTED_CHANNEL_READ(this_xact)) &&  \
+    ( \
+      ( \
+        (this_xact.data_status == svt_axi_transaction::ACCEPT) || \
+        (this_xact.data_status == svt_axi_transaction::ABORTED) \
+      ) \
+    ) \
+  ) \
+)
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_RECOMMENDED_SNOOP_XACT(xact,snoop) \
+( \
+  (xact.get_xact_type() == svt_axi_master_transaction::COHERENT) && \
+  ( \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::READONCE) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::READONCE) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::WRITEUNIQUE) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::CLEANINVALID) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::CLEANSHARED) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::CLEANSHARED) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::CLEANSHAREDPERSIST) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::CLEANSHARED) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::READONCECLEANINVALID) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::READUNIQUE) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::READONCEMAKEINVALID) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::READUNIQUE) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::CLEANINVALID) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::CLEANINVALID) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::MAKEINVALID) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::MAKEINVALID) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::READCLEAN) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::READCLEAN) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::READNOTSHAREDDIRTY) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::READNOTSHAREDDIRTY) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::READSHARED) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::READSHARED) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::READUNIQUE) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::READUNIQUE) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::CLEANUNIQUE) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::CLEANINVALID) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::MAKEUNIQUE) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::MAKEINVALID) \
+    ) || \
+    ( \
+     (xact.coherent_xact_type == svt_axi_master_transaction::WRITELINEUNIQUE) && \
+     (snoop.snoop_xact_type == svt_axi_snoop_transaction::MAKEINVALID) \
+    )  \
+  ) \
+)
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_LEGAL_SNOOP_MAPPING
+`define SVT_AXI_LEGAL_SNOOP_MAPPING(xact,snoop) \
+      ((xact.coherent_xact_type == svt_axi_master_transaction::READUNIQUE)|| \
+       (xact.coherent_xact_type == svt_axi_master_transaction::CLEANUNIQUE)|| \
+       (xact.coherent_xact_type == svt_axi_master_transaction::CLEANINVALID)|| \
+       (xact.coherent_xact_type == svt_axi_master_transaction::WRITEUNIQUE) \
+      ) && \
+      ((snoop.snoop_xact_type == svt_axi_snoop_transaction::READUNIQUE)|| \
+       (snoop.snoop_xact_type == svt_axi_snoop_transaction::CLEANINVALID) \
+      ) || \
+      ( \
+       ((xact.coherent_xact_type == svt_axi_master_transaction::MAKEINVALID)|| \
+        (xact.coherent_xact_type == svt_axi_master_transaction::MAKEUNIQUE)|| \
+        (xact.coherent_xact_type == svt_axi_master_transaction::WRITELINEUNIQUE) \
+       ) &&  \
+       ((snoop.snoop_xact_type == svt_axi_snoop_transaction::READUNIQUE)|| \
+        (snoop.snoop_xact_type == svt_axi_snoop_transaction::CLEANINVALID)|| \
+        (snoop.snoop_xact_type == svt_axi_snoop_transaction::MAKEINVALID) \
+       ) \
+      ) || \
+      ( \
+       ((xact.coherent_xact_type == svt_axi_master_transaction::CLEANSHARED) \
+       ) &&  \
+       ((snoop.snoop_xact_type == svt_axi_snoop_transaction::READUNIQUE)|| \
+        (snoop.snoop_xact_type == svt_axi_snoop_transaction::CLEANINVALID)|| \
+        (snoop.snoop_xact_type == svt_axi_snoop_transaction::CLEANSHARED) \
+       ) \
+      ) || \
+       ( \
+       ((xact.coherent_xact_type == svt_axi_master_transaction::CLEANSHAREDPERSIST) \
+       ) &&  \
+       ((snoop.snoop_xact_type == svt_axi_snoop_transaction::READUNIQUE)|| \
+        (snoop.snoop_xact_type == svt_axi_snoop_transaction::CLEANINVALID)|| \
+        (snoop.snoop_xact_type == svt_axi_snoop_transaction::CLEANSHARED) \
+       ) \
+      ) || \
+       ( \
+       ((xact.coherent_xact_type == svt_axi_master_transaction::READONCECLEANINVALID) \
+       ) &&  \
+       ((snoop.snoop_xact_type == svt_axi_snoop_transaction::READUNIQUE)|| \
+        (snoop.snoop_xact_type == svt_axi_snoop_transaction::READONCE) \
+       ) \
+      ) || \
+       ( \
+       ((xact.coherent_xact_type == svt_axi_master_transaction::READONCEMAKEINVALID) \
+       ) &&  \
+       ((snoop.snoop_xact_type == svt_axi_snoop_transaction::READUNIQUE)|| \
+        (snoop.snoop_xact_type == svt_axi_snoop_transaction::READONCE) \
+       ) \
+      ) || \
+     ( \
+       ((xact.coherent_xact_type == svt_axi_master_transaction::READCLEAN)|| \
+        (xact.coherent_xact_type == svt_axi_master_transaction::READSHARED)|| \
+        (xact.coherent_xact_type == svt_axi_master_transaction::READNOTSHAREDDIRTY) \
+       ) &&  \
+       ((snoop.snoop_xact_type == svt_axi_snoop_transaction::READUNIQUE)|| \
+        (snoop.snoop_xact_type == svt_axi_snoop_transaction::CLEANINVALID)|| \
+        (snoop.snoop_xact_type == svt_axi_snoop_transaction::READCLEAN)|| \
+        (snoop.snoop_xact_type == svt_axi_snoop_transaction::READSHARED)|| \
+        (snoop.snoop_xact_type == svt_axi_snoop_transaction::READNOTSHAREDDIRTY) \
+       ) \
+      ) || \
+      ( \
+       (xact.coherent_xact_type == svt_axi_master_transaction::READONCE) && \
+       (snoop.snoop_xact_type != svt_axi_snoop_transaction::MAKEINVALID) \
+      ) 
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_ALLOWED_SNOOP_XACT(xact, snoop, sys_cfg) \
+( \
+  ( \
+    (sys_cfg.use_recommended_coherent_to_snoop_map == 1) && \
+    (`SVT_AXI_RECOMMENDED_SNOOP_XACT(xact,snoop)) \
+  ) || \
+  ( \
+    (sys_cfg.use_recommended_coherent_to_snoop_map == 0) && \
+    (xact.get_xact_type() == svt_axi_master_transaction::COHERENT) && \
+    ( \
+    (`SVT_AXI_LEGAL_SNOOP_MAPPING(xact,snoop)) \
+    ) \
+  ) \
+)
+
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_READ_XACT(xact) \
+(xact.get_xact_type() == svt_axi_transaction::COHERENT) && \
+( \
+  (xact.coherent_xact_type == svt_axi_transaction::READONCE) || \
+  (xact.coherent_xact_type == svt_axi_transaction::READSHARED) || \
+  (xact.coherent_xact_type == svt_axi_transaction::READCLEAN) || \
+  (xact.coherent_xact_type == svt_axi_transaction::READNOTSHAREDDIRTY) || \
+  (xact.coherent_xact_type == svt_axi_transaction::READUNIQUE) || \
+  (xact.coherent_xact_type == svt_axi_transaction::CLEANUNIQUE) || \
+  (xact.coherent_xact_type == svt_axi_transaction::MAKEUNIQUE) || \
+  (xact.coherent_xact_type == svt_axi_transaction::CLEANSHARED) || \
+  (xact.coherent_xact_type == svt_axi_transaction::CLEANSHAREDPERSIST) || \
+  (xact.coherent_xact_type == svt_axi_transaction::READONCECLEANINVALID) || \
+  (xact.coherent_xact_type == svt_axi_transaction::READONCEMAKEINVALID) || \
+  (xact.coherent_xact_type == svt_axi_transaction::CLEANINVALID) || \
+  (xact.coherent_xact_type == svt_axi_transaction::MAKEINVALID) || \
+  (xact.coherent_xact_type == svt_axi_transaction::DVMCOMPLETE) || \
+  (xact.coherent_xact_type == svt_axi_transaction::DVMMESSAGE) || \
+  (xact.coherent_xact_type == svt_axi_transaction::READBARRIER) \
+)
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_COHERENT_WRITE_XACT(xact) \
+(xact.get_xact_type() == svt_axi_transaction::COHERENT) && \
+( \
+  (xact.coherent_xact_type == svt_axi_transaction::WRITENOSNOOP) || \
+  (xact.coherent_xact_type == svt_axi_transaction::WRITEUNIQUE) || \
+`ifdef SVT_ACE5_ENABLE \
+  (xact.coherent_xact_type == svt_axi_transaction::WRITEUNIQUEPTLSTASH) || \
+  (xact.coherent_xact_type == svt_axi_transaction::WRITEUNIQUEFULLSTASH) || \
+  (xact.coherent_xact_type == svt_axi_transaction::STASHONCESHARED) || \
+  (xact.coherent_xact_type == svt_axi_transaction::STASHONCEUNIQUE) || \
+  (xact.coherent_xact_type == svt_axi_transaction::STASHTRANSLATION) || \
+`endif \
+  (xact.coherent_xact_type == svt_axi_transaction::WRITELINEUNIQUE) || \
+  (xact.coherent_xact_type == svt_axi_transaction::WRITEBACK) || \
+  (xact.coherent_xact_type == svt_axi_transaction::WRITECLEAN) || \
+  (xact.coherent_xact_type == svt_axi_transaction::WRITEBARRIER) || \
+  (xact.coherent_xact_type == svt_axi_transaction::WRITEEVICT) || \
+  (xact.coherent_xact_type == svt_axi_transaction::EVICT) \
+)
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_EXCLUSIVE_ACCESS_CONDITION(xact) \
+    (((cfg.get_axi_interface_type() == svt_axi_port_configuration::AXI3 || \
+       cfg.get_axi_interface_type() == svt_axi_port_configuration::AXI4)&& \
+      (xact.get_xact_type() != svt_axi_transaction::IDLE)) || \
+     ((cfg.get_axi_interface_type() == svt_axi_port_configuration::ACE_LITE || \
+       cfg.get_axi_interface_type() == svt_axi_port_configuration::AXI_ACE) && \
+      xact.get_xact_type() == svt_axi_transaction::COHERENT && \
+      (xact.coherent_xact_type == svt_axi_transaction::WRITENOSNOOP || \
+       xact.coherent_xact_type == svt_axi_transaction::READNOSNOOP  ) \
+     ) \
+    )
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_L3_CACHE_ALLOCATING_XACTS
+`ifdef SVT_AXI_CUSTNV_ENV 
+`define SVT_AXI_L3_CACHE_ALLOCATING_XACTS(xact) \
+   (xact.get_xact_type() == svt_axi_transaction::COHERENT && \
+      (xact.coherent_xact_type == svt_axi_transaction::WRITEEVICT || \
+       xact.coherent_xact_type == svt_axi_transaction::WRITEBACK  || \
+       xact.coherent_xact_type == svt_axi_transaction::CUSTNV_L3PREFETCH  || \
+       xact.coherent_xact_type == svt_axi_transaction::READONCE    ) \
+   ) 
+`else 
+`define SVT_AXI_L3_CACHE_ALLOCATING_XACTS(xact) \
+   (xact.get_xact_type() == svt_axi_transaction::COHERENT && \
+      (xact.coherent_xact_type == svt_axi_transaction::WRITEEVICT || \
+       xact.coherent_xact_type == svt_axi_transaction::WRITEBACK  || \
+       xact.coherent_xact_type == svt_axi_transaction::READONCE    ) \
+   ) 
+`endif 
+`endif
+
+//DEEPAKP check if we need to update this for other stash transactions 
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AXI_L3_CACHE_DEALLOCATING_XACTS 
+`ifdef SVT_AXI_CUSTNV_ENV 
+`define SVT_AXI_L3_CACHE_DEALLOCATING_XACTS(xact) \
+   (xact.get_xact_type() == svt_axi_transaction::COHERENT && \
+      (xact.coherent_xact_type == svt_axi_transaction::WRITEUNIQUE || \
+`ifdef SVT_ACE5_ENABLE \
+       xact.coherent_xact_type == svt_axi_transaction::WRITEUNIQUEPTLSTASH || \
+       xact.coherent_xact_type == svt_axi_transaction::WRITEUNIQUEFULLSTASH || \
+`endif \
+       xact.coherent_xact_type == svt_axi_transaction::CLEANUNIQUE || \
+       xact.coherent_xact_type == svt_axi_transaction::MAKEUNIQUE  || \
+       xact.coherent_xact_type == svt_axi_transaction::READUNIQUE  || \
+       xact.coherent_xact_type == svt_axi_transaction::READCLEAN   || \
+       xact.coherent_xact_type == svt_axi_transaction::READNOTSHAREDDIRTY   || \
+       xact.coherent_xact_type == svt_axi_transaction::CLEANSHARED || \
+       xact.coherent_xact_type == svt_axi_transaction::CLEANINVALID|| \
+       xact.coherent_xact_type == svt_axi_transaction::READONCE    ) \
+   ) 
+`else 
+`define SVT_AXI_L3_CACHE_DEALLOCATING_XACTS(xact) \
+   (xact.get_xact_type() == svt_axi_transaction::COHERENT && \
+      (xact.coherent_xact_type == svt_axi_transaction::WRITEUNIQUE || \
+`ifdef SVT_ACE5_ENABLE \
+      xact.coherent_xact_type == svt_axi_transaction::WRITEUNIQUEPTLSTASH || \
+      xact.coherent_xact_type == svt_axi_transaction::WRITEUNIQUEFULLSTASH || \
+`endif \
+       xact.coherent_xact_type == svt_axi_transaction::CLEANUNIQUE || \
+       xact.coherent_xact_type == svt_axi_transaction::MAKEUNIQUE  || \
+       xact.coherent_xact_type == svt_axi_transaction::READUNIQUE  || \
+       xact.coherent_xact_type == svt_axi_transaction::READCLEAN   || \
+       xact.coherent_xact_type == svt_axi_transaction::READNOTSHAREDDIRTY   || \
+       xact.coherent_xact_type == svt_axi_transaction::CLEANSHARED || \
+       xact.coherent_xact_type == svt_axi_transaction::CLEANINVALID|| \
+       xact.coherent_xact_type == svt_axi_transaction::READONCE    ) \
+   ) 
+`endif 
+`endif
+
+
+/** indicates do_is_valid mode as transaction created by sample methods in slave component */
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_RELEVANT_SLAVE_TRANSACTION 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_GET_XACT_START_TIME(xact) \
+`ifdef SVT_VMM_TECHNOLOGY \
+xact.notify.timestamp(vmm_data::STARTED) \
+`else \
+xact.get_begin_realtime() \
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AXI_GET_XACT_END_TIME(xact) \
+`ifdef SVT_VMM_TECHNOLOGY \
+xact.notify.timestamp(vmm_data::ENDED) \
+`else \
+xact.get_end_realtime() \
+`endif
+
+// Feature for access control when there are transactions from
+// many ports. Crashes in IUS. Currently not supported
+// ...
+// No longer crashing in IUS. Therefore enabling this feature
+// by default in IUS. Uncomment the following if this crash
+// happens again.
+//`ifdef INCA
+//`define SVT_AXI_MULTI_SIM_OVERLAP_ADDR_ISSUE
+//`endif
+
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define custom_debug(id, msg) \
+  `ifdef SVT_AMBA_DATA_UTIL_ENABLE_INTERNAL_MESSAGING \
+    `ifndef _SVT_AXI_TEMP_DW_DEBUG \
+      `svt_debug(id, msg) \
+    `else \
+      `svt_note(id, msg) \
+    `endif \
+  `else \
+    do begin end while(0) \
+  `endif
+
+`define svt_amba_debug(id, msg) \
+  `ifdef SVT_AMBA_DATA_UTIL_ENABLE_INTERNAL_MESSAGING \
+    `svt_debug(id, msg) \
+  `else \
+    do begin end while(0) \
+  `endif
+
+`define svt_amba_verbose(id, msg) \
+  `ifdef SVT_AMBA_DATA_UTIL_ENABLE_INTERNAL_MESSAGING \
+    `svt_verbose(id, msg) \
+  `else \
+    do begin end while(0) \
+  `endif
+
+
+
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define svt_axi_xxm_fatal(id,msg) \
+`ifdef SVT_VMM_TECHNOLOGY \
+`svt_fatal(id,msg); \
+`else \
+`svt_xvm_fatal(id,msg); \
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define svt_axi_xxm_error(id,msg) \
+`ifdef SVT_VMM_TECHNOLOGY \
+`svt_error(id,msg); \
+`else \
+`svt_xvm_error(id,msg); \
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define svt_axi_xxm_warning(id,msg) \
+`ifdef SVT_VMM_TECHNOLOGY \
+`svt_warning(id,msg); \
+`else \
+`svt_xvm_warning(id,msg); \
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define svt_axi_xxm_note(id,msg) \
+`ifdef SVT_VMM_TECHNOLOGY \
+`svt_note(id,msg); \
+`else \
+`svt_xvm_note(id,msg); \
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define svt_axi_xxm_debug(id,msg) \
+`ifdef SVT_VMM_TECHNOLOGY \
+`svt_debug(id,msg); \
+`else \
+`svt_xvm_debug(id,msg); \
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define svt_axi_xxm_verbose(id,msg) \
+`ifdef SVT_VMM_TECHNOLOGY \
+`svt_verbose(id,msg); \
+`else \
+`svt_xvm_verbose(id,msg); \
+`endif
+
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AMBA_USE_INTERCONNECT_INST_NAME
+ `define SVT_AMBA_USE_INTERCONNECT_INST_NAME interconnect_env
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define xvm_object_utils(obj) \
+    `ifdef SVT_UVM_TECHNOLOGY \
+      `uvm_object_utils(obj) \
+    `elsif SVT_OVM_TECHNOLOGY \
+      `ovm_object_utils(obj) \
+    `endif
+
+
+// internal macro for snoop enable slave agent
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`ifdef SVT_AXI_SNOOP_FROM_SLAVE_ENABLE
+   // Enables typedef of svt_axi_ic_slave_agent in the slave sequence collection
+   `define SVT_AXI_INCLUDE_IC_SLAVE_AGENT
+   `define _SVT_AXI_INTNL_SLV_AGNT svt_axi_ic_slave_agent
+`else
+   `ifndef _SVT_AXI_INTNL_SLV_AGNT 
+      `define _SVT_AXI_INTNL_SLV_AGNT svt_axi_slave_agent
+   `endif
+`endif
+
+  //This method returns smallest integer which is greater than or equal to divident/divisor. 
+  //For example if dividend=5 and divisor=8 then in general division 5/8=0, but this method 5/8 returns 1.
+  //If dividend=8 and divisor=8 then in general division 8/8=1, and this method also returns 1.
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define CEIL( dividend, divisor) \
+   ((dividend / divisor) + ((dividend % divisor) != 0)) 
+
+`endprotect
+
+`endif // GUARD_SVT_AXI_COMMON_DEFINES_SVI

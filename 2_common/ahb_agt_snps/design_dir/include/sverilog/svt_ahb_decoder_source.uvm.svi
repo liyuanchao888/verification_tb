@@ -1,0 +1,11 @@
+
+`ifndef GUARD_SVT_AHB_DECODER_SOURCE_UVM_SVI
+`define GUARD_SVT_AHB_DECODER_SOURCE_UVM_SVI
+
+`include "svt_ahb_source.uvm.svi"
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_decoder_svt,R-2020.12,svt_ahb_decoder_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_decoder_svt,R-2020.12,svt_ahb_decoder_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_decoder_svt,R-2020.12,svt_ahb_decoder.uvm)
+
+`endif //GUARD_SVT_AHB_DECODER_SOURCE_UVM_SVI

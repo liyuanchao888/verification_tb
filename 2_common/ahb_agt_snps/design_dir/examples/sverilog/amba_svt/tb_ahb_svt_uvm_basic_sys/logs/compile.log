@@ -1,0 +1,53 @@
+Command: vcs -l ./logs/compile.log -q -Mdir=./output/csrc +incdir+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/src/sverilog/vcs \
++incdir+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/include/sverilog \
++incdir+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/src/verilog/vcs \
++incdir+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/include/verilog \
+-CFLAGS -DVCS +incdir+/tools/synopsys/vcs-R-2020.12-SP1/etc/uvm-1.1/src /tools/synopsys/vcs-R-2020.12-SP1/etc/uvm-1.1/src/dpi/uvm_dpi.cc \
+-full64 -sverilog +define+UVM_PACKER_MAX_BYTES=1500000 +define+UVM_DISABLE_AUTO_ITEM_RECORDING \
++define+SVT_AHB_DISABLE_IMPLICIT_BUS_CONNECTION -timescale=1ns/1ps +define+SVT_FSDB_ENABLE \
++define+WAVES_FSDB +define+WAVES=\"fsdb\" +plusarg_save -debug_access+pp+dmptf+thread \
+-debug_region=cell+encrypt -notice -P /tools/synopsys/verdi-R-2020.12-SP1/share/PLI/VCS/LINUX64/novas.tab \
+/tools/synopsys/verdi-R-2020.12-SP1/share/PLI/VCS/LINUX64/pli.a +define+SVT_UVM_TECHNOLOGY \
++define+SYNOPSYS_SV +incdir+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/examples/sverilog/amba_svt/tb_ahb_svt_uvm_basic_sys/. \
++incdir+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/examples/sverilog/amba_svt/tb_ahb_svt_uvm_basic_sys/../../env \
++incdir+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/examples/sverilog/amba_svt/tb_ahb_svt_uvm_basic_sys/../env \
++incdir+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/examples/sverilog/amba_svt/tb_ahb_svt_uvm_basic_sys/env \
++incdir+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/examples/sverilog/amba_svt/tb_ahb_svt_uvm_basic_sys/dut \
++incdir+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/examples/sverilog/amba_svt/tb_ahb_svt_uvm_basic_sys/hdl_interconnect \
++incdir+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/examples/sverilog/amba_svt/tb_ahb_svt_uvm_basic_sys/lib \
++incdir+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/examples/sverilog/amba_svt/tb_ahb_svt_uvm_basic_sys/tests \
+-o ./output/simvcssvlog -f top_files -f hdl_files
+
+Lint-[PCTI-L] Ports coerced to input
+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/examples/sverilog/amba_svt/tb_ahb_svt_uvm_basic_sys/hdl_interconnect/ahb_svt_dut_sv_wrapper.sv, 13
+"ahb_if"
+  Port "ahb_if" declared as inout in module "ahb_svt_dut_sv_wrapper" does not 
+  have any load in parent module or is connected to constant, it may need to 
+  be input. 
+  Coercing to input.
+
+
+13 modules and 0 UDP read.
+Generating code for _VCSgd_hEeZs
+Generating code for _VCSgd_QAfa9
+Generating code for _VCSgd_ux8SD
+Generating code for _VCSgd_reYIK
+Generating code for _VCSgd_zr7M1
+Generating code for _VCSgd_mTcGb
+Generating code for _VCSgd_vKgAU
+Generating code for _VCSgd_hwc5C
+Generating code for _VCSgd_VTmSf
+Generating code for _VCSgd_aauTW
+Generating code for _VCSgd_wSrgY
+Generating code for _VCSgd_tJE1A
+Generating code for _VCSgd_wjTJj
+Generating code for _VCSgd_UFirY
+Generating code for _VCSgd_b6ICG
+make[1]: Entering directory `/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/examples/sverilog/amba_svt/tb_ahb_svt_uvm_basic_sys/output/csrc' \
+
+g++ -w  -pipe -fPIC -DVCS -O -I/tools/synopsys/vcs-R-2020.12-SP1/include    -c /tools/synopsys/vcs-R-2020.12-SP1/etc/uvm-1.1/src/dpi/uvm_dpi.cc \
+
+/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/examples/sverilog/amba_svt/tb_ahb_svt_uvm_basic_sys/./output/simvcssvlog \
+up to date
+make[1]: Leaving directory `/tools/proj/verification_platform/2_common/ahb_agt_snps/design_dir/examples/sverilog/amba_svt/tb_ahb_svt_uvm_basic_sys/output/csrc' \
+

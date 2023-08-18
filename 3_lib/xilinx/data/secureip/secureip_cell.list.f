@@ -1,0 +1,2 @@
+-f $XILINX_VIVADO/data/secureip/iserdese2/iserdese2_cell.list.f // arch=aartix7,artix7,spartan7,artix7l,kintex7,kintex7l,qartix7,qartix7l,qkintex7,qkintex7l,qvirtex7,virtex7,zynq,kintexu,virtexu:unisims=ISERDESE2:secureip=iserdese2:disable=none:option=none
+-f $XILINX_VIVADO/data/secureip/oserdese2/oserdese2_cell.list.f // arch=aartix7,artix7,spartan7,artix7l,kintex7,kintex7l,qartix7,qartix7l,qkintex7,qkintex7l,qvirtex7,virtex7,zynq,kintexu,virtexu:unisims=OSERDESE2:secureip=oserdese2:disable=none:option=none

@@ -1,0 +1,15 @@
+
+`ifndef GUARD_SVT_AHB_SLAVE_AGENT_SOURCE_OVM_SVI
+`define GUARD_SVT_AHB_SLAVE_AGENT_SOURCE_OVM_SVI
+
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,ahb_slave_svt,R-2020.12,svt_ahb_slave_source.ovm)
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,ahb_slave_monitor_svt,R-2020.12,svt_ahb_slave_monitor_source.ovm)
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_slave_agent_svt,R-2020.12,svt_ahb_slave_sequencer)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_slave_agent_svt,R-2020.12,svt_ahb_slave_transaction_sequence_collection)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_slave_agent_svt,R-2020.12,svt_ahb_slave_agent)
+
+
+`endif // GUARD_SVT_AHB_SLAVE_AGENT_SOURCE_OVM_SVI
+
+

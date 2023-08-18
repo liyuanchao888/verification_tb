@@ -1,0 +1,753 @@
+
+
+`ifndef GUARD_SVT_AXI_SLAVE_BIND_IF_SVI
+`define GUARD_SVT_AXI_SLAVE_BIND_IF_SVI
+
+`include "svt_axi_defines.svi"
+//=======================================================================
+
+interface svt_axi_slave_bind_if #(  int AWADDR_WIDTH_PARAM      =   `SVT_AXI_MAX_ADDR_WIDTH,
+                                    int ARADDR_WIDTH_PARAM      =   `SVT_AXI_MAX_ADDR_WIDTH,
+                                    int AWLEN_WIDTH_PARAM       =   `SVT_AXI_MAX_BURST_LENGTH_WIDTH,
+                                    int ARLEN_WIDTH_PARAM       =   `SVT_AXI_MAX_BURST_LENGTH_WIDTH,  
+                                    int ARSIZE_WIDTH_PARAM      =   `SVT_AXI_SIZE_WIDTH,
+                                    int AWSIZE_WIDTH_PARAM      =   `SVT_AXI_SIZE_WIDTH,
+                                    int AWBURST_WIDTH_PARAM     =   `SVT_AXI_BURST_WIDTH,
+                                    int ARBURST_WIDTH_PARAM     =   `SVT_AXI_BURST_WIDTH,
+                                    int ARLOCK_WIDTH_PARAM      =   `SVT_AXI_LOCK_WIDTH,
+                                    int AWLOCK_WIDTH_PARAM      =   `SVT_AXI_LOCK_WIDTH,
+                                    int ARCACHE_WIDTH_PARAM     =   `SVT_AXI_CACHE_WIDTH,
+                                    int ARPROT_WIDTH_PARAM      =   `SVT_AXI_PROT_WIDTH,
+				    int ARTAGOP_WIDTH_PARAM     =   `SVT_AXI_TAGOP_WIDTH,		 				    
+                                    int ARVMIDEXT_WIDTH_PARAM   =   `SVT_AXI_MAX_VMIDEXT_WIDTH,
+                                    int ARID_WIDTH_PARAM        =   `SVT_AXI_MAX_ID_WIDTH,
+                                    int RID_WIDTH_PARAM         =   `SVT_AXI_MAX_ID_WIDTH,
+                                    int BID_WIDTH_PARAM         =   `SVT_AXI_MAX_ID_WIDTH,
+			            int BTAGMATCH_WIDTH_PARAM   =   `SVT_AXI_MAX_TAGUPDATE_WIDTH,
+                                    int WID_WIDTH_PARAM         =   `SVT_AXI_MAX_ID_WIDTH,
+                                    int ARDOMAIN_WIDTH_PARAM    =   `SVT_AXI_ACE_DOMAIN_WIDTH,
+                                    int AWDOMAIN_WIDTH_PARAM    =   `SVT_AXI_ACE_DOMAIN_WIDTH,
+                                    int AWSNOOP_WIDTH_PARAM     =   `SVT_AXI_ACE_WSNOOP_WIDTH,
+                                    int AWBAR_WIDTH_PARAM       =   `SVT_AXI_ACE_BARRIER_WIDTH,
+                                    int AWCMO_WIDTH_PARAM       =   `SVT_AXI_ACE_WCMO_WIDTH,
+                                    int RDATA_WIDTH_PARAM       =   `SVT_AXI_MAX_DATA_WIDTH,
+                                    int RRESP_WIDTH_PARAM       =   `SVT_AXI_RESP_WIDTH,
+                                    int AWREGION_WIDTH_PARAM    =   `SVT_AXI_REGION_WIDTH,         
+                                    int AWQOS_WIDTH_PARAM       =   `SVT_AXI_QOS_WIDTH,            
+                                    int AWCACHE_WIDTH_PARAM     =   `SVT_AXI_CACHE_WIDTH,
+                                    int AWPROT_WIDTH_PARAM      =   `SVT_AXI_PROT_WIDTH,
+                                    int AWID_WIDTH_PARAM        =   `SVT_AXI_MAX_ID_WIDTH,
+                                    int DOMAIN_WIDTH_PARAM      =   `SVT_AXI_ACE_DOMAIN_WIDTH,
+                                    int WSNOOP_WIDTH_PARAM      =   `SVT_AXI_ACE_WSNOOP_WIDTH,
+                                    int ARBAR_WIDTH_PARAM       =   `SVT_AXI_ACE_BARRIER_WIDTH,
+                                    int WDATA_WIDTH_PARAM       =   `SVT_AXI_MAX_DATA_WIDTH,
+                                    int BRESP_WIDTH_PARAM       =   `SVT_AXI_RESP_WIDTH,
+                                    int ARREGION_WIDTH_PARAM    =   `SVT_AXI_REGION_WIDTH,         
+                                    int ARQOS_WIDTH_PARAM       =   `SVT_AXI_QOS_WIDTH,            
+                                    int ARUSER_WIDTH_PARAM      =   `SVT_AXI_MAX_ADDR_USER_WIDTH,  
+                                    int WUSER_WIDTH_PARAM       =   `SVT_AXI_MAX_DATA_USER_WIDTH,
+                                    int AWUSER_WIDTH_PARAM      =   `SVT_AXI_MAX_ADDR_USER_WIDTH,  
+                                    int RUSER_WIDTH_PARAM       =   `SVT_AXI_MAX_DATA_USER_WIDTH,
+                                    int BUSER_WIDTH_PARAM       =   `SVT_AXI_MAX_BRESP_USER_WIDTH,      			    
+                                    int ACADDR_WIDTH_PARAM      =   `SVT_AXI_ACE_SNOOP_ADDR_WIDTH,
+                                    int ACSNOOP_WIDTH_PARAM     =   `SVT_AXI_ACE_SNOOP_TYPE_WIDTH,
+                                    int ACPROT_WIDTH_PARAM      =   `SVT_AXI_ACE_SNOOP_PROT_WIDTH,
+                                    int CRRESP_WIDTH_PARAM      =   `SVT_AXI_ACE_SNOOP_RESP_WIDTH,
+                                    int CDDATA_WIDTH_PARAM      =   `SVT_AXI_ACE_SNOOP_DATA_WIDTH,
+                                    int TDATA_WIDTH_PARAM       =   `SVT_AXI_MAX_TDATA_WIDTH,      
+                                    int TSTRB_WIDTH_PARAM       =   `SVT_AXI_TSTRB_WIDTH,          
+                                    int TDEST_WIDTH_PARAM       =   `SVT_AXI_MAX_TDEST_WIDTH,      
+                                    int TKEEP_WIDTH_PARAM       =   `SVT_AXI_TKEEP_WIDTH,          
+                                    int TID_WIDTH_PARAM         =   `SVT_AXI_MAX_TID_WIDTH,      
+                                    int WSTRB_WIDTH_PARAM       =   `SVT_AXI_MAX_DATA_WIDTH/8,
+                                    int TUSER_WIDTH_PARAM       =   `SVT_AXI_MAX_TUSER_WIDTH,
+                                    int AWMMUSID_WIDTH_PARAM    =   `SVT_AXI_MAX_MMUSID_WIDTH,
+                                    int AWMMUSSID_WIDTH_PARAM   =   `SVT_AXI_MAX_MMUSSID_WIDTH,
+                                    int AWATOP_WIDTH_PARAM      =   `SVT_ACE5_ATOMIC_TYPE_WIDTH,
+                                    int AWMPAM_WIDTH_PARAM      =   `SVT_AXI_MAX_MPAM_WIDTH,
+                                    int ARMPAM_WIDTH_PARAM      =   `SVT_AXI_MAX_MPAM_WIDTH,
+                                    int AWTAGOP_WIDTH_PARAM     =   `SVT_AXI_MAX_TAG_WIDTH,
+                                    int AWSTASHNID_WIDTH_PARAM  =   `SVT_AXI_STASH_NID_WIDTH,
+                                    int AWSTASHLPID_WIDTH_PARAM =   `SVT_AXI_STASH_LPID_WIDTH,
+                                    int ARMMUSID_WIDTH_PARAM    =   `SVT_AXI_MAX_MMUSID_WIDTH,
+                                    int ARMMUSSID_WIDTH_PARAM   =   `SVT_AXI_MAX_MMUSSID_WIDTH,
+                                    int WPOISON_WIDTH_PARAM     =   `SVT_AXI_MAX_DATA_WIDTH/64,
+                                    int WTAG_WIDTH_PARAM        =   `SVT_AXI_MAX_TAG_WIDTH,
+                                    int WTAGUPDATE_WIDTH_PARAM  =   `SVT_AXI_MAX_TAGUPDATE_WIDTH,
+                                    int CDPOISON_WIDTH_PARAM    =   `SVT_AXI_ACE_SNOOP_DATA_WIDTH/64,
+                                    int ACVMIDEXT_WIDTH_PARAM   =   `SVT_AXI_MAX_VMIDEXT_WIDTH,
+                                    int RPOISON_WIDTH_PARAM     =   `SVT_AXI_MAX_DATA_WIDTH/64,
+                                    int RTAG_WIDTH_PARAM        =   `SVT_AXI_MAX_TAG_WIDTH,
+                                    int ARSNOOP_WIDTH_PARAM     =   `SVT_AXI_ACE_RSNOOP_WIDTH,
+                                    int RCHUNKNUM_WIDTH_PARAM   =   `SVT_AXI_MAX_CHUNK_NUM_WIDTH,
+                                    int RCHUNKSTRB_WIDTH_PARAM  =   `SVT_AXI_MAX_CHUNK_STROBE_WIDTH,
+  //AXI ACE Parity Check Signals
+                                    int AWIDCHK_WIDTH_PARAM     =   `CEIL(`SVT_AXI_MAX_ID_WIDTH,8),
+                                    int AWADDRCHK_WIDTH_PARAM   =   `CEIL(`SVT_AXI_MAX_ADDR_WIDTH,8),
+                                    int WDATACHK_WIDTH_PARAM    =   `CEIL(`SVT_AXI_MAX_DATA_WIDTH,8),
+                                    int WSTRBCHK_WIDTH_PARAM    =   `CEIL(`SVT_AXI_MAX_DATA_WIDTH,64),
+                                    int BIDCHK_WIDTH_PARAM      =   `CEIL(`SVT_AXI_MAX_ID_WIDTH,8),
+                                    int ARIDCHK_WIDTH_PARAM     =   `CEIL(`SVT_AXI_MAX_ID_WIDTH,8),
+                                    int ARADDRCHK_WIDTH_PARAM   =   `SVT_AXI_MAX_ADDR_WIDTH/8,
+                                    int RIDCHK_WIDTH_PARAM      =   `CEIL(`SVT_AXI_MAX_ID_WIDTH,8),
+                                    int RDATACHK_WIDTH_PARAM    =   `CEIL(`SVT_AXI_MAX_DATA_WIDTH,8),
+                                    int ACADDRCHK_WIDTH_PARAM   =   `CEIL(`SVT_AXI_ACE_SNOOP_ADDR_WIDTH,8),
+                                    int CDDATACHK_WIDTH_PARAM   =   `CEIL(`SVT_AXI_ACE_SNOOP_DATA_WIDTH,8),
+
+                                    int AWUSERCHK_WIDTH_PARAM   =   `CEIL(`SVT_AXI_MAX_ADDR_USER_WIDTH,8),  
+                                    int WUSERCHK_WIDTH_PARAM    =   `CEIL(`SVT_AXI_MAX_DATA_USER_WIDTH,8),
+                                    int BUSERCHK_WIDTH_PARAM    =   `CEIL(`SVT_AXI_MAX_BRESP_USER_WIDTH,8),      			    
+                                    int ARUSERCHK_WIDTH_PARAM   =   `CEIL(`SVT_AXI_MAX_ADDR_USER_WIDTH,8),  
+                                    int RUSERCHK_WIDTH_PARAM    =   `CEIL(`SVT_AXI_MAX_DATA_USER_WIDTH,8)
+)                       
+(
+  input                                           awvalid,
+  input                                           awvalidchk,
+  input [AWADDR_WIDTH_PARAM-1:0]                  awaddr,
+  input [AWADDRCHK_WIDTH_PARAM-1:0]               awaddrchk,
+  input [AWLEN_WIDTH_PARAM-1:0]                   awlen,
+  input                                           awlenchk,
+  input [AWSIZE_WIDTH_PARAM-1:0]                  awsize,
+  input [AWBURST_WIDTH_PARAM-1:0]                 awburst,
+  input [AWLOCK_WIDTH_PARAM-1:0]                  awlock,
+  input [AWCACHE_WIDTH_PARAM-1:0]                 awcache,
+  input [AWPROT_WIDTH_PARAM-1:0]                  awprot,
+  input [AWID_WIDTH_PARAM-1:0]                    awid,
+  input [AWIDCHK_WIDTH_PARAM-1:0]                 awidchk,
+  input                                           awidunq,
+  inout                                           awready,
+  inout                                           awreadychk,
+  input [AWDOMAIN_WIDTH_PARAM-1:0]	          awdomain,	
+  input [AWSNOOP_WIDTH_PARAM -1:0]	          awsnoop,	
+  input [AWBAR_WIDTH_PARAM -1:0]	          awbar,
+  input [AWCMO_WIDTH_PARAM-1:0]                   awcmo,
+  input [AWMPAM_WIDTH_PARAM-1:0]                  awmpam,
+  input [ARMPAM_WIDTH_PARAM-1:0]                  armpam,  
+  input                                           arvalid,
+  input                                           arvalidchk,
+  input [ARADDR_WIDTH_PARAM-1:0]                  araddr,
+  input [ARADDRCHK_WIDTH_PARAM-1:0]               araddrchk,
+  input [ARLEN_WIDTH_PARAM-1:0]                   arlen,
+  input                                           arlenchk,
+  input [ARSIZE_WIDTH_PARAM-1:0]                  arsize,
+  input [ARBURST_WIDTH_PARAM-1:0]                 arburst,
+  input [ARLOCK_WIDTH_PARAM-1:0]                  arlock,
+  input [ARCACHE_WIDTH_PARAM-1:0]                 arcache,
+  input [ARPROT_WIDTH_PARAM-1:0]                  arprot,
+  input [ARTAGOP_WIDTH_PARAM-1:0]                 artagop,
+  inout [ARVMIDEXT_WIDTH_PARAM-1:0]               arvmidext,
+  input [ARID_WIDTH_PARAM-1:0]                    arid,
+  input [ARIDCHK_WIDTH_PARAM-1:0]                 aridchk,
+  input                                           aridunq,
+  inout                                           arready,
+  inout                                           arreadychk,
+  input [ARDOMAIN_WIDTH_PARAM-1:0]	          ardomain,	
+  input [ARSNOOP_WIDTH_PARAM -1:0]	          arsnoop,	
+  input [ARBAR_WIDTH_PARAM -1:0]	          arbar,
+  inout                                           rvalid,
+  inout                                           rvalidchk,
+  inout                                           rlast,
+  inout                                           rlastchk,
+  inout [RDATA_WIDTH_PARAM-1:0]                   rdata,
+  inout [RDATACHK_WIDTH_PARAM-1:0]                rdatachk,
+  inout [RRESP_WIDTH_PARAM-1:0]                   rresp,
+  inout                                           rrespchk,
+  inout [RID_WIDTH_PARAM-1:0]                     rid,
+  inout [RIDCHK_WIDTH_PARAM-1:0]                  ridchk,
+  inout                                           ridunq,
+  input                                           rready,
+  input                                           rreadychk,
+  input         		                  rack,
+  input         		                  rackchk,
+  input                                           wvalid,
+  input                                           wvalidchk,
+  input                                           wlast,
+  input                                           wlastchk,
+  input [WDATA_WIDTH_PARAM-1:0]                   wdata,
+  input [WDATACHK_WIDTH_PARAM-1:0]                wdatachk,
+  input [WSTRB_WIDTH_PARAM-1:0]                   wstrb,
+  input [WSTRBCHK_WIDTH_PARAM-1:0]                wstrbchk,
+  input [WID_WIDTH_PARAM-1:0]                     wid,
+  inout                                           wready,
+  inout                                           wreadychk,
+  inout                                           bvalid,
+  inout                                           bvalidchk,
+  inout [BRESP_WIDTH_PARAM-1:0]                   bresp,
+  inout                                           brespchk,
+  inout [BID_WIDTH_PARAM-1:0]                     bid,
+  inout [BIDCHK_WIDTH_PARAM-1:0]                  bidchk,
+  inout                                           bidunq,
+  input                                           bready,
+  input                                           breadychk,
+  input	        	                          wack,
+  input	        	                          wackchk,
+  input [AWREGION_WIDTH_PARAM-1:0]                awregion,
+  input [AWQOS_WIDTH_PARAM-1:0]                   awqos,
+  input [AWUSER_WIDTH_PARAM-1:0]                  awuser,
+  input [AWUSERCHK_WIDTH_PARAM-1:0]               awuserchk,
+  input [ARREGION_WIDTH_PARAM-1:0]                arregion,
+  input [ARQOS_WIDTH_PARAM-1:0]                   arqos,
+  input [ARUSER_WIDTH_PARAM-1:0]                  aruser,
+  input [ARUSERCHK_WIDTH_PARAM-1:0]               aruserchk,
+  input [WUSER_WIDTH_PARAM-1:0]                   wuser,
+  input [WUSERCHK_WIDTH_PARAM-1:0]                wuserchk,
+  inout [RUSER_WIDTH_PARAM-1:0]                   ruser,
+  inout [RUSERCHK_WIDTH_PARAM-1:0]                ruserchk,
+  inout [BUSER_WIDTH_PARAM-1:0]                   buser,
+  inout [BUSERCHK_WIDTH_PARAM-1:0]                buserchk,
+  inout         		                  acvalid,	
+  inout         		                  acvalidchk,	
+  inout         		                  acwakeup,	
+  inout         		                  acwakeupchk,	
+  input         		                  acready,	
+  input         		                  acreadychk,	
+  input [ACADDR_WIDTH_PARAM-1:0]	          acaddr,	        
+  input [ACADDRCHK_WIDTH_PARAM-1:0]	          acaddrchk,	        
+  input [ACSNOOP_WIDTH_PARAM-1:0]	          acsnoop,	
+  input [ACPROT_WIDTH_PARAM-1:0]	          acprot,		
+  input  	                                  crvalid,	
+  input  	                                  crvalidchk,	
+  inout  	                                  crready,	
+  inout  	                                  crreadychk,	
+  input [CRRESP_WIDTH_PARAM-1:0]          	  crresp,		
+  input                                   	  crrespchk,		
+  input  	                                  cdvalid,	
+  input  	                                  cdvalidchk,	
+  inout  	                                  cdready,	
+  inout  	                                  cdreadychk,	
+  input [CDDATA_WIDTH_PARAM-1:0]	          cddata,		
+  inout [CDDATACHK_WIDTH_PARAM-1:0]	          cddatachk,
+  input  	                                  cdlast,
+  input  	                                  cdlastchk,
+  input                                           tvalid,
+  inout                                           tready,
+  input [TDATA_WIDTH_PARAM-1:0]                   tdata,
+  input [TSTRB_WIDTH_PARAM-1:0]                   tstrb,
+  input [TDEST_WIDTH_PARAM-1:0]                   tdest,
+  input [TKEEP_WIDTH_PARAM-1:0]                   tkeep,
+  input                                           tlast,
+  input [TID_WIDTH_PARAM-1:0]                     tid,
+  input                                           awakeup,
+  input                                           awakeupchk,
+
+  //----------------------------------------------------------------------
+  // AXI G Read Data Chunking Interface Siganal
+  //----------------------------------------------------------------------
+  input                                        archunken,
+  inout                                        rchunkv,
+  inout[RCHUNKNUM_WIDTH_PARAM-1:0]             rchunknum,
+  inout[RCHUNKSTRB_WIDTH_PARAM-1:0]            rchunkstrb,
+ `ifdef SVT_AXI_QVN_ENABLE
+  input  [3:0] arvnet , 
+  input  [3:0] awvnet , 
+  input  [3:0] wvnet  , 
+  input  [3:0] varqosvn3  , 
+  input        varvalidvn3, 
+  inout        varreadyvn3, 
+  input  [3:0] vawqosvn3  , 
+  input        vawvalidvn3, 
+  inout        vawreadyvn3, 
+  input        vwvalidvn3 , 
+  inout        vwreadyvn3 , 
+  input  [3:0] varqosvn2  , 
+  input        varvalidvn2, 
+  inout        varreadyvn2, 
+  input  [3:0] vawqosvn2  , 
+  input        vawvalidvn2, 
+  inout        vawreadyvn2, 
+  input        vwvalidvn2 , 
+  inout        vwreadyvn2 , 
+  input  [3:0] varqosvn1  , 
+  input        varvalidvn1, 
+  inout        varreadyvn1, 
+  input  [3:0] vawqosvn1  , 
+  input        vawvalidvn1, 
+  inout        vawreadyvn1, 
+  input        vwvalidvn1 , 
+  inout        vwreadyvn1 , 
+  input  [3:0] varqosvn0  , 
+  input        varvalidvn0, 
+  inout        varreadyvn0, 
+  input  [3:0] vawqosvn0  , 
+  input        vawvalidvn0, 
+  inout        vawreadyvn0, 
+  input        vwvalidvn0 , 
+  inout        vwreadyvn0 ,
+`endif
+  output	                             awtrace,
+  output	                             awmmusecsid,
+  output        [AWMMUSID_WIDTH_PARAM-1:0]   awmmusid,
+  output	                             awmmussidv,
+  output        [AWMMUSSID_WIDTH_PARAM-1:0]  awmmussid,
+  output	                             awmmuatst,
+  output	[AWATOP_WIDTH_PARAM-1:0]     awatop,
+  output        [AWTAGOP_WIDTH_PARAM-1:0]    awtagop,
+  output	[AWSTASHNID_WIDTH_PARAM-1:0] awstashnid,
+  output	[AWSTASHLPID_WIDTH_PARAM-1:0]awstashlpid,
+  output	                             awstashnid_en,
+  output	                             awstashlpid_en,
+  output	                             artrace,
+  output	                             armmusecsid,
+  output	[ARMMUSID_WIDTH_PARAM-1:0]   armmusid,
+  output                                     armmussidv,
+  output	[ARMMUSSID_WIDTH_PARAM-1:0]  armmussid,
+  output	                             armmuatst,
+  input 	                             wtrace,
+  input  	[WPOISON_WIDTH_PARAM-1:0]    wpoison,
+  inout         [WTAG_WIDTH_PARAM-1:0]       wtag,
+  inout         [WTAGUPDATE_WIDTH_PARAM-1:0] wtagupdate,
+  output	[CDPOISON_WIDTH_PARAM-1:0]   cdpoison,
+  output	                             cdtrace,
+  input	        [ACVMIDEXT_WIDTH_PARAM-1:0]  acvmidext,
+  input		                             actrace,
+  inout		                             btrace,
+  inout                                      bcomp,
+  inout         [BTAGMATCH_WIDTH_PARAM-1:0]  btagmatch,
+  inout	        [RPOISON_WIDTH_PARAM-1:0]    rpoison,
+  inout         [RTAG_WIDTH_PARAM-1:0]       rtag,
+  inout		                             rtrace,
+  output	                             crtrace,
+  input         [TUSER_WIDTH_PARAM-1:0]      tuser 
+);
+
+endinterface
+
+//=======================================================================
+module svt_axi_slave_connector #(parameter is_active=1) (svt_axi_slave_if slave_if, svt_axi_slave_bind_if slave_bind_if);
+
+`ifdef SVT_MULTI_SIM_PROCEDURAL_COMBINATORIAL_DRIVE
+
+  always @(*) 
+  begin
+  // Inputs
+    slave_if.awvalid  =  slave_bind_if.awvalid;
+    slave_if.awvalidchk  =  slave_bind_if.awvalidchk;
+    slave_if.awaddr   =  slave_bind_if.awaddr;
+    slave_if.awaddrchk=  slave_bind_if.awaddrchk;
+    slave_if.awlen    =  slave_bind_if.awlen;
+    slave_if.awlenchk    =  slave_bind_if.awlenchk;
+    slave_if.awsize   =  slave_bind_if.awsize;
+    slave_if.awburst  =  slave_bind_if.awburst;
+    slave_if.awlock   =  slave_bind_if.awlock;
+    slave_if.awcache  =  slave_bind_if.awcache;
+    slave_if.awprot   =  slave_bind_if.awprot;
+    slave_if.awid     =  slave_bind_if.awid;
+    slave_if.awidchk  =  slave_bind_if.awidchk;
+    slave_if.awidunq  =  slave_bind_if.awidunq;
+    slave_if.awdomain =  slave_bind_if.awdomain;
+    slave_if.awsnoop  =  slave_bind_if.awsnoop;
+    slave_if.awbar    =  slave_bind_if.awbar;
+    slave_if.awcmo    =  slave_bind_if.awcmo;
+    slave_if.awmpam   =  slave_bind_if.awmpam;
+    slave_if.armpam   =  slave_bind_if.armpam;
+    slave_if.arvalid  =  slave_bind_if.arvalid;
+    slave_if.arvalidchk  =  slave_bind_if.arvalidchk;
+    slave_if.araddr   =  slave_bind_if.araddr;
+    slave_if.araddrchk=  slave_bind_if.araddrchk;
+    slave_if.arlen    =  slave_bind_if.arlen;
+    slave_if.arlenchk    =  slave_bind_if.arlenchk;
+    slave_if.arsize   =  slave_bind_if.arsize;
+    slave_if.arburst  =  slave_bind_if.arburst;
+    slave_if.arlock   =  slave_bind_if.arlock;
+    slave_if.arcache  =  slave_bind_if.arcache;
+    slave_if.arprot   =  slave_bind_if.arprot;
+    slave_if.artagop  =  slave_bind_if.artagop;
+    slave_if.arvmidext=  slave_bind_if.arvmidext;
+    slave_if.arid     =  slave_bind_if.arid;
+    slave_if.aridchk  =  slave_bind_if.aridchk;
+    slave_if.aridunq  =  slave_bind_if.aridunq;
+    slave_if.ardomain =  slave_bind_if.ardomain;
+    slave_if.arsnoop  =  slave_bind_if.arsnoop;
+    slave_if.arbar    =  slave_bind_if.arbar;
+    slave_if.rready   =  slave_bind_if.rready;
+    slave_if.rreadychk   =  slave_bind_if.rreadychk;
+    slave_if.rack     =  slave_bind_if.rack;
+    slave_if.rackchk     =  slave_bind_if.rackchk;
+    slave_if.wvalid   =  slave_bind_if.wvalid;
+    slave_if.wvalidchk   =  slave_bind_if.wvalidchk;
+    slave_if.wlast    =  slave_bind_if.wlast;
+    slave_if.wlastchk    =  slave_bind_if.wlastchk;
+    slave_if.wdata    =  slave_bind_if.wdata;
+    slave_if.wdatachk =  slave_bind_if.wdatachk;
+    slave_if.wstrb    =  slave_bind_if.wstrb;
+    slave_if.wstrbchk =  slave_bind_if.wstrbchk;
+    slave_if.wid      =  slave_bind_if.wid;
+    slave_if.bready   =  slave_bind_if.bready;
+    slave_if.breadychk   =  slave_bind_if.breadychk;
+    slave_if.wack     =  slave_bind_if.wack;
+    slave_if.wackchk     =  slave_bind_if.wackchk;
+    slave_if.awregion =  slave_bind_if.awregion;
+    slave_if.awqos    =  slave_bind_if.awqos;
+    slave_if.awuser   =  slave_bind_if.awuser;
+    slave_if.awuserchk =  slave_bind_if.awuserchk;
+    slave_if.arregion =  slave_bind_if.arregion;
+    slave_if.arqos    =  slave_bind_if.arqos;
+    slave_if.aruser   =  slave_bind_if.aruser;
+    slave_if.aruserchk =  slave_bind_if.aruserchk;
+    slave_if.wuser    =  slave_bind_if.wuser;
+    slave_if.wuserchk =  slave_bind_if.wuserchk;
+    slave_if.acready  =  slave_bind_if.acready;
+    slave_if.acreadychk  =  slave_bind_if.acreadychk;
+    slave_if.crvalid  =  slave_bind_if.crvalid;
+    slave_if.crvalidchk  =  slave_bind_if.crvalidchk;
+    slave_if.crresp   =  slave_bind_if.crresp;
+    slave_if.crrespchk =  slave_bind_if.crrespchk;
+    slave_if.cdvalid  =  slave_bind_if.cdvalid;
+    slave_if.cdvalidchk  =  slave_bind_if.cdvalidchk;
+    slave_if.cdready  =  slave_bind_if.cdready;
+    slave_if.cdreadychk  =  slave_bind_if.cdreadychk;
+    slave_if.cddata   =  slave_bind_if.cddata;
+    slave_if.cddatachk=  slave_bind_if.cddatachk;
+    slave_if.cdlast   =  slave_bind_if.cdlast;
+    slave_if.cdlastchk   =  slave_bind_if.cdlastchk;
+    slave_if.tvalid   =  slave_bind_if.tvalid;
+    slave_if.awakeup  =  slave_bind_if.awakeup;
+    slave_if.awakeupchk  =  slave_bind_if.awakeupchk;
+    slave_if.tdata    =  slave_bind_if.tdata;
+    slave_if.tstrb    =  slave_bind_if.tstrb;
+    slave_if.tdest    =  slave_bind_if.tdest;
+    slave_if.tkeep    =  slave_bind_if.tkeep;
+    slave_if.tlast    =  slave_bind_if.tlast;
+    slave_if.tid      =  slave_bind_if.tid;
+    slave_if.tuser    =  slave_bind_if.tuser;
+    slave_if.archunken    =  slave_bind_if.archunken;
+ `ifdef SVT_AXI_QVN_ENABLE
+    slave_if.arvnet      =  slave_bind_if.arvnet     ;
+    slave_if.awvnet      =  slave_bind_if.awvnet     ;
+    slave_if.wvnet       =  slave_bind_if.wvnet      ;
+    slave_if.varqosvn3   =  slave_bind_if.varqosvn3   ;
+    slave_if.varvalidvn3 =  slave_bind_if.varvalidvn3 ;
+    slave_if.vawqosvn3   =  slave_bind_if.vawqosvn3   ;
+    slave_if.vawvalidvn3 =  slave_bind_if.vawvalidvn3 ;
+    slave_if.vwvalidvn3  =  slave_bind_if.vwvalidvn3  ;
+    slave_if.varqosvn2   =  slave_bind_if.varqosvn2   ;
+    slave_if.varvalidvn2 =  slave_bind_if.varvalidvn2 ;
+    slave_if.vawqosvn2   =  slave_bind_if.vawqosvn2   ;
+    slave_if.vawvalidvn2 =  slave_bind_if.vawvalidvn2 ;
+    slave_if.vwvalidvn2  =  slave_bind_if.vwvalidvn2  ;
+    slave_if.varqosvn1   =  slave_bind_if.varqosvn1   ;
+    slave_if.varvalidvn1 =  slave_bind_if.varvalidvn1 ;
+    slave_if.vawqosvn1   =  slave_bind_if.vawqosvn1   ;
+    slave_if.vawvalidvn1 =  slave_bind_if.vawvalidvn1 ;
+    slave_if.vwvalidvn1  =  slave_bind_if.vwvalidvn1  ;
+    slave_if.varqosvn0   =  slave_bind_if.varqosvn0   ;
+    slave_if.varvalidvn0 =  slave_bind_if.varvalidvn0 ;
+    slave_if.vawqosvn0   =  slave_bind_if.vawqosvn0   ;
+    slave_if.vawvalidvn0 =  slave_bind_if.vawvalidvn0 ;
+    slave_if.vwvalidvn0  =  slave_bind_if.vwvalidvn0  ;
+  `endif
+    slave_if.acvmidext  =  slave_bind_if.acvmidext;
+    slave_if.actrace    =  slave_bind_if.actrace;
+    slave_if.btrace     =  slave_bind_if.btrace;
+    slave_if.bcomp      =  slave_bind_if.bcomp;
+    slave_if.btagmatch  =  slave_bind_if.btagmatch;
+    slave_if.rpoison    =  slave_bind_if.rpoison;
+    slave_if.rtag       =  slave_bind_if.rtag;
+    slave_if.rtrace     =  slave_bind_if.rtrace;
+  end
+`else
+  // Inputs
+  assign slave_if.awvalid  =  slave_bind_if.awvalid;
+  assign slave_if.awvalidchk  =  slave_bind_if.awvalidchk;
+  assign slave_if.awaddr   =  slave_bind_if.awaddr;
+  assign slave_if.awaddrchk=  slave_bind_if.awaddrchk;
+  assign slave_if.awlen    =  slave_bind_if.awlen;
+  assign slave_if.awlenchk    =  slave_bind_if.awlenchk;
+  assign slave_if.awsize   =  slave_bind_if.awsize;
+  assign slave_if.awburst  =  slave_bind_if.awburst;
+  assign slave_if.awlock   =  slave_bind_if.awlock;
+  assign slave_if.awcache  =  slave_bind_if.awcache;
+  assign slave_if.awprot   =  slave_bind_if.awprot;
+  assign slave_if.awid     =  slave_bind_if.awid;
+  assign slave_if.awidchk  =  slave_bind_if.awidchk;
+  assign slave_if.awidunq  =  slave_bind_if.awidunq;
+  assign slave_if.awdomain =  slave_bind_if.awdomain;
+  assign slave_if.awsnoop  =  slave_bind_if.awsnoop;
+  assign slave_if.awbar    =  slave_bind_if.awbar;
+  assign slave_if.awcmo    =  slave_bind_if.awcmo;
+  assign slave_if.awmpam   =  slave_bind_if.awmpam;
+  assign slave_if.armpam   =  slave_bind_if.armpam;
+  assign slave_if.arvalid  =  slave_bind_if.arvalid;
+  assign slave_if.arvalidchk  =  slave_bind_if.arvalidchk;
+  assign slave_if.araddr   =  slave_bind_if.araddr;
+  assign slave_if.araddrchk=  slave_bind_if.araddrchk;
+  assign slave_if.arlen    =  slave_bind_if.arlen;
+  assign slave_if.arlenchk    =  slave_bind_if.arlenchk;
+  assign slave_if.arsize   =  slave_bind_if.arsize;
+  assign slave_if.arburst  =  slave_bind_if.arburst;
+  assign slave_if.arlock   =  slave_bind_if.arlock;
+  assign slave_if.arcache  =  slave_bind_if.arcache;
+  assign slave_if.arprot   =  slave_bind_if.arprot;
+  assign slave_if.artagop  =  slave_bind_if.artagop;
+  assign slave_if.arvmidext=  slave_bind_if.arvmidext;
+  assign slave_if.arid     =  slave_bind_if.arid;
+  assign slave_if.aridchk  =  slave_bind_if.aridchk;
+  assign slave_if.aridunq  =  slave_bind_if.aridunq;
+  assign slave_if.ardomain =  slave_bind_if.ardomain;
+  assign slave_if.arsnoop  =  slave_bind_if.arsnoop;
+  assign slave_if.arbar    =  slave_bind_if.arbar;
+  assign slave_if.rready   =  slave_bind_if.rready;
+  assign slave_if.rreadychk   =  slave_bind_if.rreadychk;
+  assign slave_if.rack     =  slave_bind_if.rack;
+  assign slave_if.rackchk     =  slave_bind_if.rackchk;
+  assign slave_if.wvalid   =  slave_bind_if.wvalid;
+  assign slave_if.wvalidchk   =  slave_bind_if.wvalidchk;
+  assign slave_if.wlast    =  slave_bind_if.wlast;
+  assign slave_if.wlastchk    =  slave_bind_if.wlastchk;
+  assign slave_if.wdata    =  slave_bind_if.wdata;
+  assign slave_if.wdatachk =  slave_bind_if.wdatachk;
+  assign slave_if.wstrb    =  slave_bind_if.wstrb;
+  assign slave_if.wstrbchk =  slave_bind_if.wstrbchk;
+  assign slave_if.wid      =  slave_bind_if.wid;
+  assign slave_if.bready   =  slave_bind_if.bready;
+  assign slave_if.breadychk   =  slave_bind_if.breadychk;
+  assign slave_if.wack     =  slave_bind_if.wack;
+  assign slave_if.wackchk    =  slave_bind_if.wackchk;
+  assign slave_if.awregion =  slave_bind_if.awregion;
+  assign slave_if.awqos    =  slave_bind_if.awqos;
+  assign slave_if.awuser   =  slave_bind_if.awuser;
+  assign slave_if.awuserchk =  slave_bind_if.awuserchk;
+  assign slave_if.arregion =  slave_bind_if.arregion;
+  assign slave_if.arqos    =  slave_bind_if.arqos;
+  assign slave_if.aruser   =  slave_bind_if.aruser;
+  assign slave_if.aruserchk =  slave_bind_if.aruserchk;
+  assign slave_if.wuser    =  slave_bind_if.wuser;
+  assign slave_if.wuserchk =  slave_bind_if.wuserchk;
+  assign slave_if.acready  =  slave_bind_if.acready;
+  assign slave_if.acreadychk  =  slave_bind_if.acreadychk;
+  assign slave_if.crvalid  =  slave_bind_if.crvalid;
+  assign slave_if.crvalidchk  =  slave_bind_if.crvalidchk;
+  assign slave_if.crresp   =  slave_bind_if.crresp;
+  assign slave_if.crrespchk =  slave_bind_if.crrespchk;
+  assign slave_if.cdvalid  =  slave_bind_if.cdvalid;
+  assign slave_if.cdvalidchk  =  slave_bind_if.cdvalidchk;
+  assign slave_if.cdready  =  slave_bind_if.cdready;
+  assign slave_if.cdreadychk  =  slave_bind_if.cdreadychk;
+  assign slave_if.cddata   =  slave_bind_if.cddata;
+  assign slave_if.cddatachk=  slave_bind_if.cddatachk;
+  assign slave_if.cdlast   =  slave_bind_if.cdlast;
+  assign slave_if.cdlastchk   =  slave_bind_if.cdlastchk;
+  assign slave_if.tvalid   =  slave_bind_if.tvalid;
+  assign slave_if.awakeup  =  slave_bind_if.awakeup;
+  assign slave_if.awakeupchk  =  slave_bind_if.awakeupchk;
+  assign slave_if.tdata    =  slave_bind_if.tdata;
+  assign slave_if.tstrb    =  slave_bind_if.tstrb;
+  assign slave_if.tdest    =  slave_bind_if.tdest;
+  assign slave_if.tkeep    =  slave_bind_if.tkeep;
+  assign slave_if.tlast    =  slave_bind_if.tlast;
+  assign slave_if.tid      =  slave_bind_if.tid;
+  assign slave_if.tuser    =  slave_bind_if.tuser;
+  assign slave_if.archunken    =  slave_bind_if.archunken;
+`ifdef SVT_AXI_QVN_ENABLE
+  assign  slave_if.arvnet      =  slave_bind_if.arvnet     ;
+  assign  slave_if.awvnet      =  slave_bind_if.awvnet     ;
+  assign  slave_if.wvnet       =  slave_bind_if.wvnet      ;
+  assign  slave_if.varqosvn3   =  slave_bind_if.varqosvn3   ;
+  assign  slave_if.varvalidvn3 =  slave_bind_if.varvalidvn3 ;
+  assign  slave_if.vawqosvn3   =  slave_bind_if.vawqosvn3   ;
+  assign  slave_if.vawvalidvn3 =  slave_bind_if.vawvalidvn3 ;
+  assign  slave_if.vwvalidvn3  =  slave_bind_if.vwvalidvn3  ;
+  assign  slave_if.varqosvn2   =  slave_bind_if.varqosvn2   ;
+  assign  slave_if.varvalidvn2 =  slave_bind_if.varvalidvn2 ;
+  assign  slave_if.vawqosvn2   =  slave_bind_if.vawqosvn2   ;
+  assign  slave_if.vawvalidvn2 =  slave_bind_if.vawvalidvn2 ;
+  assign  slave_if.vwvalidvn2  =  slave_bind_if.vwvalidvn2  ;
+  assign  slave_if.varqosvn1   =  slave_bind_if.varqosvn1   ;
+  assign  slave_if.varvalidvn1 =  slave_bind_if.varvalidvn1 ;
+  assign  slave_if.vawqosvn1   =  slave_bind_if.vawqosvn1   ;
+  assign  slave_if.vawvalidvn1 =  slave_bind_if.vawvalidvn1 ;
+  assign  slave_if.vwvalidvn1  =  slave_bind_if.vwvalidvn1  ;
+  assign  slave_if.varqosvn0   =  slave_bind_if.varqosvn0   ;
+  assign  slave_if.varvalidvn0 =  slave_bind_if.varvalidvn0 ;
+  assign  slave_if.vawqosvn0   =  slave_bind_if.vawqosvn0   ;
+  assign  slave_if.vawvalidvn0 =  slave_bind_if.vawvalidvn0 ;
+  assign  slave_if.vwvalidvn0  =  slave_bind_if.vwvalidvn0  ;
+ `endif
+  assign  slave_if.acvmidext   = slave_bind_if.acvmidext;
+  assign  slave_if.actrace     = slave_bind_if.actrace;
+  assign  slave_if.btrace      = slave_bind_if.btrace;
+  assign  slave_if.bcomp       = slave_bind_if.bcomp;
+  assign  slave_if.btagmatch   = slave_bind_if.btagmatch;
+  assign  slave_if.rpoison     = slave_bind_if.rpoison;
+  assign  slave_if.rtag        = slave_bind_if.rtag;
+  assign  slave_if.rtrace      = slave_bind_if.rtrace;
+`endif  
+  // inouts
+  // If slave is Active
+  assign slave_bind_if.awready  =  (is_active == 0) ? 'bz : slave_if.awready;
+  assign slave_bind_if.awreadychk  =  (is_active == 0) ? 'bz : slave_if.awreadychk;
+  assign slave_bind_if.arready  =  (is_active == 0) ? 'bz : slave_if.arready;
+  assign slave_bind_if.arreadychk  =  (is_active == 0) ? 'bz : slave_if.arreadychk;
+  assign slave_bind_if.rvalid   =  (is_active == 0) ? 'bz : slave_if.rvalid;
+  assign slave_bind_if.rvalidchk   =  (is_active == 0) ? 'bz : slave_if.rvalidchk;
+  assign slave_bind_if.rlast    =  (is_active == 0) ? 'bz : slave_if.rlast;
+  assign slave_bind_if.rlastchk    =  (is_active == 0) ? 'bz : slave_if.rlastchk;
+  assign slave_bind_if.rdata    =  (is_active == 0) ? 'bz : slave_if.rdata;
+  assign slave_bind_if.rdatachk =  (is_active == 0) ? 'bz : slave_if.rdatachk;
+  assign slave_bind_if.rresp    =  (is_active == 0) ? 'bz : slave_if.rresp;
+  assign slave_bind_if.rrespchk    =  (is_active == 0) ? 'bz : slave_if.rrespchk;
+  assign slave_bind_if.rid      =  (is_active == 0) ? 'bz : slave_if.rid;
+  assign slave_bind_if.ridchk   =  (is_active == 0) ? 'bz : slave_if.ridchk;
+  assign slave_bind_if.ridunq   =  (is_active == 0) ? 'bz : slave_if.ridunq;
+  assign slave_bind_if.wready   =  (is_active == 0) ? 'bz : slave_if.wready;
+  assign slave_bind_if.wreadychk   =  (is_active == 0) ? 'bz : slave_if.wreadychk;
+  assign slave_bind_if.bvalid   =  (is_active == 0) ? 'bz : slave_if.bvalid;
+  assign slave_bind_if.bvalidchk   =  (is_active == 0) ? 'bz : slave_if.bvalidchk;
+  assign slave_bind_if.bresp    =  (is_active == 0) ? 'bz : slave_if.bresp;
+  assign slave_bind_if.brespchk    =  (is_active == 0) ? 'bz : slave_if.brespchk;
+  assign slave_bind_if.bid      =  (is_active == 0) ? 'bz : slave_if.bid;
+  assign slave_bind_if.bidchk   =  (is_active == 0) ? 'bz : slave_if.bidchk;
+  assign slave_bind_if.bidunq   =  (is_active == 0) ? 'bz : slave_if.bidunq;
+  assign slave_bind_if.ruser    =  (is_active == 0) ? 'bz : slave_if.ruser;
+  assign slave_bind_if.ruserchk =  (is_active == 0) ? 'bz : slave_if.ruserchk;
+  assign slave_bind_if.buser    =  (is_active == 0) ? 'bz : slave_if.buser;
+  assign slave_bind_if.buserchk =  (is_active == 0) ? 'bz : slave_if.buserchk;
+  assign slave_bind_if.acvalid  =  (is_active == 0) ? 'bz : slave_if.acvalid;
+  assign slave_bind_if.acvalidchk  =  (is_active == 0) ? 'bz : slave_if.acvalidchk;
+  assign slave_bind_if.acwakeup =  (is_active == 0) ? 'bz : slave_if.acwakeup;
+  assign slave_bind_if.acwakeupchk =  (is_active == 0) ? 'bz : slave_if.acwakeupchk;
+  assign slave_bind_if.acaddr   =  (is_active == 0) ? 'bz : slave_if.acaddr;
+  assign slave_bind_if.acaddrchk=  (is_active == 0) ? 'bz : slave_if.acaddrchk;
+  assign slave_bind_if.acsnoop  =  (is_active == 0) ? 'bz : slave_if.acsnoop;
+  assign slave_bind_if.acprot   =  (is_active == 0) ? 'bz : slave_if.acprot;
+  assign slave_bind_if.crready  =  (is_active == 0) ? 'bz : slave_if.crready;
+  assign slave_bind_if.crreadychk  =  (is_active == 0) ? 'bz : slave_if.crreadychk;
+  assign slave_bind_if.tready   =  (is_active == 0) ? 'bz : slave_if.tready;
+`ifdef SVT_AXI_QVN_ENABLE
+  assign  slave_bind_if.varreadyvn3 = (is_active == 0) ? 'bz : slave_if.varreadyvn3 ;
+  assign  slave_bind_if.vawreadyvn3 = (is_active == 0) ? 'bz : slave_if.vawreadyvn3 ;
+  assign  slave_bind_if.vwreadyvn3  = (is_active == 0) ? 'bz : slave_if.vwreadyvn3  ;
+  assign  slave_bind_if.varreadyvn2 = (is_active == 0) ? 'bz : slave_if.varreadyvn2 ;
+  assign  slave_bind_if.vawreadyvn2 = (is_active == 0) ? 'bz : slave_if.vawreadyvn2 ;
+  assign  slave_bind_if.vwreadyvn2  = (is_active == 0) ? 'bz : slave_if.vwreadyvn2  ;
+  assign  slave_bind_if.varreadyvn1 = (is_active == 0) ? 'bz : slave_if.varreadyvn1 ;
+  assign  slave_bind_if.vawreadyvn1 = (is_active == 0) ? 'bz : slave_if.vawreadyvn1 ;
+  assign  slave_bind_if.vwreadyvn1  = (is_active == 0) ? 'bz : slave_if.vwreadyvn1  ;
+  assign  slave_bind_if.varreadyvn0 = (is_active == 0) ? 'bz : slave_if.varreadyvn0 ;
+  assign  slave_bind_if.vawreadyvn0 = (is_active == 0) ? 'bz : slave_if.vawreadyvn0 ;
+  assign  slave_bind_if.vwreadyvn0  = (is_active == 0) ? 'bz : slave_if.vwreadyvn0  ;
+`endif
+  assign slave_bind_if.awtrace        = (is_active == 0) ? 'bz : slave_if.awtrace;
+  assign slave_bind_if.awmmusecsid    = (is_active == 0) ? 'bz : slave_if.awmmusecsid;
+  assign slave_bind_if.awmmusid       = (is_active == 0) ? 'bz : slave_if.awmmusid;
+  assign slave_bind_if.awmmussidv     = (is_active == 0) ? 'bz : slave_if.awmmussidv;
+  assign slave_bind_if.awmmussid      = (is_active == 0) ? 'bz : slave_if.awmmussid;
+  assign slave_bind_if.awmmuatst      = (is_active == 0) ? 'bz : slave_if.awmmuatst;
+  assign slave_bind_if.awatop         = (is_active == 0) ? 'bz : slave_if.awatop;
+  assign slave_bind_if.awtagop        = (is_active == 0) ? 'bz : slave_if.awtagop;
+  assign slave_bind_if.awstashnid     = (is_active == 0) ? 'bz : slave_if.awstashnid;
+  assign slave_bind_if.awstashlpid    = (is_active == 0) ? 'bz : slave_if.awstashlpid;
+  assign slave_bind_if.awstashnid_en  = (is_active == 0) ?  'bz : slave_if.awstashnid;
+  assign slave_bind_if.awstashlpid_en = (is_active == 0) ? 'bz : slave_if.awstashlpid;
+  assign slave_bind_if.artrace        = (is_active == 0) ?  'bz : slave_if.artrace;
+  assign slave_bind_if.armmusecsid    = (is_active == 0) ? 'bz : slave_if.armmusecsid;
+  assign slave_bind_if.armmusid       = (is_active == 0) ? 'bz : slave_if.armmusid;
+  assign slave_bind_if.armmussidv     = (is_active == 0) ? 'bz : slave_if.armmussidv;
+  assign slave_bind_if.armmussid      = (is_active == 0) ? 'bz : slave_if.armmussid;
+  assign slave_bind_if.armmuatst      = (is_active == 0) ? 'bz : slave_if.armmuatst;
+  assign slave_bind_if.wtrace         = (is_active == 0) ? 'bz : slave_if.wtrace;
+  assign slave_bind_if.wpoison        = (is_active == 0) ? 'bz : slave_if.wpoison;
+  assign slave_bind_if.wtag           = (is_active == 0) ? 'bz : slave_if.wtag;
+  assign slave_bind_if.wtagupdate     = (is_active == 0) ? 'bz : slave_if.wtagupdate;
+  assign slave_bind_if.cdpoison       = (is_active == 0) ? 'bz : slave_if.cdpoison;
+  assign slave_bind_if.cdtrace        = (is_active == 0) ? 'bz : slave_if.cdtrace;
+  assign slave_bind_if.crtrace        = (is_active == 0) ? 'bz : slave_if.crtrace;
+  assign slave_bind_if.rchunkv        = (is_active == 0) ? 'bz : slave_if.rchunkv;
+  assign slave_bind_if.rchunknum      = (is_active == 0) ? 'bz : slave_if.rchunknum;
+  assign slave_bind_if.rchunkstrb     = (is_active == 0) ? 'bz : slave_if.rchunkstrb;
+
+  always @(*)
+    begin
+      // If slave is Passive : inout will be inputs for passive components
+     if(is_active == 0) begin
+       slave_if.awready  =  slave_bind_if.awready;
+       slave_if.awreadychk  =  slave_bind_if.awreadychk;
+       slave_if.arready  =  slave_bind_if.arready;
+       slave_if.arreadychk  =  slave_bind_if.arreadychk;
+       slave_if.rvalid   =  slave_bind_if.rvalid;
+       slave_if.rvalidchk   =  slave_bind_if.rvalidchk;
+       slave_if.rlast    =  slave_bind_if.rlast;
+       slave_if.rlastchk    =  slave_bind_if.rlastchk;
+       slave_if.rdata    =  slave_bind_if.rdata;
+       slave_if.rdatachk =  slave_bind_if.rdatachk;
+       slave_if.rresp    =  slave_bind_if.rresp;
+       slave_if.rrespchk    =  slave_bind_if.rrespchk;
+       slave_if.rid      =  slave_bind_if.rid;
+       slave_if.ridchk   =  slave_bind_if.ridchk;
+       slave_if.ridunq   =  slave_bind_if.ridunq;
+       slave_if.wready   =  slave_bind_if.wready;
+       slave_if.wreadychk   =  slave_bind_if.wreadychk;
+       slave_if.bvalid   =  slave_bind_if.bvalid;
+       slave_if.bvalidchk   =  slave_bind_if.bvalidchk;
+       slave_if.bresp    =  slave_bind_if.bresp;
+       slave_if.brespchk    =  slave_bind_if.brespchk;
+       slave_if.bid      =  slave_bind_if.bid;
+       slave_if.bidchk   =  slave_bind_if.bidchk;
+       slave_if.bidunq   =  slave_bind_if.bidunq;
+       slave_if.ruser    =  slave_bind_if.ruser;
+       slave_if.ruserchk =  slave_bind_if.ruserchk;
+       slave_if.buser    =  slave_bind_if.buser;
+       slave_if.buserchk =  slave_bind_if.buserchk;
+       slave_if.acvalid  =  slave_bind_if.acvalid;
+       slave_if.acvalidchk  =  slave_bind_if.acvalidchk;
+       slave_if.acwakeup =  slave_bind_if.acwakeup;
+       slave_if.acwakeupchk =  slave_bind_if.acwakeupchk;
+       slave_if.acaddr   =  slave_bind_if.acaddr;
+       slave_if.acaddrchk=  slave_bind_if.acaddrchk;
+       slave_if.acsnoop  =  slave_bind_if.acsnoop;
+       slave_if.acprot   =  slave_bind_if.acprot;
+       slave_if.crready  =  slave_bind_if.crready;
+       slave_if.crreadychk  =  slave_bind_if.crreadychk;
+       slave_if.tready   =  slave_bind_if.tready;
+     `ifdef SVT_AXI_QVN_ENABLE
+       slave_if.varreadyvn3 = slave_bind_if.varreadyvn3 ;
+       slave_if.vawreadyvn3 = slave_bind_if.vawreadyvn3 ;
+       slave_if.vwreadyvn3  = slave_bind_if.vwreadyvn3  ;
+       slave_if.varreadyvn2 = slave_bind_if.varreadyvn2 ;
+       slave_if.vawreadyvn2 = slave_bind_if.vawreadyvn2 ;
+       slave_if.vwreadyvn2  = slave_bind_if.vwreadyvn2  ;
+       slave_if.varreadyvn1 = slave_bind_if.varreadyvn1 ;
+       slave_if.vawreadyvn1 = slave_bind_if.vawreadyvn1 ;
+       slave_if.vwreadyvn1  = slave_bind_if.vwreadyvn1  ;
+       slave_if.varreadyvn0 = slave_bind_if.varreadyvn0 ;
+       slave_if.vawreadyvn0 = slave_bind_if.vawreadyvn0 ;
+       slave_if.vwreadyvn0  = slave_bind_if.vwreadyvn0  ;
+     `endif
+       slave_if.awtrace        =  slave_bind_if.awtrace;
+       slave_if.awmmusecsid    =  slave_bind_if.awmmusecsid;
+       slave_if.awmmusid       =  slave_bind_if.awmmusid;
+       slave_if.awmmussidv     =  slave_bind_if.awmmussidv;
+       slave_if.awmmussid      =  slave_bind_if.awmmussid;
+       slave_if.awmmuatst      =  slave_bind_if.awmmuatst;
+       slave_if.awatop         =  slave_bind_if.awatop;
+       slave_if.awtagop        =  slave_bind_if.awtagop;
+       slave_if.awstashnid     =  slave_bind_if.awstashnid;
+       slave_if.awstashlpid    =  slave_bind_if.awstashlpid;
+       slave_if.awstashnid_en  =  slave_bind_if.awstashnid;
+       slave_if.awstashlpid_en =  slave_bind_if.awstashlpid;
+       slave_if.artrace        =  slave_bind_if.artrace;
+       slave_if.armmusecsid    =  slave_bind_if.armmusecsid;
+       slave_if.armmusid       =  slave_bind_if.armmusid;
+       slave_if.armmussidv     =  slave_bind_if.armmussidv;
+       slave_if.armmussid      =  slave_bind_if.armmussid;
+       slave_if.armmuatst      =  slave_bind_if.armmuatst;
+       slave_if.wtrace         =  slave_bind_if.wtrace;
+       slave_if.wpoison        =  slave_bind_if.wpoison;
+       slave_if.wtag           =  slave_bind_if.wtag;
+       slave_if.wtagupdate     =  slave_bind_if.wtagupdate;
+       slave_if.cdpoison       =  slave_bind_if.cdpoison;
+       slave_if.cdtrace        =  slave_bind_if.cdtrace;
+       slave_if.crtrace        =  slave_bind_if.crtrace;
+       slave_if.rchunkv        =  slave_bind_if.rchunkv;
+       slave_if.rchunknum      =  slave_bind_if.rchunknum;
+       slave_if.rchunkstrb     =  slave_bind_if.rchunkstrb;
+     end
+  end
+
+endmodule
+
+`endif // GUARD_SVT_AXI_SLAVE_BIND_IF_SVI
+
+
+
+

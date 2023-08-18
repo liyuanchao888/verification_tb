@@ -1,0 +1,11 @@
+
+`ifndef GUARD_SVT_AHB_SYSTEM_MONITOR_SOURCE_VMM_SVI
+`define GUARD_SVT_AHB_SYSTEM_MONITOR_SOURCE_VMM_SVI
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_system_monitor_svt,R-2020.12,svt_ahb_system_monitor_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_system_monitor_svt,R-2020.12,svt_ahb_system_monitor.vmm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_system_monitor_svt,R-2020.12,svt_ahb_system_monitor_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_system_monitor_svt,R-2020.12,svt_ahb_system_monitor_def_cov_data_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_system_monitor_svt,R-2020.12,svt_ahb_system_monitor_def_cov_callback)
+
+`endif //GUARD_SVT_AHB_SYSTEM_MONITOR_SOURCE_VMM_SVI

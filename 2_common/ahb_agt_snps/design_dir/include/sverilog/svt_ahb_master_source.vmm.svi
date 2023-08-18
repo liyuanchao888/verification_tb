@@ -1,0 +1,13 @@
+
+`ifndef GUARD_SVT_AHB_MASTER_SOURCE_VMM_SVI
+`define GUARD_SVT_AHB_MASTER_SOURCE_VMM_SVI
+
+`include "svt_ahb_source.vmm.svi"
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_common)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_master_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_master_svt,R-2020.12,svt_ahb_master_active_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_master_svt,R-2020.12,svt_ahb_master.vmm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_master_svt,R-2020.12,svt_ahb_master_callback)
+
+`endif //GUARD_SVT_AHB_MASTER_SOURCE_VMM_SVI

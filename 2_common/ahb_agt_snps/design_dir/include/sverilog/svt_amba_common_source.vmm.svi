@@ -1,0 +1,10 @@
+
+`ifndef GUARD_SVT_AMBA_COMMON_SOURCE_VMM_SVI
+`define GUARD_SVT_AMBA_COMMON_SOURCE_VMM_SVI
+
+`ifndef DESIGNWARE_INCDIR
+  `include "svt_source.vmm.svi"
+`endif
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_perf_base) 
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_addr_mapper) 
+`endif

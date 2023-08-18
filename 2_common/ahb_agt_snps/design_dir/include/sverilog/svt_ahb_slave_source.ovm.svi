@@ -1,0 +1,13 @@
+
+`ifndef GUARD_SVT_AHB_SLAVE_SOURCE_OVM_SVI
+`define GUARD_SVT_AHB_SLAVE_SOURCE_OVM_SVI
+
+`include "svt_ahb_source.ovm.svi"
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_common)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_slave_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_slave_svt,R-2020.12,svt_ahb_slave_active_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_slave_svt,R-2020.12,svt_ahb_slave.ovm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_slave_svt,R-2020.12,svt_ahb_slave_callback)
+
+`endif //GUARD_SVT_AHB_SLAVE_SOURCE_OVM_SVI

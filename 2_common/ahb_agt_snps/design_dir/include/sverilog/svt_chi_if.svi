@@ -1,0 +1,1791 @@
+//=======================================================================
+// COPYRIGHT (C) 2013 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//
+//-----------------------------------------------------------------------
+
+`ifndef GUARD_SVT_CHI_IF_SVI
+`define GUARD_SVT_CHI_IF_SVI
+
+/** @cond HIDE_AXI_IN_CHI */
+// Include the AXI System Interface
+`include "svt_axi_if.svi"
+/** @endcond */
+
+`include "svt_chi_port_defines.svi"
+
+`include "svt_chi_rn_if.svi"
+`include "svt_chi_sn_if.svi"
+`include "svt_chi_ic_rn_if.svi"
+`include "svt_chi_ic_sn_if.svi"
+
+/**
+    @grouphdr Interfaces svt_chi_if Top Level interface for CHI VIP
+ */
+
+
+typedef virtual svt_chi_rn_if CHI_RN_IF;
+typedef virtual svt_chi_sn_if CHI_SN_IF;
+typedef virtual svt_chi_ic_rn_if CHI_IC_RN_IF;
+typedef virtual svt_chi_ic_sn_if CHI_IC_SN_IF;
+typedef virtual svt_axi_if AXI_IF;
+
+// Setup the macros for the clock signal to be passed to
+// RN and SN sub interfaces.
+`ifndef SVT_CHI_ENABLE_MULTI_CLOCK
+  `define SVT_CHI_RN_CLK clk
+  `define SVT_CHI_SN_CLK clk
+`else
+  `define SVT_CHI_RN_CLK rn_clk
+  `define SVT_CHI_SN_CLK sn_clk
+`endif
+
+// Setup the macros for the reset signal to be passed to
+// RN and SN sub interfaces.
+`ifndef SVT_CHI_ENABLE_MULTI_RESET
+  `define SVT_CHI_RN_RESETN resetn
+  `define SVT_CHI_SN_RESETN resetn
+`else
+  `define SVT_CHI_RN_RESETN rn_resetn
+  `define SVT_CHI_SN_RESETN sn_resetn
+`endif
+/**
+ * @groupname svt_chi_if
+ * <b>General description:</b><p>
+ * CHI VIP provides the SystemVerilog interface which can be used to connect
+ * the VIP to the DUT. A top level interface svt_chi_if is defined. The top
+ * level interface contains an array of RN & SN interfaces. By default, 16 RN
+ * and 16 SN interfaces are defined in the top level interface.
+ * Currently, the maximum RN and SN interfaces supported is 128. The number of
+ * RN and SN interfaces in top level interface can be controlled using macros
+ * the SVT_CHI_MAX_NUM_RNS_{0..128} and SVT_CHI_MAX_NUM_SNS_{0..128} respectively.
+ * For example, if you want to use 8 RN interfaces and 10 SN interfaces, you can
+ * define following macros when compiling the VIP:
+ * <li> SVT_CHI_MAX_NUM_RNS_8<br>
+ * <li> SVT_CHI_MAX_NUM_SNS_10<br>
+ * Please refer to User Guide section Overriding System Constants on how to
+ * provide these macro definitions to VIP.
+ *
+ * <b>Sub-interfaces:</b><br>
+ *
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Interface Name </b></th><th bgcolor="#dddddd"> Interface Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><a class="ClassLink" href="##intf_svt_chi_rn_if"><b> svt_chi_rn_if </b></td><td> RN Interface used by RN VIP component contained within the CHI System component</b></td><tr>
+ *    <tr><td><a class="ClassLink" href="##intf_svt_chi_sn_if"><b> svt_chi_sn_if </b></td><td> Sn Interface used by sn VIP component contained within the CHI System component</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>Clock signal description:</b><br>
+ * - Common clock mode - Default usage:
+ *   - Clock signal 'clk' is provided to the  svt_chi_if through interface port list. 
+ *   - This clock signal is then passed down to the sub-interfaces for RN, SN.
+ *   .
+ * - Multi clock mode - Usage with port specific clock:
+ *   - This feature is enabled by defining the following compile time macro 
+ *     `SVT_CHI_ENABLE_MULTI_CLOCK
+ *   - An array of clocks meant for the each RN [(`SVT_CHI_MAX_NUM_RNS-1):0] is supplied 
+ *     through interface port rn_clk[(`SVT_CHI_MAX_NUM_RNS-1):0]. The RN sub-interface
+ *     for a given index 'i' rn_if[i], ic_rn_if[i] is supplied with rn_clk[i].
+ *   - An array of clocks meant for the each SN [(`SVT_CHI_MAX_NUM_SNS-1):0] is supplied 
+ *     through interface port sn_clk[(`SVT_CHI_MAX_NUM_SNS-1):0]. The SN sub-interface
+ *     for a given index 'i' sn_if[i], ic_sn_if[i] is supplied with sn_clk[i].
+ *   .
+ * .
+ * 
+ * <b>Reset signal description:</b><br>
+ * - Common reset mode - Default usage:
+ *   - Reset signal 'resetn' is provided to the  svt_chi_if through interface port list. 
+ *   - This rest signal is then passed down to the sub-interfaces for RN, SN.
+ *   .
+ * - Multi reset mode - Usage with port specific reset:
+ *   - This feature is enabled by defining the following compile time macro 
+ *     `SVT_CHI_ENABLE_MULTI_RESET
+ *   - An array of resetn signals meant for the each RN [(`SVT_CHI_MAX_NUM_RNS-1):0] is supplied 
+ *     through interface port rn_resetn[(`SVT_CHI_MAX_NUM_RNS-1):0]. The RN sub-interface
+ *     for a given index 'i' rn_if[i], ic_rn_if[i] is supplied with rn_resetn[i].
+ *   - An array of resetn signals meant for the each SN [(`SVT_CHI_MAX_NUM_SNS-1):0] is supplied 
+ *     through interface port sn_resetn[(`SVT_CHI_MAX_NUM_SNS-1):0]. The SN sub-interface
+ *     for a given index 'i' sn_if[i], ic_sn_if[i] is supplied with sn_resetn[i].
+ *   .
+ * .
+ * <b> Following is the interface definition: </b> <br><br>
+ * interface svt_chi_if ( <br>
+ * <b>\`ifndef SVT_CHI_ENABLE_MULTI_CLOCK </b><br>
+ *                       input logic clk, <br>
+ * <b>\`else </b><br>
+ *                       input logic rn_clk[(\`SVT_CHI_MAX_NUM_RNS-1):0], <br>
+ *                       input logic sn_clk[(\`SVT_CHI_MAX_NUM_SNS-1):0], <br>
+ * <b>\`endif </b> <br> 
+ * <b>\`ifndef SVT_CHI_ENABLE_MULTI_RESET </b><br>
+ *                       input logic resetn <br>
+ * <b>\`else </b><br>
+ *                       input logic rn_resetn[(\`SVT_CHI_MAX_NUM_RNS-1):0], <br>
+ *                       input logic sn_resetn[(\`SVT_CHI_MAX_NUM_SNS-1):0] <br>
+ * <b>\`endif </b> <br>
+ *                       ); <br>
+ * 
+ */
+
+interface svt_chi_if (
+`ifndef SVT_CHI_ENABLE_MULTI_CLOCK
+                      input logic clk,
+`else
+                      input logic rn_clk[(`SVT_CHI_MAX_NUM_RNS-1):0],
+                      input logic sn_clk[(`SVT_CHI_MAX_NUM_SNS-1):0],
+`endif
+`ifndef SVT_CHI_ENABLE_MULTI_RESET
+                      input logic resetn
+`else
+                      input logic rn_resetn[(`SVT_CHI_MAX_NUM_RNS-1):0],
+                      input logic sn_resetn[(`SVT_CHI_MAX_NUM_SNS-1):0]
+`endif                
+                      );
+
+`ifndef SVT_CHI_MAX_NUM_RNS_0
+  svt_chi_rn_if rn_if[`SVT_CHI_MAX_NUM_RNS-1:0](`SVT_CHI_RN_CLK, `SVT_CHI_RN_RESETN);
+  svt_chi_ic_rn_if ic_rn_if[`SVT_CHI_MAX_NUM_RNS-1:0](`SVT_CHI_RN_CLK, `SVT_CHI_RN_RESETN);
+`endif
+`ifndef SVT_CHI_MAX_NUM_SNS_0
+  svt_chi_sn_if  sn_if[`SVT_CHI_MAX_NUM_SNS-1:0](`SVT_CHI_SN_CLK, `SVT_CHI_SN_RESETN);
+  svt_chi_ic_sn_if  ic_sn_if[`SVT_CHI_MAX_NUM_SNS-1:0](`SVT_CHI_SN_CLK, `SVT_CHI_SN_RESETN);
+`endif
+  
+  /** @cond HIDE_AXI_IN_CHI */
+  /** AXI System Interface */
+  svt_axi_if axi_if();
+  /** @endcond */
+  
+/** @cond PRIVATE */
+  function CHI_RN_IF get_rn_if(int idx);
+    case (idx)
+`ifdef SVT_CHI_VALID_RN_IDX_0
+      0 : get_rn_if = svt_chi_if.rn_if[0];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_1
+      1 : get_rn_if = svt_chi_if.rn_if[1];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_2
+      2 : get_rn_if = svt_chi_if.rn_if[2];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_3
+      3 : get_rn_if = svt_chi_if.rn_if[3];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_4
+      4 : get_rn_if = svt_chi_if.rn_if[4];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_5
+      5 : get_rn_if = svt_chi_if.rn_if[5];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_6
+      6 : get_rn_if = svt_chi_if.rn_if[6];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_7
+      7 : get_rn_if = svt_chi_if.rn_if[7];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_8
+      8 : get_rn_if = svt_chi_if.rn_if[8];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_9
+      9 : get_rn_if = svt_chi_if.rn_if[9];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_10
+      10 : get_rn_if = svt_chi_if.rn_if[10];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_11
+      11 : get_rn_if = svt_chi_if.rn_if[11];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_12
+      12 : get_rn_if = svt_chi_if.rn_if[12];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_13
+      13 : get_rn_if = svt_chi_if.rn_if[13];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_14
+      14 : get_rn_if = svt_chi_if.rn_if[14];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_15
+      15 : get_rn_if = svt_chi_if.rn_if[15];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_16
+      16 : get_rn_if = svt_chi_if.rn_if[16];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_17
+      17 : get_rn_if = svt_chi_if.rn_if[17];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_18
+      18 : get_rn_if = svt_chi_if.rn_if[18];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_19
+      19 : get_rn_if = svt_chi_if.rn_if[19];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_20
+      20 : get_rn_if = svt_chi_if.rn_if[20];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_21
+      21 : get_rn_if = svt_chi_if.rn_if[21];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_22
+      22 : get_rn_if = svt_chi_if.rn_if[22];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_23
+      23 : get_rn_if = svt_chi_if.rn_if[23];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_24
+      24 : get_rn_if = svt_chi_if.rn_if[24];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_25
+      25 : get_rn_if = svt_chi_if.rn_if[25];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_26
+      26 : get_rn_if = svt_chi_if.rn_if[26];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_27
+      27 : get_rn_if = svt_chi_if.rn_if[27];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_28
+      28 : get_rn_if = svt_chi_if.rn_if[28];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_29
+      29 : get_rn_if = svt_chi_if.rn_if[29];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_30
+      30 : get_rn_if = svt_chi_if.rn_if[30];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_31
+      31 : get_rn_if = svt_chi_if.rn_if[31];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_32
+      32 : get_rn_if = svt_chi_if.rn_if[32];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_33
+      33 : get_rn_if = svt_chi_if.rn_if[33];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_34
+      34 : get_rn_if = svt_chi_if.rn_if[34];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_35
+      35 : get_rn_if = svt_chi_if.rn_if[35];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_36
+      36 : get_rn_if = svt_chi_if.rn_if[36];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_37
+      37 : get_rn_if = svt_chi_if.rn_if[37];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_38
+      38 : get_rn_if = svt_chi_if.rn_if[38];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_39
+      39 : get_rn_if = svt_chi_if.rn_if[39];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_40
+      40 : get_rn_if = svt_chi_if.rn_if[40];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_41
+      41 : get_rn_if = svt_chi_if.rn_if[41];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_42
+      42 : get_rn_if = svt_chi_if.rn_if[42];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_43
+      43 : get_rn_if = svt_chi_if.rn_if[43];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_44
+      44 : get_rn_if = svt_chi_if.rn_if[44];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_45
+      45 : get_rn_if = svt_chi_if.rn_if[45];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_46
+      46 : get_rn_if = svt_chi_if.rn_if[46];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_47
+      47 : get_rn_if = svt_chi_if.rn_if[47];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_48
+      48 : get_rn_if = svt_chi_if.rn_if[48];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_49
+      49 : get_rn_if = svt_chi_if.rn_if[49];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_50
+      50 : get_rn_if = svt_chi_if.rn_if[50];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_51
+      51 : get_rn_if = svt_chi_if.rn_if[51];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_52
+      52 : get_rn_if = svt_chi_if.rn_if[52];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_53
+      53 : get_rn_if = svt_chi_if.rn_if[53];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_54
+      54 : get_rn_if = svt_chi_if.rn_if[54];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_55
+      55 : get_rn_if = svt_chi_if.rn_if[55];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_56
+      56 : get_rn_if = svt_chi_if.rn_if[56];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_57
+      57 : get_rn_if = svt_chi_if.rn_if[57];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_58
+      58 : get_rn_if = svt_chi_if.rn_if[58];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_59
+      59 : get_rn_if = svt_chi_if.rn_if[59];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_60
+      60 : get_rn_if = svt_chi_if.rn_if[60];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_61
+      61 : get_rn_if = svt_chi_if.rn_if[61];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_62
+      62 : get_rn_if = svt_chi_if.rn_if[62];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_63
+      63 : get_rn_if = svt_chi_if.rn_if[63];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_64
+      64 : get_rn_if = svt_chi_if.rn_if[64];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_65
+      65 : get_rn_if = svt_chi_if.rn_if[65];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_66
+      66 : get_rn_if = svt_chi_if.rn_if[66];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_67
+      67 : get_rn_if = svt_chi_if.rn_if[67];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_68
+      68 : get_rn_if = svt_chi_if.rn_if[68];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_69
+      69 : get_rn_if = svt_chi_if.rn_if[69];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_70
+      70 : get_rn_if = svt_chi_if.rn_if[70];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_71
+      71 : get_rn_if = svt_chi_if.rn_if[71];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_72
+      72 : get_rn_if = svt_chi_if.rn_if[72];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_73
+      73 : get_rn_if = svt_chi_if.rn_if[73];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_74
+      74 : get_rn_if = svt_chi_if.rn_if[74];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_75
+      75 : get_rn_if = svt_chi_if.rn_if[75];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_76
+      76 : get_rn_if = svt_chi_if.rn_if[76];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_77
+      77 : get_rn_if = svt_chi_if.rn_if[77];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_78
+      78 : get_rn_if = svt_chi_if.rn_if[78];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_79
+      79 : get_rn_if = svt_chi_if.rn_if[79];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_80
+      80 : get_rn_if = svt_chi_if.rn_if[80];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_81
+      81 : get_rn_if = svt_chi_if.rn_if[81];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_82
+      82 : get_rn_if = svt_chi_if.rn_if[82];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_83
+      83 : get_rn_if = svt_chi_if.rn_if[83];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_84
+      84 : get_rn_if = svt_chi_if.rn_if[84];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_85
+      85 : get_rn_if = svt_chi_if.rn_if[85];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_86
+      86 : get_rn_if = svt_chi_if.rn_if[86];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_87
+      87 : get_rn_if = svt_chi_if.rn_if[87];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_88
+      88 : get_rn_if = svt_chi_if.rn_if[88];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_89
+      89 : get_rn_if = svt_chi_if.rn_if[89];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_90
+      90 : get_rn_if = svt_chi_if.rn_if[90];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_91
+      91 : get_rn_if = svt_chi_if.rn_if[91];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_92
+      92 : get_rn_if = svt_chi_if.rn_if[92];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_93
+      93 : get_rn_if = svt_chi_if.rn_if[93];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_94
+      94 : get_rn_if = svt_chi_if.rn_if[94];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_95
+      95 : get_rn_if = svt_chi_if.rn_if[95];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_96
+      96 : get_rn_if = svt_chi_if.rn_if[96];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_97
+      97 : get_rn_if = svt_chi_if.rn_if[97];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_98
+      98 : get_rn_if = svt_chi_if.rn_if[98];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_99
+      99 : get_rn_if = svt_chi_if.rn_if[99];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_100
+      100 : get_rn_if = svt_chi_if.rn_if[100];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_101
+      101 : get_rn_if = svt_chi_if.rn_if[101];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_102
+      102 : get_rn_if = svt_chi_if.rn_if[102];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_103
+      103 : get_rn_if = svt_chi_if.rn_if[103];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_104
+      104 : get_rn_if = svt_chi_if.rn_if[104];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_105
+      105 : get_rn_if = svt_chi_if.rn_if[105];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_106
+      106 : get_rn_if = svt_chi_if.rn_if[106];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_107
+      107 : get_rn_if = svt_chi_if.rn_if[107];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_108
+      108 : get_rn_if = svt_chi_if.rn_if[108];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_109
+      109 : get_rn_if = svt_chi_if.rn_if[109];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_110
+      110 : get_rn_if = svt_chi_if.rn_if[110];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_111
+      111 : get_rn_if = svt_chi_if.rn_if[111];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_112
+      112 : get_rn_if = svt_chi_if.rn_if[112];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_113
+      113 : get_rn_if = svt_chi_if.rn_if[113];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_114
+      114 : get_rn_if = svt_chi_if.rn_if[114];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_115
+      115 : get_rn_if = svt_chi_if.rn_if[115];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_116
+      116 : get_rn_if = svt_chi_if.rn_if[116];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_117
+      117 : get_rn_if = svt_chi_if.rn_if[117];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_118
+      118 : get_rn_if = svt_chi_if.rn_if[118];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_119
+      119 : get_rn_if = svt_chi_if.rn_if[119];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_120
+      120 : get_rn_if = svt_chi_if.rn_if[120];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_121
+      121 : get_rn_if = svt_chi_if.rn_if[121];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_122
+      122 : get_rn_if = svt_chi_if.rn_if[122];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_123
+      123 : get_rn_if = svt_chi_if.rn_if[123];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_124
+      124 : get_rn_if = svt_chi_if.rn_if[124];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_125
+      125 : get_rn_if = svt_chi_if.rn_if[125];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_126
+      126 : get_rn_if = svt_chi_if.rn_if[126];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_127
+      127 : get_rn_if = svt_chi_if.rn_if[127];
+`endif
+      default: begin
+        $display("svt_chi_if::get_rn_if(): RN index %0d not supported.", idx);
+        $finish;
+      end
+    endcase
+  endfunction
+/** @endcond */
+
+/** @cond PRIVATE */
+  function CHI_SN_IF get_sn_if(int idx);
+    case (idx)
+`ifdef SVT_CHI_VALID_SN_IDX_0
+      0 : get_sn_if = svt_chi_if.sn_if[0];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_1
+      1 : get_sn_if = svt_chi_if.sn_if[1];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_2
+      2 : get_sn_if = svt_chi_if.sn_if[2];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_3
+      3 : get_sn_if = svt_chi_if.sn_if[3];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_4
+      4 : get_sn_if = svt_chi_if.sn_if[4];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_5
+      5 : get_sn_if = svt_chi_if.sn_if[5];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_6
+      6 : get_sn_if = svt_chi_if.sn_if[6];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_7
+      7 : get_sn_if = svt_chi_if.sn_if[7];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_8
+      8 : get_sn_if = svt_chi_if.sn_if[8];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_9
+      9 : get_sn_if = svt_chi_if.sn_if[9];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_10
+      10 : get_sn_if = svt_chi_if.sn_if[10];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_11
+      11 : get_sn_if = svt_chi_if.sn_if[11];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_12
+      12 : get_sn_if = svt_chi_if.sn_if[12];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_13
+      13 : get_sn_if = svt_chi_if.sn_if[13];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_14
+      14 : get_sn_if = svt_chi_if.sn_if[14];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_15
+      15 : get_sn_if = svt_chi_if.sn_if[15];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_16
+      16 : get_sn_if = svt_chi_if.sn_if[16];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_17
+      17 : get_sn_if = svt_chi_if.sn_if[17];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_18
+      18 : get_sn_if = svt_chi_if.sn_if[18];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_19
+      19 : get_sn_if = svt_chi_if.sn_if[19];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_20
+      20 : get_sn_if = svt_chi_if.sn_if[20];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_21
+      21 : get_sn_if = svt_chi_if.sn_if[21];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_22
+      22 : get_sn_if = svt_chi_if.sn_if[22];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_23
+      23 : get_sn_if = svt_chi_if.sn_if[23];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_24
+      24 : get_sn_if = svt_chi_if.sn_if[24];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_25
+      25 : get_sn_if = svt_chi_if.sn_if[25];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_26
+      26 : get_sn_if = svt_chi_if.sn_if[26];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_27
+      27 : get_sn_if = svt_chi_if.sn_if[27];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_28
+      28 : get_sn_if = svt_chi_if.sn_if[28];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_29
+      29 : get_sn_if = svt_chi_if.sn_if[29];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_30
+      30 : get_sn_if = svt_chi_if.sn_if[30];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_31
+      31 : get_sn_if = svt_chi_if.sn_if[31];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_32
+      32 : get_sn_if = svt_chi_if.sn_if[32];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_33
+      33 : get_sn_if = svt_chi_if.sn_if[33];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_34
+      34 : get_sn_if = svt_chi_if.sn_if[34];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_35
+      35 : get_sn_if = svt_chi_if.sn_if[35];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_36
+      36 : get_sn_if = svt_chi_if.sn_if[36];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_37
+      37 : get_sn_if = svt_chi_if.sn_if[37];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_38
+      38 : get_sn_if = svt_chi_if.sn_if[38];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_39
+      39 : get_sn_if = svt_chi_if.sn_if[39];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_40
+      40 : get_sn_if = svt_chi_if.sn_if[40];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_41
+      41 : get_sn_if = svt_chi_if.sn_if[41];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_42
+      42 : get_sn_if = svt_chi_if.sn_if[42];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_43
+      43 : get_sn_if = svt_chi_if.sn_if[43];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_44
+      44 : get_sn_if = svt_chi_if.sn_if[44];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_45
+      45 : get_sn_if = svt_chi_if.sn_if[45];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_46
+      46 : get_sn_if = svt_chi_if.sn_if[46];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_47
+      47 : get_sn_if = svt_chi_if.sn_if[47];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_48
+      48 : get_sn_if = svt_chi_if.sn_if[48];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_49
+      49 : get_sn_if = svt_chi_if.sn_if[49];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_50
+      50 : get_sn_if = svt_chi_if.sn_if[50];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_51
+      51 : get_sn_if = svt_chi_if.sn_if[51];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_52
+      52 : get_sn_if = svt_chi_if.sn_if[52];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_53
+      53 : get_sn_if = svt_chi_if.sn_if[53];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_54
+      54 : get_sn_if = svt_chi_if.sn_if[54];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_55
+      55 : get_sn_if = svt_chi_if.sn_if[55];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_56
+      56 : get_sn_if = svt_chi_if.sn_if[56];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_57
+      57 : get_sn_if = svt_chi_if.sn_if[57];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_58
+      58 : get_sn_if = svt_chi_if.sn_if[58];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_59
+      59 : get_sn_if = svt_chi_if.sn_if[59];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_60
+      60 : get_sn_if = svt_chi_if.sn_if[60];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_61
+      61 : get_sn_if = svt_chi_if.sn_if[61];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_62
+      62 : get_sn_if = svt_chi_if.sn_if[62];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_63
+      63 : get_sn_if = svt_chi_if.sn_if[63];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_64
+      64 : get_sn_if = svt_chi_if.sn_if[64];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_65
+      65 : get_sn_if = svt_chi_if.sn_if[65];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_66
+      66 : get_sn_if = svt_chi_if.sn_if[66];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_67
+      67 : get_sn_if = svt_chi_if.sn_if[67];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_68
+      68 : get_sn_if = svt_chi_if.sn_if[68];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_69
+      69 : get_sn_if = svt_chi_if.sn_if[69];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_70
+      70 : get_sn_if = svt_chi_if.sn_if[70];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_71
+      71 : get_sn_if = svt_chi_if.sn_if[71];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_72
+      72 : get_sn_if = svt_chi_if.sn_if[72];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_73
+      73 : get_sn_if = svt_chi_if.sn_if[73];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_74
+      74 : get_sn_if = svt_chi_if.sn_if[74];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_75
+      75 : get_sn_if = svt_chi_if.sn_if[75];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_76
+      76 : get_sn_if = svt_chi_if.sn_if[76];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_77
+      77 : get_sn_if = svt_chi_if.sn_if[77];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_78
+      78 : get_sn_if = svt_chi_if.sn_if[78];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_79
+      79 : get_sn_if = svt_chi_if.sn_if[79];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_80
+      80 : get_sn_if = svt_chi_if.sn_if[80];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_81
+      81 : get_sn_if = svt_chi_if.sn_if[81];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_82
+      82 : get_sn_if = svt_chi_if.sn_if[82];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_83
+      83 : get_sn_if = svt_chi_if.sn_if[83];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_84
+      84 : get_sn_if = svt_chi_if.sn_if[84];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_85
+      85 : get_sn_if = svt_chi_if.sn_if[85];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_86
+      86 : get_sn_if = svt_chi_if.sn_if[86];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_87
+      87 : get_sn_if = svt_chi_if.sn_if[87];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_88
+      88 : get_sn_if = svt_chi_if.sn_if[88];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_89
+      89 : get_sn_if = svt_chi_if.sn_if[89];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_90
+      90 : get_sn_if = svt_chi_if.sn_if[90];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_91
+      91 : get_sn_if = svt_chi_if.sn_if[91];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_92
+      92 : get_sn_if = svt_chi_if.sn_if[92];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_93
+      93 : get_sn_if = svt_chi_if.sn_if[93];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_94
+      94 : get_sn_if = svt_chi_if.sn_if[94];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_95
+      95 : get_sn_if = svt_chi_if.sn_if[95];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_96
+      96 : get_sn_if = svt_chi_if.sn_if[96];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_97
+      97 : get_sn_if = svt_chi_if.sn_if[97];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_98
+      98 : get_sn_if = svt_chi_if.sn_if[98];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_99
+      99 : get_sn_if = svt_chi_if.sn_if[99];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_100
+      100 : get_sn_if = svt_chi_if.sn_if[100];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_101
+      101 : get_sn_if = svt_chi_if.sn_if[101];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_102
+      102 : get_sn_if = svt_chi_if.sn_if[102];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_103
+      103 : get_sn_if = svt_chi_if.sn_if[103];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_104
+      104 : get_sn_if = svt_chi_if.sn_if[104];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_105
+      105 : get_sn_if = svt_chi_if.sn_if[105];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_106
+      106 : get_sn_if = svt_chi_if.sn_if[106];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_107
+      107 : get_sn_if = svt_chi_if.sn_if[107];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_108
+      108 : get_sn_if = svt_chi_if.sn_if[108];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_109
+      109 : get_sn_if = svt_chi_if.sn_if[109];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_110
+      110 : get_sn_if = svt_chi_if.sn_if[110];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_111
+      111 : get_sn_if = svt_chi_if.sn_if[111];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_112
+      112 : get_sn_if = svt_chi_if.sn_if[112];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_113
+      113 : get_sn_if = svt_chi_if.sn_if[113];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_114
+      114 : get_sn_if = svt_chi_if.sn_if[114];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_115
+      115 : get_sn_if = svt_chi_if.sn_if[115];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_116
+      116 : get_sn_if = svt_chi_if.sn_if[116];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_117
+      117 : get_sn_if = svt_chi_if.sn_if[117];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_118
+      118 : get_sn_if = svt_chi_if.sn_if[118];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_119
+      119 : get_sn_if = svt_chi_if.sn_if[119];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_120
+      120 : get_sn_if = svt_chi_if.sn_if[120];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_121
+      121 : get_sn_if = svt_chi_if.sn_if[121];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_122
+      122 : get_sn_if = svt_chi_if.sn_if[122];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_123
+      123 : get_sn_if = svt_chi_if.sn_if[123];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_124
+      124 : get_sn_if = svt_chi_if.sn_if[124];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_125
+      125 : get_sn_if = svt_chi_if.sn_if[125];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_126
+      126 : get_sn_if = svt_chi_if.sn_if[126];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_127
+      127 : get_sn_if = svt_chi_if.sn_if[127];
+`endif      
+      default: begin
+        $display("svt_chi_if::get_sn_if(): SN index %0d not supported.", idx);
+        $finish;
+      end
+    endcase
+  endfunction
+/** @endcond */
+
+/** @cond PRIVATE */
+
+  function CHI_IC_RN_IF get_ic_rn_if(int idx);
+    case (idx)
+`ifdef SVT_CHI_VALID_RN_IDX_0
+      0 : get_ic_rn_if = svt_chi_if.ic_rn_if[0];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_1
+      1 : get_ic_rn_if = svt_chi_if.ic_rn_if[1];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_2
+      2 : get_ic_rn_if = svt_chi_if.ic_rn_if[2];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_3
+      3 : get_ic_rn_if = svt_chi_if.ic_rn_if[3];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_4
+      4 : get_ic_rn_if = svt_chi_if.ic_rn_if[4];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_5
+      5 : get_ic_rn_if = svt_chi_if.ic_rn_if[5];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_6
+      6 : get_ic_rn_if = svt_chi_if.ic_rn_if[6];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_7
+      7 : get_ic_rn_if = svt_chi_if.ic_rn_if[7];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_8
+      8 : get_ic_rn_if = svt_chi_if.ic_rn_if[8];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_9
+      9 : get_ic_rn_if = svt_chi_if.ic_rn_if[9];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_10
+      10 : get_ic_rn_if = svt_chi_if.ic_rn_if[10];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_11
+      11 : get_ic_rn_if = svt_chi_if.ic_rn_if[11];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_12
+      12 : get_ic_rn_if = svt_chi_if.ic_rn_if[12];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_13
+      13 : get_ic_rn_if = svt_chi_if.ic_rn_if[13];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_14
+      14 : get_ic_rn_if = svt_chi_if.ic_rn_if[14];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_15
+      15 : get_ic_rn_if = svt_chi_if.ic_rn_if[15];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_16
+      16 : get_ic_rn_if = svt_chi_if.ic_rn_if[16];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_17
+      17 : get_ic_rn_if = svt_chi_if.ic_rn_if[17];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_18
+      18 : get_ic_rn_if = svt_chi_if.ic_rn_if[18];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_19
+      19 : get_ic_rn_if = svt_chi_if.ic_rn_if[19];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_20
+      20 : get_ic_rn_if = svt_chi_if.ic_rn_if[20];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_21
+      21 : get_ic_rn_if = svt_chi_if.ic_rn_if[21];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_22
+      22 : get_ic_rn_if = svt_chi_if.ic_rn_if[22];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_23
+      23 : get_ic_rn_if = svt_chi_if.ic_rn_if[23];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_24
+      24 : get_ic_rn_if = svt_chi_if.ic_rn_if[24];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_25
+      25 : get_ic_rn_if = svt_chi_if.ic_rn_if[25];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_26
+      26 : get_ic_rn_if = svt_chi_if.ic_rn_if[26];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_27
+      27 : get_ic_rn_if = svt_chi_if.ic_rn_if[27];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_28
+      28 : get_ic_rn_if = svt_chi_if.ic_rn_if[28];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_29
+      29 : get_ic_rn_if = svt_chi_if.ic_rn_if[29];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_30
+      30 : get_ic_rn_if = svt_chi_if.ic_rn_if[30];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_31
+      31 : get_ic_rn_if = svt_chi_if.ic_rn_if[31];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_32
+      32 : get_ic_rn_if = svt_chi_if.ic_rn_if[32];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_33
+      33 : get_ic_rn_if = svt_chi_if.ic_rn_if[33];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_34
+      34 : get_ic_rn_if = svt_chi_if.ic_rn_if[34];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_35
+      35 : get_ic_rn_if = svt_chi_if.ic_rn_if[35];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_36
+      36 : get_ic_rn_if = svt_chi_if.ic_rn_if[36];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_37
+      37 : get_ic_rn_if = svt_chi_if.ic_rn_if[37];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_38
+      38 : get_ic_rn_if = svt_chi_if.ic_rn_if[38];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_39
+      39 : get_ic_rn_if = svt_chi_if.ic_rn_if[39];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_40
+      40 : get_ic_rn_if = svt_chi_if.ic_rn_if[40];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_41
+      41 : get_ic_rn_if = svt_chi_if.ic_rn_if[41];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_42
+      42 : get_ic_rn_if = svt_chi_if.ic_rn_if[42];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_43
+      43 : get_ic_rn_if = svt_chi_if.ic_rn_if[43];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_44
+      44 : get_ic_rn_if = svt_chi_if.ic_rn_if[44];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_45
+      45 : get_ic_rn_if = svt_chi_if.ic_rn_if[45];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_46
+      46 : get_ic_rn_if = svt_chi_if.ic_rn_if[46];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_47
+      47 : get_ic_rn_if = svt_chi_if.ic_rn_if[47];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_48
+      48 : get_ic_rn_if = svt_chi_if.ic_rn_if[48];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_49
+      49 : get_ic_rn_if = svt_chi_if.ic_rn_if[49];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_50
+      50 : get_ic_rn_if = svt_chi_if.ic_rn_if[50];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_51
+      51 : get_ic_rn_if = svt_chi_if.ic_rn_if[51];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_52
+      52 : get_ic_rn_if = svt_chi_if.ic_rn_if[52];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_53
+      53 : get_ic_rn_if = svt_chi_if.ic_rn_if[53];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_54
+      54 : get_ic_rn_if = svt_chi_if.ic_rn_if[54];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_55
+      55 : get_ic_rn_if = svt_chi_if.ic_rn_if[55];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_56
+      56 : get_ic_rn_if = svt_chi_if.ic_rn_if[56];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_57
+      57 : get_ic_rn_if = svt_chi_if.ic_rn_if[57];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_58
+      58 : get_ic_rn_if = svt_chi_if.ic_rn_if[58];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_59
+      59 : get_ic_rn_if = svt_chi_if.ic_rn_if[59];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_60
+      60 : get_ic_rn_if = svt_chi_if.ic_rn_if[60];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_61
+      61 : get_ic_rn_if = svt_chi_if.ic_rn_if[61];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_62
+      62 : get_ic_rn_if = svt_chi_if.ic_rn_if[62];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_63
+      63 : get_ic_rn_if = svt_chi_if.ic_rn_if[63];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_64
+      64 : get_ic_rn_if = svt_chi_if.ic_rn_if[64];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_65
+      65 : get_ic_rn_if = svt_chi_if.ic_rn_if[65];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_66
+      66 : get_ic_rn_if = svt_chi_if.ic_rn_if[66];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_67
+      67 : get_ic_rn_if = svt_chi_if.ic_rn_if[67];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_68
+      68 : get_ic_rn_if = svt_chi_if.ic_rn_if[68];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_69
+      69 : get_ic_rn_if = svt_chi_if.ic_rn_if[69];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_70
+      70 : get_ic_rn_if = svt_chi_if.ic_rn_if[70];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_71
+      71 : get_ic_rn_if = svt_chi_if.ic_rn_if[71];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_72
+      72 : get_ic_rn_if = svt_chi_if.ic_rn_if[72];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_73
+      73 : get_ic_rn_if = svt_chi_if.ic_rn_if[73];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_74
+      74 : get_ic_rn_if = svt_chi_if.ic_rn_if[74];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_75
+      75 : get_ic_rn_if = svt_chi_if.ic_rn_if[75];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_76
+      76 : get_ic_rn_if = svt_chi_if.ic_rn_if[76];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_77
+      77 : get_ic_rn_if = svt_chi_if.ic_rn_if[77];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_78
+      78 : get_ic_rn_if = svt_chi_if.ic_rn_if[78];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_79
+      79 : get_ic_rn_if = svt_chi_if.ic_rn_if[79];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_80
+      80 : get_ic_rn_if = svt_chi_if.ic_rn_if[80];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_81
+      81 : get_ic_rn_if = svt_chi_if.ic_rn_if[81];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_82
+      82 : get_ic_rn_if = svt_chi_if.ic_rn_if[82];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_83
+      83 : get_ic_rn_if = svt_chi_if.ic_rn_if[83];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_84
+      84 : get_ic_rn_if = svt_chi_if.ic_rn_if[84];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_85
+      85 : get_ic_rn_if = svt_chi_if.ic_rn_if[85];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_86
+      86 : get_ic_rn_if = svt_chi_if.ic_rn_if[86];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_87
+      87 : get_ic_rn_if = svt_chi_if.ic_rn_if[87];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_88
+      88 : get_ic_rn_if = svt_chi_if.ic_rn_if[88];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_89
+      89 : get_ic_rn_if = svt_chi_if.ic_rn_if[89];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_90
+      90 : get_ic_rn_if = svt_chi_if.ic_rn_if[90];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_91
+      91 : get_ic_rn_if = svt_chi_if.ic_rn_if[91];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_92
+      92 : get_ic_rn_if = svt_chi_if.ic_rn_if[92];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_93
+      93 : get_ic_rn_if = svt_chi_if.ic_rn_if[93];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_94
+      94 : get_ic_rn_if = svt_chi_if.ic_rn_if[94];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_95
+      95 : get_ic_rn_if = svt_chi_if.ic_rn_if[95];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_96
+      96 : get_ic_rn_if = svt_chi_if.ic_rn_if[96];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_97
+      97 : get_ic_rn_if = svt_chi_if.ic_rn_if[97];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_98
+      98 : get_ic_rn_if = svt_chi_if.ic_rn_if[98];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_99
+      99 : get_ic_rn_if = svt_chi_if.ic_rn_if[99];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_100
+      100 : get_ic_rn_if = svt_chi_if.ic_rn_if[100];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_101
+      101 : get_ic_rn_if = svt_chi_if.ic_rn_if[101];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_102
+      102 : get_ic_rn_if = svt_chi_if.ic_rn_if[102];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_103
+      103 : get_ic_rn_if = svt_chi_if.ic_rn_if[103];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_104
+      104 : get_ic_rn_if = svt_chi_if.ic_rn_if[104];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_105
+      105 : get_ic_rn_if = svt_chi_if.ic_rn_if[105];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_106
+      106 : get_ic_rn_if = svt_chi_if.ic_rn_if[106];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_107
+      107 : get_ic_rn_if = svt_chi_if.ic_rn_if[107];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_108
+      108 : get_ic_rn_if = svt_chi_if.ic_rn_if[108];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_109
+      109 : get_ic_rn_if = svt_chi_if.ic_rn_if[109];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_110
+      110 : get_ic_rn_if = svt_chi_if.ic_rn_if[110];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_111
+      111 : get_ic_rn_if = svt_chi_if.ic_rn_if[111];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_112
+      112 : get_ic_rn_if = svt_chi_if.ic_rn_if[112];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_113
+      113 : get_ic_rn_if = svt_chi_if.ic_rn_if[113];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_114
+      114 : get_ic_rn_if = svt_chi_if.ic_rn_if[114];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_115
+      115 : get_ic_rn_if = svt_chi_if.ic_rn_if[115];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_116
+      116 : get_ic_rn_if = svt_chi_if.ic_rn_if[116];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_117
+      117 : get_ic_rn_if = svt_chi_if.ic_rn_if[117];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_118
+      118 : get_ic_rn_if = svt_chi_if.ic_rn_if[118];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_119
+      119 : get_ic_rn_if = svt_chi_if.ic_rn_if[119];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_120
+      120 : get_ic_rn_if = svt_chi_if.ic_rn_if[120];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_121
+      121 : get_ic_rn_if = svt_chi_if.ic_rn_if[121];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_122
+      122 : get_ic_rn_if = svt_chi_if.ic_rn_if[122];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_123
+      123 : get_ic_rn_if = svt_chi_if.ic_rn_if[123];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_124
+      124 : get_ic_rn_if = svt_chi_if.ic_rn_if[124];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_125
+      125 : get_ic_rn_if = svt_chi_if.ic_rn_if[125];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_126
+      126 : get_ic_rn_if = svt_chi_if.ic_rn_if[126];
+`endif
+`ifdef SVT_CHI_VALID_RN_IDX_127
+      127 : get_ic_rn_if = svt_chi_if.ic_rn_if[127];
+`endif 
+      default: begin
+        $display("svt_chi_if::get_ic_rn_if(): IC RN index %0d not supported.", idx);
+        $finish;
+      end
+    endcase
+  endfunction
+/** @endcond */
+
+/** @cond PRIVATE */
+  function CHI_IC_SN_IF get_ic_sn_if(int idx);
+    case (idx)
+`ifdef SVT_CHI_VALID_SN_IDX_0
+      0 : get_ic_sn_if = svt_chi_if.ic_sn_if[0];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_1
+      1 : get_ic_sn_if = svt_chi_if.ic_sn_if[1];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_2
+      2 : get_ic_sn_if = svt_chi_if.ic_sn_if[2];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_3
+      3 : get_ic_sn_if = svt_chi_if.ic_sn_if[3];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_4
+      4 : get_ic_sn_if = svt_chi_if.ic_sn_if[4];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_5
+      5 : get_ic_sn_if = svt_chi_if.ic_sn_if[5];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_6
+      6 : get_ic_sn_if = svt_chi_if.ic_sn_if[6];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_7
+      7 : get_ic_sn_if = svt_chi_if.ic_sn_if[7];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_8
+      8 : get_ic_sn_if = svt_chi_if.ic_sn_if[8];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_9
+      9 : get_ic_sn_if = svt_chi_if.ic_sn_if[9];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_10
+      10 : get_ic_sn_if = svt_chi_if.ic_sn_if[10];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_11
+      11 : get_ic_sn_if = svt_chi_if.ic_sn_if[11];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_12
+      12 : get_ic_sn_if = svt_chi_if.ic_sn_if[12];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_13
+      13 : get_ic_sn_if = svt_chi_if.ic_sn_if[13];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_14
+      14 : get_ic_sn_if = svt_chi_if.ic_sn_if[14];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_15
+      15 : get_ic_sn_if = svt_chi_if.ic_sn_if[15];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_16
+      16 : get_ic_sn_if = svt_chi_if.ic_sn_if[16];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_17
+      17 : get_ic_sn_if = svt_chi_if.ic_sn_if[17];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_18
+      18 : get_ic_sn_if = svt_chi_if.ic_sn_if[18];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_19
+      19 : get_ic_sn_if = svt_chi_if.ic_sn_if[19];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_20
+      20 : get_ic_sn_if = svt_chi_if.ic_sn_if[20];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_21
+      21 : get_ic_sn_if = svt_chi_if.ic_sn_if[21];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_22
+      22 : get_ic_sn_if = svt_chi_if.ic_sn_if[22];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_23
+      23 : get_ic_sn_if = svt_chi_if.ic_sn_if[23];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_24
+      24 : get_ic_sn_if = svt_chi_if.ic_sn_if[24];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_25
+      25 : get_ic_sn_if = svt_chi_if.ic_sn_if[25];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_26
+      26 : get_ic_sn_if = svt_chi_if.ic_sn_if[26];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_27
+      27 : get_ic_sn_if = svt_chi_if.ic_sn_if[27];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_28
+      28 : get_ic_sn_if = svt_chi_if.ic_sn_if[28];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_29
+      29 : get_ic_sn_if = svt_chi_if.ic_sn_if[29];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_30
+      30 : get_ic_sn_if = svt_chi_if.ic_sn_if[30];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_31
+      31 : get_ic_sn_if = svt_chi_if.ic_sn_if[31];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_32
+      32 : get_ic_sn_if = svt_chi_if.ic_sn_if[32];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_33
+      33 : get_ic_sn_if = svt_chi_if.ic_sn_if[33];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_34
+      34 : get_ic_sn_if = svt_chi_if.ic_sn_if[34];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_35
+      35 : get_ic_sn_if = svt_chi_if.ic_sn_if[35];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_36
+      36 : get_ic_sn_if = svt_chi_if.ic_sn_if[36];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_37
+      37 : get_ic_sn_if = svt_chi_if.ic_sn_if[37];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_38
+      38 : get_ic_sn_if = svt_chi_if.ic_sn_if[38];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_39
+      39 : get_ic_sn_if = svt_chi_if.ic_sn_if[39];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_40
+      40 : get_ic_sn_if = svt_chi_if.ic_sn_if[40];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_41
+      41 : get_ic_sn_if = svt_chi_if.ic_sn_if[41];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_42
+      42 : get_ic_sn_if = svt_chi_if.ic_sn_if[42];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_43
+      43 : get_ic_sn_if = svt_chi_if.ic_sn_if[43];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_44
+      44 : get_ic_sn_if = svt_chi_if.ic_sn_if[44];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_45
+      45 : get_ic_sn_if = svt_chi_if.ic_sn_if[45];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_46
+      46 : get_ic_sn_if = svt_chi_if.ic_sn_if[46];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_47
+      47 : get_ic_sn_if = svt_chi_if.ic_sn_if[47];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_48
+      48 : get_ic_sn_if = svt_chi_if.ic_sn_if[48];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_49
+      49 : get_ic_sn_if = svt_chi_if.ic_sn_if[49];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_50
+      50 : get_ic_sn_if = svt_chi_if.ic_sn_if[50];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_51
+      51 : get_ic_sn_if = svt_chi_if.ic_sn_if[51];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_52
+      52 : get_ic_sn_if = svt_chi_if.ic_sn_if[52];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_53
+      53 : get_ic_sn_if = svt_chi_if.ic_sn_if[53];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_54
+      54 : get_ic_sn_if = svt_chi_if.ic_sn_if[54];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_55
+      55 : get_ic_sn_if = svt_chi_if.ic_sn_if[55];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_56
+      56 : get_ic_sn_if = svt_chi_if.ic_sn_if[56];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_57
+      57 : get_ic_sn_if = svt_chi_if.ic_sn_if[57];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_58
+      58 : get_ic_sn_if = svt_chi_if.ic_sn_if[58];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_59
+      59 : get_ic_sn_if = svt_chi_if.ic_sn_if[59];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_60
+      60 : get_ic_sn_if = svt_chi_if.ic_sn_if[60];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_61
+      61 : get_ic_sn_if = svt_chi_if.ic_sn_if[61];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_62
+      62 : get_ic_sn_if = svt_chi_if.ic_sn_if[62];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_63
+      63 : get_ic_sn_if = svt_chi_if.ic_sn_if[63];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_64
+      64 : get_ic_sn_if = svt_chi_if.ic_sn_if[64];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_65
+      65 : get_ic_sn_if = svt_chi_if.ic_sn_if[65];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_66
+      66 : get_ic_sn_if = svt_chi_if.ic_sn_if[66];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_67
+      67 : get_ic_sn_if = svt_chi_if.ic_sn_if[67];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_68
+      68 : get_ic_sn_if = svt_chi_if.ic_sn_if[68];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_69
+      69 : get_ic_sn_if = svt_chi_if.ic_sn_if[69];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_70
+      70 : get_ic_sn_if = svt_chi_if.ic_sn_if[70];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_71
+      71 : get_ic_sn_if = svt_chi_if.ic_sn_if[71];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_72
+      72 : get_ic_sn_if = svt_chi_if.ic_sn_if[72];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_73
+      73 : get_ic_sn_if = svt_chi_if.ic_sn_if[73];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_74
+      74 : get_ic_sn_if = svt_chi_if.ic_sn_if[74];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_75
+      75 : get_ic_sn_if = svt_chi_if.ic_sn_if[75];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_76
+      76 : get_ic_sn_if = svt_chi_if.ic_sn_if[76];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_77
+      77 : get_ic_sn_if = svt_chi_if.ic_sn_if[77];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_78
+      78 : get_ic_sn_if = svt_chi_if.ic_sn_if[78];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_79
+      79 : get_ic_sn_if = svt_chi_if.ic_sn_if[79];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_80
+      80 : get_ic_sn_if = svt_chi_if.ic_sn_if[80];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_81
+      81 : get_ic_sn_if = svt_chi_if.ic_sn_if[81];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_82
+      82 : get_ic_sn_if = svt_chi_if.ic_sn_if[82];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_83
+      83 : get_ic_sn_if = svt_chi_if.ic_sn_if[83];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_84
+      84 : get_ic_sn_if = svt_chi_if.ic_sn_if[84];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_85
+      85 : get_ic_sn_if = svt_chi_if.ic_sn_if[85];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_86
+      86 : get_ic_sn_if = svt_chi_if.ic_sn_if[86];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_87
+      87 : get_ic_sn_if = svt_chi_if.ic_sn_if[87];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_88
+      88 : get_ic_sn_if = svt_chi_if.ic_sn_if[88];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_89
+      89 : get_ic_sn_if = svt_chi_if.ic_sn_if[89];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_90
+      90 : get_ic_sn_if = svt_chi_if.ic_sn_if[90];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_91
+      91 : get_ic_sn_if = svt_chi_if.ic_sn_if[91];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_92
+      92 : get_ic_sn_if = svt_chi_if.ic_sn_if[92];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_93
+      93 : get_ic_sn_if = svt_chi_if.ic_sn_if[93];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_94
+      94 : get_ic_sn_if = svt_chi_if.ic_sn_if[94];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_95
+      95 : get_ic_sn_if = svt_chi_if.ic_sn_if[95];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_96
+      96 : get_ic_sn_if = svt_chi_if.ic_sn_if[96];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_97
+      97 : get_ic_sn_if = svt_chi_if.ic_sn_if[97];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_98
+      98 : get_ic_sn_if = svt_chi_if.ic_sn_if[98];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_99
+      99 : get_ic_sn_if = svt_chi_if.ic_sn_if[99];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_100
+      100 : get_ic_sn_if = svt_chi_if.ic_sn_if[100];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_101
+      101 : get_ic_sn_if = svt_chi_if.ic_sn_if[101];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_102
+      102 : get_ic_sn_if = svt_chi_if.ic_sn_if[102];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_103
+      103 : get_ic_sn_if = svt_chi_if.ic_sn_if[103];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_104
+      104 : get_ic_sn_if = svt_chi_if.ic_sn_if[104];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_105
+      105 : get_ic_sn_if = svt_chi_if.ic_sn_if[105];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_106
+      106 : get_ic_sn_if = svt_chi_if.ic_sn_if[106];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_107
+      107 : get_ic_sn_if = svt_chi_if.ic_sn_if[107];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_108
+      108 : get_ic_sn_if = svt_chi_if.ic_sn_if[108];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_109
+      109 : get_ic_sn_if = svt_chi_if.ic_sn_if[109];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_110
+      110 : get_ic_sn_if = svt_chi_if.ic_sn_if[110];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_111
+      111 : get_ic_sn_if = svt_chi_if.ic_sn_if[111];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_112
+      112 : get_ic_sn_if = svt_chi_if.ic_sn_if[112];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_113
+      113 : get_ic_sn_if = svt_chi_if.ic_sn_if[113];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_114
+      114 : get_ic_sn_if = svt_chi_if.ic_sn_if[114];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_115
+      115 : get_ic_sn_if = svt_chi_if.ic_sn_if[115];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_116
+      116 : get_ic_sn_if = svt_chi_if.ic_sn_if[116];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_117
+      117 : get_ic_sn_if = svt_chi_if.ic_sn_if[117];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_118
+      118 : get_ic_sn_if = svt_chi_if.ic_sn_if[118];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_119
+      119 : get_ic_sn_if = svt_chi_if.ic_sn_if[119];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_120
+      120 : get_ic_sn_if = svt_chi_if.ic_sn_if[120];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_121
+      121 : get_ic_sn_if = svt_chi_if.ic_sn_if[121];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_122
+      122 : get_ic_sn_if = svt_chi_if.ic_sn_if[122];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_123
+      123 : get_ic_sn_if = svt_chi_if.ic_sn_if[123];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_124
+      124 : get_ic_sn_if = svt_chi_if.ic_sn_if[124];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_125
+      125 : get_ic_sn_if = svt_chi_if.ic_sn_if[125];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_126
+      126 : get_ic_sn_if = svt_chi_if.ic_sn_if[126];
+`endif
+`ifdef SVT_CHI_VALID_SN_IDX_127
+      127 : get_ic_sn_if = svt_chi_if.ic_sn_if[127];
+`endif      
+      default: begin
+        $display("svt_chi_if::get_ic_sn_if(): IC SN index %0d not supported.", idx);
+        $finish;
+      end
+    endcase
+  endfunction
+/** @endcond */
+
+ /** @cond PRIVATE */
+ function AXI_IF get_axi_if();
+   get_axi_if = svt_chi_if.axi_if;
+ endfunction
+/** @endcond */
+ 
+`ifndef __SVDOC__
+  // AXI interface as part of CHI interface is deprecated feature
+  // So, not considering this aspect for support MULTI clock mode
+  // for CHI interface.
+  `ifndef SVT_CHI_ENABLE_MULTI_CLOCK
+  `ifndef SVT_AMBA_INTERFACE_METHOD_DISABLE
+     assign axi_if.common_aclk = clk;
+  `endif
+
+genvar i;
+generate
+  for(i=0;i<`SVT_AXI_MAX_NUM_MASTERS;i++) begin: master_signal_connections
+    assign axi_if.master_if[i].aclk = clk;
+    `ifndef SVT_CHI_ENABLE_MULTI_RESET
+    assign axi_if.master_if[i].aresetn = resetn;
+    `endif
+  end
+endgenerate
+
+generate
+  for(i=0;i<`SVT_AXI_MAX_NUM_SLAVES;i++) begin: slave_signal_connections
+    assign axi_if.slave_if[i].aclk = clk;
+    `ifndef SVT_CHI_ENABLE_MULTI_RESET
+    assign axi_if.slave_if[i].aresetn = resetn;
+    `endif
+  end
+endgenerate
+  `endif //  `ifndef SVT_CHI_ENABLE_MULTI_CLOCK
+`endif
+
+/**support for signal logging. */
+`SVT_IF_UTIL_SUPPORT_SIGNAL_LOGGING(1)
+  
+endinterface
+
+`endif // GUARD_SVT_CHI_IF_SVI

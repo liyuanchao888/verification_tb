@@ -1,0 +1,25 @@
+
+`ifndef GUARD_SVT_AMBA_SOURCE_OVM_SVI
+`define GUARD_SVT_AMBA_SOURCE_OVM_SVI
+
+`include "svt_source.ovm.svi"
+`ifndef SVT_AMBA_EXCLUDE_APB_IN_AMBA_SYS_ENV
+  `include "svt_apb_source.ovm.svi"
+`endif
+`ifndef SVT_AMBA_EXCLUDE_AHB_IN_AMBA_SYS_ENV
+  `include "svt_ahb_source.ovm.svi"
+`endif  
+`include "svt_axi_source.ovm.svi"
+
+`ifndef SVT_AMBA_VCAP_ENABLE
+`ifndef SVT_EXCLUDE_VCAP
+`define SVT_EXCLUDE_VCAP
+`endif
+`endif
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_system_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_system_checker)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_system_transaction)
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_mem_system_backdoor)
+`endif // GUARD_SVT_AMBA_SOURCE_OVM_SVI

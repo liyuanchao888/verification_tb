@@ -1,0 +1,15 @@
+
+`ifndef GUARD_SVT_AHB_SYSTEM_ENV_SOURCE_UVM_SVI
+`define GUARD_SVT_AHB_SYSTEM_ENV_SOURCE_UVM_SVI
+
+`include `SVT_SOURCE_MAP_AGENT_INCLUDE_SVI(amba_svt,ahb_master_agent_svt,R-2020.12,svt_ahb_master_agent_source.uvm)
+`include `SVT_SOURCE_MAP_AGENT_INCLUDE_SVI(amba_svt,ahb_slave_agent_svt,R-2020.12,svt_ahb_slave_agent_source.uvm)
+`include `SVT_SOURCE_MAP_ENV_CMD_INCLUDE_SVI(amba_svt,ahb_bus_env_svt,R-2020.12,svt_ahb_bus_env_source.uvm)
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,ahb_system_monitor_svt,R-2020.12,svt_ahb_system_monitor_source.uvm)
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_ahb_system_checker)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_system_env_svt,R-2020.12,svt_ahb_system_sequencer)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_system_env_svt,R-2020.12,svt_ahb_system_sequence_library)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_system_env_svt,R-2020.12,svt_ahb_system_env)
+
+`endif //GUARD_SVT_AHB_SYSTEM_ENV_SOURCE_UVM_SVI

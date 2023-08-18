@@ -1,0 +1,112 @@
+//=======================================================================
+// COPYRIGHT (C) 2010 - 2017 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//
+//-----------------------------------------------------------------------
+
+`ifndef GUARD_SVT_AMBA_COMMON_DEFINES_SVI
+`define GUARD_SVT_AMBA_COMMON_DEFINES_SVI
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_AXI_INTERFACE 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_AHB_INTERFACE 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_APB_INTERFACE 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_CHI_INTERFACE 3
+`define SVT_CHI_MAX_NUM_SYSTEMS 32
+`define SVT_AXI_MAX_NUM_SYSTEMS 32
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AHB_MAX_NUM_SYSTEMS 32
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_MAX_NUM_SYSTEMS 128
+
+`ifndef SVT_AMBA_PATH_COV_DEST_NAMES
+`define SVT_AMBA_PATH_COV_DEST_NAMES slave_0,slave_1,slave_2,slave_3,slave_4,slave_5
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AMBA_system_amba_master_to_slave_access_amba_master_to_slave_access_COV_OPTION_AT_LEAST_VAL
+  `define SVT_AMBA_system_amba_master_to_slave_access_amba_master_to_slave_access_COV_OPTION_AT_LEAST_VAL 1
+`endif
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef IGNORE_BINS_CG_system_amba_master_to_slave_access_CP_master_to_slave_pair_id  
+  `define IGNORE_BINS_CG_system_amba_master_to_slave_access_CP_master_to_slave_pair_id  
+`endif
+
+// Exclude all coverage based on SVT_AMBA_EXCLUDE_AMBA_COVERAGE macro
+`ifdef SVT_AMBA_EXCLUDE_AMBA_COVERAGE
+  `define SVT_AXI_EXCLUDE_AXI_PORT_COVERAGE 1
+  `define SVT_AXI_EXCLUDE_AXI_SYSTEM_COVERAGE 1
+  `define SVT_AMBA_EXCLUDE_AMBA_SYS_COVERAGE 1
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_MEM_MODE_WIDTH 2
+
+// Defines for security_type
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_SECURE_NONSECURE_ACCESS 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_SECURE_ACCESS 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_NONSECURE_ACCESS 2
+
+// Defines for direction_type
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_READ_WRITE_ACCESS 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_READ_ACCESS 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_AMBA_WRITE_ACCESS 2
+
+`endif // GUARD_SVT_AMBA_COMMON_DEFINES_SVI

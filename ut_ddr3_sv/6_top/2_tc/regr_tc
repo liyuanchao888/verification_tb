@@ -1,0 +1,5 @@
+ahb_apb_bridge_burst_write_test   1  DM_EN 
+ahb_apb_bridge_single_write_test  1        
+ahb_apb_bridge_single_read_test   1  VC_EN 
+ahb_apb_bridge_burst_read_test    1  DM_EN+regr_test 
+ahb_apb_bridge_random_test        1  DM_EN 

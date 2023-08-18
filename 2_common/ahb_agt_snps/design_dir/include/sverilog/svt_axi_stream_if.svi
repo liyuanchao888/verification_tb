@@ -1,0 +1,139 @@
+
+
+`ifndef GUARD_SVT_AXI_STREAM_IF_SVI
+`define GUARD_SVT_AXI_STREAM_IF_SVI
+
+`include "svt_axi_defines.svi"
+
+interface svt_axi_stream_if ( input logic common_aclk );
+
+  // Parameter to enable/disable Common Clock Mode
+  // By default this mode will be enabled
+  bit                                           common_clock_mode=1;
+
+  // User clock
+  // In multiple clock mode, user is expected to drive this signal
+  bit                                           user_aclk;
+
+  //----------------------------------------------------------------------
+  // AXI Stream Interface signals
+  //----------------------------------------------------------------------
+
+  logic                                         aclk;
+  logic                                         aresetn;
+
+  logic                                         tvalid;
+  logic                                         tready;
+  logic [`SVT_AXI_MAX_TDATA_WIDTH-1:0]          tdata;
+  logic [`SVT_AXI_TSTRB_WIDTH-1:0]              tstrb;
+  logic [`SVT_AXI_MAX_TDEST_WIDTH-1:0]          tdest;
+  logic [`SVT_AXI_TKEEP_WIDTH-1:0]              tkeep;
+  logic                                         tlast;
+  logic [`SVT_AXI_MAX_TID_WIDTH-1:0]            tid;
+  logic [`SVT_AXI_MAX_TUSER_WIDTH-1:0]          tuser;
+
+  // Depending upon the Clock Mode, assign either the User Clock or
+  // Common Clock to the 'aclk' signal
+  assign aclk = (common_clock_mode == 0) ? user_aclk : common_aclk;
+
+  // AXI Stream Master Clocking Block 
+  clocking axi_stream_master_cb @(posedge aclk);
+    default input #`SVT_AXI_MASTER_IF_SETUP_TIME output #`SVT_AXI_MASTER_IF_HOLD_TIME;
+
+    output tvalid ;
+    output tdata ;
+    output tstrb ;
+    output tkeep ;
+    output tlast ;
+    output tid ;
+    output tdest ;
+    output tuser ;
+    input  tready ;
+
+  endclocking : axi_stream_master_cb
+
+  // AXI Stream Slave Clocking Block 
+  clocking axi_stream_slave_cb @(posedge aclk);
+    default input #`SVT_AXI_SLAVE_IF_SETUP_TIME output #`SVT_AXI_SLAVE_IF_HOLD_TIME;
+
+    input  tvalid ;
+    input  tdata ;
+    input  tstrb ;
+    input  tkeep ;
+    input  tlast ;
+    input  tid ;
+    input  tdest ;
+    input  tuser ;
+    output tready ;
+
+  endclocking : axi_stream_slave_cb
+
+  // AXI Stream Monitor Clocking Block 
+  clocking axi_stream_monitor_cb @(posedge aclk);
+    default input #`SVT_AXI_MONITOR_IF_SETUP_TIME output #`SVT_AXI_MONITOR_IF_HOLD_TIME;
+
+    input  tvalid ;
+    input  tdata ;
+    input  tstrb ;
+    input  tkeep ;
+    input  tlast ;
+    input  tid ;
+    input  tdest ;
+    input  tuser ;
+    input  tready ;
+
+  endclocking : axi_stream_monitor_cb
+
+  //------------------------------------------------------------------------
+  /** Modport used to connect the VIP AXI Stream Master to AXI interface signals. */
+  modport svt_axi_stream_master_modport(clocking axi_stream_master_cb);
+  
+  //------------------------------------------------------------------------
+  /** Modport used to connect the VIP AXI Stream Slave to AXI interface signals. */
+  modport svt_axi_stream_slave_modport(clocking axi_stream_slave_cb);
+  
+  //-----------------------------------------------------------------------
+  /** Modport used to connect the VIP AXI Stream Monitor to AXI interface signals. */
+  modport svt_axi_stream_monitor_modport(clocking axi_stream_monitor_cb);
+
+  //-----------------------------------------------------------------------
+  /**
+   * Defines an un-timed modport suitable for connecting to a DUT Slave.
+   */
+  `ifndef __SVDOC__
+  modport dut_stream_master_modport (output tvalid, tdata, tstrb, tkeep,
+                                     tlast, tid, tdest, tuser,
+
+                                     input tready
+                                    );
+  `else
+  modport dut_stream_master_modport (output tvalid, output tdata, output tstrb,
+                                     output tkeep, output tlast, output tid,
+                                     output tdest, output tuser,
+
+                                     input tready
+                                    );
+  `endif
+
+  //-----------------------------------------------------------------------
+  /**
+   * Defines an un-timed modport suitable for connecting to a DUT Master.
+   */
+  `ifndef __SVDOC__
+  modport dut_stream_slave_modport (output tready,
+                            
+                                    input tvalid, tdata, tstrb, tkeep, tlast,
+                                    tid, tdest, tuser
+                                   );
+  `else
+  modport dut_stream_slave_modport (output tready,
+
+                                    input tvalid, input tdata, input tstrb,
+                                    input tkeep, input tlast, input tid,
+                                    input tdest, input tuser
+                                   );
+  `endif
+
+endinterface: svt_axi_stream_if
+
+`endif // GUARD_SVT_AXI_STREAM_IF_SVI

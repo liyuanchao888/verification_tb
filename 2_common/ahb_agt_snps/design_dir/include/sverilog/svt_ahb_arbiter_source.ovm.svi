@@ -1,0 +1,11 @@
+
+`ifndef GUARD_SVT_AHB_ARBITER_SOURCE_OVM_SVI
+`define GUARD_SVT_AHB_ARBITER_SOURCE_OVM_SVI
+
+`include "svt_ahb_source.ovm.svi"
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_arbiter_svt,R-2020.12,svt_ahb_arbiter_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_arbiter_svt,R-2020.12,svt_ahb_arbiter_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,ahb_arbiter_svt,R-2020.12,svt_ahb_arbiter.ovm)
+
+`endif //GUARD_SVT_AHB_ARBITER_SOURCE_OVM_SVI

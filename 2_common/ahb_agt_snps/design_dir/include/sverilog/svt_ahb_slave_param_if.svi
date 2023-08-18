@@ -1,0 +1,123 @@
+
+`ifndef GUARD_SVT_AHB_SLAVE_PARAM_IF_SVI
+`define GUARD_SVT_AHB_SLAVE_PARAM_IF_SVI
+
+`include "svt_ahb_port_defines.svi"
+
+/**
+ * <b>General description:</b><p>
+ * The AHB Slave parameterized interface svt_ahb_slave_param_if defines the 
+ * AHB signals appropriate for a single AHB Slave port. Slave parameterized 
+ * interface connects AHB Slave VIP to DUT. The width of signals within the
+ * parameterized interface can be parameterized to match signal widths of DUT.
+ * The default value of all the parameters are same as the MAX signal widths 
+ * defined in svt_ahb_port_defines.svi or svt_ahb_user_defines.svi. Slave 
+ * parameterized interface works in conjunction with top level parameterized
+ * interface svt_ahb_param_if.
+ *
+ * <b>Clock signal description:</b><br>
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Signal Name </b></th><th bgcolor="#dddddd"> Signal Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> aclk </b></td><td> If all AHB interfaces in the system are expected to run on a different clock, user can use the hclk signal in the slave interfaces. Set the configuration parameter svt_ahb_system_configuration::common_clock_mode to 0. In this case, connect the hclk signal in each slave interface to the appropriate slave specific clock in the testbench.</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>Reset signal description:</b><br>
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Signal Name </b></th><th bgcolor="#dddddd"> Signal Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> aclk </b></td><td> If all AHB interfaces in the system are expected to run on a different reset, user can use the hresetn signal in the slave interfaces. Set the configuration parameter svt_ahb_system_configuration::common_reset_mode to 0. In this case, connect the hresetn signal in each slave interface to the appropriate slave specific reset in the testbench.</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>Parameter description:</b><br>
+ * The signal width of slave parameterized interface can be parameterized to
+ * match DUT signal widths. The default value of all the parameters are same as
+ * the MAX signal widths defined in svt_ahb_port_defines.svi or svt_ahb_user_defines.svi.
+ * The parameter values should not exceed the MAX signal width values defined in
+ * svt_ahb_port_defines.svi or redefined by user in svt_ahb_user_defines.svi.
+ *  
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Parameter Name </b></th><th bgcolor="#dddddd"> Parameter Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> SVT_AHB_DATA_WIDTH_PARAM </b></td><td> Read and Write data width (HRDATA,HWDATA).</b></td><tr>
+ *    <tr><td><b> SVT_AHB_HRESP_PORT_WIDTH_PARAM </b></td><td> Response signal width (HRESP).</b></td><tr>
+ *    <tr><td><b> SVT_AHB_HSPLIT_PORT_WIDTH_PARAM </b></td><td> hsplit signal width (HSPLIT).</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>AHB signal description:</b><br>
+ * This sub-interface supports signals for AHB,AHB-Lite. The names of the signals
+ * match the names specified in the AHB specification. Please refer to the AHB
+ * specification for specific description of any of the signals.
+ * </p>
+ */
+
+interface svt_ahb_slave_param_if #(int SVT_AHB_DATA_WIDTH_PARAM = `SVT_AHB_MAX_DATA_WIDTH,
+                                   int SVT_AHB_HRESP_PORT_WIDTH_PARAM = `SVT_AHB_HRESP_PORT_WIDTH,
+                                   int SVT_AHB_HSPLIT_PORT_WIDTH_PARAM = `SVT_AHB_MAX_NUM_MASTERS,
+                                   int SVT_AHB_DATA_HUSER_PORT_WIDTH_PARAM = `SVT_AHB_MAX_DATA_USER_WIDTH,
+                                   int SVT_AHB_HSEL_PORT_WIDTH_PARAM = `SVT_AHB_MAX_HSEL_WIDTH
+                            ) (svt_ahb_slave_if slave_if);
+
+  /** User clock
+      In multiple clock mode, user is expected to drive this signal */
+  logic                   hclk;
+
+  /** User reset
+      In multiple reset mode, user is expected to drive this signal */
+  logic                   hresetn;
+
+  logic [(SVT_AHB_DATA_WIDTH_PARAM - 1):0] hrdata;
+  logic [(SVT_AHB_HRESP_PORT_WIDTH_PARAM - 1):0] hresp;
+  logic [(SVT_AHB_HSEL_PORT_WIDTH_PARAM - 1):0] hsel;
+  logic hready;
+  logic [(SVT_AHB_HSPLIT_PORT_WIDTH_PARAM - 1):0] hsplit;
+  logic [(SVT_AHB_DATA_HUSER_PORT_WIDTH_PARAM - 1):0] hrdata_huser;
+
+`ifndef __SVDOC__
+
+`ifdef QUESTA
+   always@(*) slave_if.hclk = hclk;
+   always@(*) slave_if.hresetn = hresetn;
+`else
+   assign slave_if.hclk = hclk;
+   assign slave_if.hresetn = hresetn;
+`endif
+
+`ifndef VCS
+   always@(*) slave_if.hsel      = hsel;
+`else
+   assign slave_if.hsel      = hsel;
+`endif // !`ifndef VCS
+
+   // slave BFM will be driving slave_if (svt_ahb_slave_if)
+   assign hrdata = slave_if.hrdata[(SVT_AHB_DATA_WIDTH_PARAM - 1):0];
+   assign hready = slave_if.hready;
+   assign hresp  = slave_if.hresp[(SVT_AHB_HRESP_PORT_WIDTH_PARAM - 1):0];
+   assign hsplit = slave_if.hsplit[(SVT_AHB_HSPLIT_PORT_WIDTH_PARAM - 1):0];
+   assign hrdata_huser = slave_if.hrdata_huser[(SVT_AHB_DATA_HUSER_PORT_WIDTH_PARAM - 1):0];
+
+`protect
+   initial begin
+      slave_if.param_check_flag = 4'b0;
+      
+      if( SVT_AHB_DATA_WIDTH_PARAM               > `SVT_AHB_MAX_DATA_WIDTH)         begin slave_if.param_check_flag [0]  = 1'b1; end
+      if( SVT_AHB_HRESP_PORT_WIDTH_PARAM         > `SVT_AHB_HRESP_PORT_WIDTH)       begin slave_if.param_check_flag [1]  = 1'b1; end
+      if( SVT_AHB_HSPLIT_PORT_WIDTH_PARAM        > `SVT_AHB_MAX_NUM_MASTERS)        begin slave_if.param_check_flag [2]  = 1'b1; end
+      if( SVT_AHB_DATA_HUSER_PORT_WIDTH_PARAM    > `SVT_AHB_MAX_DATA_USER_WIDTH)    begin slave_if.param_check_flag [3]  = 1'b1; end
+
+   end
+`endprotect
+`endif
+
+endinterface: svt_ahb_slave_param_if
+
+`endif // GUARD_SVT_AHB_SLAVE_PARAM_IF_SVI

@@ -89,4 +89,10 @@ c_seq_axi.sv/c_sqr_axi.sv/c_cfg_axi.sv/c_trans_axi.sv
 	it_xxx(来源于xt_demo)
 	it_yyy(来源于xt_demo)
 	st_soc(来源于xt_demo)
- 
+
+	xt_demo    : apb2ahb  + uvm env
+	ut_axi     : axi      + uvm axi(M+S)  
+	ut_axi_noc : axi_xbar + sv  axi(M+S)  ( axi_xbar initial tc for test address )
+	ut_noc     : axi_xbar + svt_axi_uvm(M+S)
+    ut_ddr3    : ddr3     + svt_axi_uvm(M) + ddr3
+
