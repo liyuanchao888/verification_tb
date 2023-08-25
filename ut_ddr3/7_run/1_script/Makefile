@@ -20,3 +20,10 @@ include ${TB_PATH}/7_run/1_script/common.mk
 #include $(TB_PATH)/6_top/3_cpu_sw/cpu_xx.mk
 #$(info " debug info ${TB_PATH} ")
 
+#------------------ record last command -----------------------------
+ifneq (${MAKECMDGOALS},)#no null
+ifeq ($(filter clean help,${MAKECMDGOALS}),)#no clean,help 
+    $(shell echo "make ${MAKECMDGOALS} " > rerun)
+    $(shell chmod +x ./rerun)
+endif
+endif

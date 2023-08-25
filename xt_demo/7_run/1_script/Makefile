@@ -15,8 +15,15 @@ export TB_PATH                 ?= $(abspath $(MAKE_PATH)/../../)
 include ${TB_PATH}/7_run/1_script/0_config/0_cfg_var.ini
 #---------- call shell script to execute ----------------------------
 include ${TB_PATH}/7_run/1_script/common.mk
-
+#args = `arg="$(filter-out $@,$(MAKECMDGOALS))" && echo $${arg:-${1}}`
 #reserved for cpu software Makefile
 #include $(TB_PATH)/6_top/3_cpu_sw/cpu_xx.mk
-#$(info " debug info ${TB_PATH} ")
 
+#$(info "info is ${arg_1} ")
+#------------------ record last command -----------------------------
+ifneq (${MAKECMDGOALS},)#no null
+ifeq ($(filter clean help,${MAKECMDGOALS}),)#no clean,help 
+    $(shell echo "make ${MAKECMDGOALS} " > rerun)
+    $(shell chmod +x ./rerun)
+endif
+endif
