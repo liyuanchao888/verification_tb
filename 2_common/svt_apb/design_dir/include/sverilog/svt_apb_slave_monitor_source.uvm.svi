@@ -1,0 +1,23 @@
+
+`ifndef GUARD_SVT_APB_SLAVE_MONITOR_SOURCE_UVM_SVI
+`define GUARD_SVT_APB_SLAVE_MONITOR_SOURCE_UVM_SVI
+
+`include "svt_apb_source.uvm.svi"
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_checker)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_monitor_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_monitor.uvm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_monitor_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_monitor_pa_writer_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_monitor_def_toggle_cov_data_callbacks)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_monitor_def_toggle_cov_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_monitor_def_state_cov_data_callbacks)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_monitor_def_state_cov_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_monitor_def_cov_data_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_monitor_def_cov_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_monitor_system_checker_callback)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_monitor_transaction_report_callback)
+
+`endif //GUARD_SVT_APB_SLAVE_MONITOR_SOURCE_UVM_SVI

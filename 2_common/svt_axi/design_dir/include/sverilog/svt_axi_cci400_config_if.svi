@@ -1,0 +1,136 @@
+
+`ifndef GUARD_SVT_AXI_CCI400_CONFIG_IF_SVI
+`define GUARD_SVT_AXI_CCI400_CONFIG_IF_SVI
+
+`include "svt_axi_defines.svi"
+
+/**
+ * <b>General description:</b><p>
+ * The cci400 configuration interface svt_axi_cci400_config_if defines the signals used
+ * in cci400 reset time configuration.
+ *
+ * <b>Clock signal description:</b><br>
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Signal Name </b></th><th bgcolor="#dddddd"> Signal Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> aclk </b></td><td> If all AXI interfaces in the system are expected to run on a different clock, user can use the aclk signal in the port interfaces. Set the configuration parameter svt_axi_system_configuration::common_clock_mode to 0. In this case, connect the aclk signal in each port interface to the appropriate port specific clock in the testbench.</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>Debug port description:</b><br>
+ * In active and passive mode, the VIP assigns a unique number to each
+ * transaction. This number is also displayed in the messages issued by the VIP.
+ * The debug port reflects this unique transaction number. This makes it easy to
+ * fnd a particular transaction on the waveforms, by looking at the debug port
+ * signals. For example, if messages mentions that there is a error on
+ * transaction #100, used can jump to value #100 on debug port signals, to find
+ * the transaction. A seperate debug port is provided for each AXI channel, so
+ * that you can jump to the address phase, data phase or response phase of a
+ * given transaction, for example transaction #100.
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Signal Name </b></th><th bgcolor="#dddddd"> Signal Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> periph_base </b></td><td> Base Address of CCI400 Interconnect address space. </b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>CCI400 signal description:</b><br>
+ * This sub-interface only provides reset time pin configuration signals.
+ * For other ACE/ACE-Lite AXI ports of CCI400 have been defined in svt_axi_if.
+ * Please refer to the CCI400 TRM for specific description of any of these signals.
+ */
+interface svt_axi_cci400_config_if (input logic common_aclk);
+
+  // Parameter to enable/disable Common Clock Mode
+  // By default this mode will be enabled
+  bit           common_clock_mode=1;
+
+
+  // User clock
+  // In multiple clock mode, user is expected to drive this signal
+  logic         aclk;
+  logic         aresetn;
+
+  //-----------------------------------------------------------------------
+  // CCI400 Pin Configuration Interface Write Address Channel Signals
+  //-----------------------------------------------------------------------
+  logic [ 4: 0] acchannelen         ;
+  logic [ 4: 0] qosoverride         ;
+  logic [ 2: 0] bufferableoverride  ;
+  logic [ 2: 0] barrierterminate    ;
+  logic [ 2: 0] broadcastcachemaint ;
+  logic [39:15] periph_base         ;
+  logic [ 3: 0] ecorevnum           ;
+
+  // Global Interface signals
+/** @cond PRIVATE */
+  logic         internal_aclk;
+/** @endcond */
+
+
+  // Depending upon the Clock Mode, assign either the User Clock or
+  // Common Clock to the 'internal_aclk' signal
+  assign internal_aclk = (common_clock_mode == 0) ? aclk : common_aclk;
+
+
+  //-----------------------------------------------------------------------
+  // CCI400 Pin Configuration Clocking blocks
+  //-----------------------------------------------------------------------
+  /*
+   * Clocking block that defines VIP CCI400 configuration pin Interface
+   * signal synchronization and directionality for driver mode.
+   */
+/*
+  clocking axi_cci400_config_driver_cb @(posedge internal_aclk);
+    default input #`SVT_AXI_CCI400_IF_SETUP_TIME output #`SVT_AXI_CCI400_IF_HOLD_TIME;
+
+    input   aresetn ;
+    
+    output  acchannelen         ;
+    output  qosoverride         ;
+    output  bufferableoverride  ;
+    output  barrierterminate    ;
+    output  broadcastcachemaint ;
+    output  periph_base         ;
+    output  ecorevnum         ;
+
+  endclocking : axi_cci400_config_driver_cb
+*/
+
+  //-----------------------------------------------------------------------
+  /**
+   * Clocking block that defines the CCI400 configuration pin Interface
+   * signal synchronization and directionality for monitor mode.
+   */
+  clocking axi_cci400_config_monitor_cb @(posedge internal_aclk);
+    default input #`SVT_AXI_MONITOR_IF_SETUP_TIME output #`SVT_AXI_MONITOR_IF_HOLD_TIME;
+    
+    input  aresetn ;
+
+    input  acchannelen         ;
+    input  qosoverride         ;
+    input  bufferableoverride  ;
+    input  barrierterminate    ;
+    input  broadcastcachemaint ;
+    input  periph_base         ;
+    input  ecorevnum           ;
+
+  endclocking : axi_cci400_config_monitor_cb
+
+
+  //------------------------------------------------------------------------
+  /** Modport used to connect the VIP Master to CCI400 configuration pin interface signals. */
+  //modport svt_axi_master_modport (clocking axi_cci400_config_driver_cb);
+  
+  //-----------------------------------------------------------------------
+  //** Modport used to connect the VIP Monitor to CCI400 configuration pin interface signals. */
+  modport svt_axi_monitor_modport (clocking axi_cci400_config_monitor_cb);
+
+
+endinterface: svt_axi_cci400_config_if
+
+`endif // GUARD_SVT_AXI_CCI400_CONFIG_IF_SVI

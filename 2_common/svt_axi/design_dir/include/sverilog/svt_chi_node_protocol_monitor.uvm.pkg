@@ -1,0 +1,35 @@
+//--------------------------------------------------------------------------
+// COPYRIGHT (C) 2013-2018 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//--------------------------------------------------------------------------
+
+`ifndef GUARD_SVT_CHI_NODE_PROTOCOL_MONITOR_UVM_PKG
+`define GUARD_SVT_CHI_NODE_PROTOCOL_MONITOR_UVM_PKG
+
+`include "svt_amba_common.uvm.pkg"
+`include "svt_axi.uvm.pkg"
+`include "svt_chi_source.uvm.pkg"
+
+`include "svt_chi_if.svi"
+ 
+package svt_chi_node_protocol_monitor_uvm_pkg;
+  import uvm_pkg::*;
+  `include "uvm_macros.svh"
+
+  import svt_uvm_pkg::*;
+  import svt_amba_common_uvm_pkg::*;	    
+  import svt_axi_uvm_pkg::*;
+  import svt_chi_source_uvm_pkg::*;
+  
+  `include `SVT_SOURCE_MAP_AGENT_INCLUDE_SVI(amba_svt,chi_node_protocol_monitor_svt,R-2020.12,svt_chi_node_protocol_monitor_source)
+endpackage
+
+`endif // GUARD_SVT_CHI_NODE_PROTOCOL_MONITOR_UVM_PKG

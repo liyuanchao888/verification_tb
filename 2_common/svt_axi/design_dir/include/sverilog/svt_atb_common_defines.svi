@@ -1,0 +1,182 @@
+
+`ifndef GUARD_SVT_ATB_COMMON_DEFINES_SVI
+`define GUARD_SVT_ATB_COMMON_DEFINES_SVI
+
+// User controllable
+`ifndef SVT_ATB_MAX_ADDR_WIDTH      
+`define SVT_ATB_MAX_ADDR_WIDTH             32
+`endif
+`ifndef SVT_ATB_MAX_DATA_WIDTH      
+`define SVT_ATB_MAX_DATA_WIDTH             32
+`endif
+`ifndef SVT_ATB_MAX_ID_WIDTH       
+`define SVT_ATB_MAX_ID_WIDTH                7
+`endif
+`ifndef SVT_ATB_MAX_DATA_VALID_BYTES_WIDTH
+`define SVT_ATB_MAX_DATA_VALID_BYTES_WIDTH  2
+`endif
+
+`ifndef SVT_ATB_MIN_DATA_WIDTH           
+`define SVT_ATB_MIN_DATA_WIDTH             32
+`endif
+`ifndef SVT_ATB_MIN_ID_WIDTH            
+`define SVT_ATB_MIN_ID_WIDTH                7
+`endif
+`ifndef SVT_ATB_MIN_DATA_VALID_BYTES_WIDTH 
+`define SVT_ATB_MIN_DATA_VALID_BYTES_WIDTH  2
+`endif
+
+
+`ifndef SVT_ATB_MAX_BURST_LENGTH     
+`define SVT_ATB_MAX_BURST_LENGTH           4
+`endif
+`ifndef SVT_ATB_VALID_SOURCE_ID_RANGE 
+`define SVT_ATB_VALID_SOURCE_ID_RANGE      [7'h01 : 7'h6F]
+`endif
+`ifndef SVT_ATB_RESERVED_SOURCE_ID   
+`define SVT_ATB_RESERVED_SOURCE_ID         7'h0, [7'h70  :  7'h7C], 7'h7E, 7'h7F
+`endif
+`ifndef SVT_ATB_TRIGGER_ID          
+`define SVT_ATB_TRIGGER_ID                 7'h7D
+`endif
+`ifndef SVT_ATB_FLUSH_REQUEST_TYPE   
+`define SVT_ATB_FLUSH_REQUEST_TYPE         1
+`endif
+`ifndef SVT_ATB_SYNC_REQUEST_TYPE     
+`define SVT_ATB_SYNC_REQUEST_TYPE          2
+`endif
+
+`ifndef SVT_ATB_MAX_DATA_VALID_DELAY   
+`define SVT_ATB_MAX_DATA_VALID_DELAY      16
+`endif
+`ifndef SVT_ATB_MAX_DATA_READY_DELAY    
+`define SVT_ATB_MAX_DATA_READY_DELAY      16
+`endif
+`ifndef SVT_ATB_SLAVE_MAX_DATA_RECEIVE_RATE_RANGE 
+`define SVT_ATB_SLAVE_MAX_DATA_RECEIVE_RATE_RANGE  [50:90]
+`endif
+`ifndef SVT_ATB_FLUSH_VALID_ENABLE_RANGE 
+`define SVT_ATB_FLUSH_VALID_ENABLE_RANGE  0:=96,1:=4
+`endif
+`ifndef SVT_ATB_FLUSH_VALID_DELAY_RANGE 
+`define SVT_ATB_FLUSH_VALID_DELAY_RANGE  [0:10]
+`endif
+`ifndef SVT_ATB_SYNCREQ_ENABLE_RANGE 
+`define SVT_ATB_SYNCREQ_ENABLE_RANGE  0:=97,1:=3
+`endif
+`ifndef SVT_ATB_SYNCREQ_DELAY_RANGE 
+`define SVT_ATB_SYNCREQ_DELAY_RANGE  [0:10]
+`endif
+`ifndef SVT_ATB_BUS_INACTIVITY_TIMEOUT   
+`define SVT_ATB_BUS_INACTIVITY_TIMEOUT   100
+`endif
+`ifndef SVT_ATB_MAX_ADDR
+`define SVT_ATB_MAX_ADDR ((1<<`SVT_ATB_MAX_ADDR_WIDTH)-1)
+`endif
+
+
+//----- define macros used in sequences -----//
+`ifndef svt_atb_master_random_sequence_NORMAL_DATA_WT
+`define svt_atb_master_random_sequence_NORMAL_DATA_WT 50
+`endif
+
+`ifndef svt_atb_master_random_sequence_TRIGGER_DATA_WT
+`define svt_atb_master_random_sequence_TRIGGER_DATA_WT 20
+`endif
+
+`ifndef svt_atb_master_random_sequence_SEND_FLUSH_DATA_ASAP
+`define svt_atb_master_random_sequence_SEND_FLUSH_DATA_ASAP 1
+`endif
+
+`ifndef svt_atb_base_test_SEQUENCE_LENGTH
+`define svt_atb_base_test_SEQUENCE_LENGTH 50
+`endif
+
+`ifndef SVT_ATB_MASTER_RAND_PERCENTAGE_TO_START_ZERO_DELAY_RESPONSE_RAND_RANGE
+`define SVT_ATB_MASTER_RAND_PERCENTAGE_TO_START_ZERO_DELAY_RESPONSE_RAND_RANGE 10:=40,[15:30]:/60
+`endif
+
+`ifndef SVT_ATB_MASTER_NUM_TXN_WITH_ZERO_READY_DELAY_RESPONSE_RAND_RANGE
+`define SVT_ATB_MASTER_NUM_TXN_WITH_ZERO_READY_DELAY_RESPONSE_RAND_RANGE 5,15,20
+`endif
+
+`ifndef SVT_ATB_SLAVE_RAND_PERCENTAGE_TO_START_ZERO_DELAY_RESPONSE_RAND_RANGE
+`define SVT_ATB_SLAVE_RAND_PERCENTAGE_TO_START_ZERO_DELAY_RESPONSE_RAND_RANGE 10:=40,[15:30]:/60
+`endif
+
+`ifndef SVT_ATB_SLAVE_NUM_TXN_WITH_ZERO_READY_DELAY_RESPONSE_RAND_RANGE
+`define SVT_ATB_SLAVE_NUM_TXN_WITH_ZERO_READY_DELAY_RESPONSE_RAND_RANGE 5:=40,15:=30,20:=30
+`endif
+
+`ifndef SVT_ATB_SLAVE_RAND_PERCENTAGE_TO_SEND_EMPTY_FLUSH_REQUEST_RAND_RANGE
+`define SVT_ATB_SLAVE_RAND_PERCENTAGE_TO_SEND_EMPTY_FLUSH_REQUEST_RAND_RANGE 5:=40,[6:20]:/60
+`endif
+
+`ifndef SVT_ATB_SLAVE_NUM_WAIT_CYCLES_BEFORE_SENDING_EMPTY_FLUSH_REQUEST_RAND_RANGE
+`define SVT_ATB_SLAVE_NUM_WAIT_CYCLES_BEFORE_SENDING_EMPTY_FLUSH_REQUEST_RAND_RANGE 10:=1,[11:30]:=4,[31:50]:=50,[51:150]:=45
+`endif
+// -----------------------------------------------
+`protect
+
+`define ATB_CHAN_IDLE_TYPES INACTIVE_CHAN_LOW_VAL, INACTIVE_CHAN_HIGH_VAL, INACTIVE_CHAN_PREV_VAL, INACTIVE_CHAN_X_VAL  , INACTIVE_CHAN_Z_VAL  , INACTIVE_CHAN_RAND_VAL
+
+`ifdef SVT_UVM_TECHNOLOGY
+  `define _SVT_UVM_OVM_TECHNOLOGY
+`elsif SVT_OVM_TECHNOLOGY
+  `define _SVT_UVM_OVM_TECHNOLOGY
+`endif
+
+`define _XVM(str) \
+   `ifdef SVT_UVM_TECHNOLOGY \
+      uvm_``str \
+   `elsif SVT_OVM_TECHNOLOGY \
+      ovm_``str \
+   `endif
+
+
+// represents how many precision digits are used
+// to determine timestamp
+//----------------------------------------------
+`ifndef SVT_ATB_NUM_TIMESCALE_PRECISION_DIGITS
+`define SVT_ATB_NUM_TIMESCALE_PRECISION_DIGITS 3
+`endif
+
+//----- ENUM DEFINE DECLARATION -----//
+//-----------------------------------//
+`define SVT_ATB_INACTIVE_CHAN_LOW_VAL 0
+`define SVT_ATB_INACTIVE_CHAN_HIGH_VAL 1
+`define SVT_ATB_INACTIVE_CHAN_PREV_VAL 2
+`define SVT_ATB_INACTIVE_CHAN_X_VAL 3
+`define SVT_ATB_INACTIVE_CHAN_Z_VAL 4
+`define SVT_ATB_INACTIVE_CHAN_RAND_VAL 5
+
+`define SVT_ATB_INTERFACE_ATB1_0 0
+`define SVT_ATB_INTERFACE_ATB1_1 1
+
+`define SVT_ATB_MASTER 0
+`define SVT_ATB_SLAVE  1
+
+`define SVT_ATB_TRANSACTION_TYPE_NORMAL_DATA   0
+`define SVT_ATB_TRANSACTION_TYPE_FLUSH_DATA    1
+`define SVT_ATB_TRANSACTION_TYPE_TRIGGER_DATA  2
+`define SVT_ATB_TRANSACTION_TYPE_SYNC_DATA     3
+
+`define SVT_ATB_TRANSACTION_PREV_DATA_VALID_REF     0
+`define SVT_ATB_TRANSACTION_PREV_DATA_HANDSHAKE_REF 1
+
+`define SVT_ATB_TRANSACTION_PREV_DATA_VALID_REF 0
+`define SVT_ATB_TRANSACTION_MANUAL_DATA_READY   1
+
+
+//-----------------------------------//
+
+`define SVT_ATB_PRINT_PREFIX1(xact) \
+$sformatf("{TYPE(%0s) OBJ_ID('d%0d) ID('h%0x)}",\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?xact.object_id:-1),\
+          ((xact != null)?xact.id:0))
+
+
+`endprotect
+
+`endif // GUARD_SVT_ATB_COMMON_DEFINES_SVI

@@ -1,0 +1,397 @@
+//=======================================================================
+// COPYRIGHT (C) 2013 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//
+//-----------------------------------------------------------------------
+
+`ifndef GUARD_SVT_CHI_IC_SN_IF_SVI
+`define GUARD_SVT_CHI_IC_SN_IF_SVI
+
+`include "svt_chi_port_defines.svi"
+
+/**
+    @grouphdr Interfaces svt_chi_ic_sn_if CHI IC Slave Node interface. This is a sub-interface of svt_chi_if.
+ */
+
+/**
+ * @groupname svt_chi_ic_sn_if
+ * <b>General description:</b><p>
+ * The SN interface svt_chi_ic_sn_if defines the CHI signals appropriate for a
+ * node in the interconnect that connects to a fully coherent Slave Node, along
+ * with the modports needed for the Interconnect and monitor VIP. IC SN
+ * interface is a sub-interface to the top level interface svt_chi_if.
+ *
+ * <b>Clock signal description:</b><br>
+ * Clock signal is obtained in this IC SN interface through interface port list.
+ * User provides this signal from the testbench to the top level interface
+ * svt_chi_if through interface port list. The top level interface then passes
+ * this signal down to the SN sub-interface.
+ *
+ * <b>Debug port description:</b><br>
+ * - The CHI VIP drives the object number of the transaction corresponding to a flit on the debug ports.
+ * - The CHI VIP drives the current l-credit count corresponding to each virtual channel on the debug ports.
+ *   - #curr_req_lcrd_count : 
+ *     - Current TX REQ VC l-credit count, will be driven whenever there is a change in TX REQ VC l-credit count
+ *     - On power up or reset will be driven to default l-credit count value zero
+ *     .
+ *   - #curr_txdat_lcrd_count : 
+ *     - Current TX DAT VC l-credit count, will be driven whenever there is a change in TX DAT VC l-credit count
+ *     - On power up or reset will be driven to default l-credit count value zero
+ *     .
+ *   - #curr_rxrsp_lcrd_count : 
+ *     - Current RX RSP VC l-credit count, will be driven whenever there is a change in RX RSP VC l-credit count
+ *     - On power up or reset will be driven to default l-credit count value svt_chi_node_configuration::rx_rsp_vc_flit_buffer_size
+ *     .
+ *   - #curr_rxdat_lcrd_count : 
+ *     - Current RX DAT VC l-credit count, will be driven whenever there is a change in RX DAT VC l-credit count
+ *     - On power up or reset will be driven to default l-credit count value svt_chi_node_configuration::rx_dat_vc_flit_buffer_size
+ *     .
+ *   . 
+ * .
+ *
+ * <b>CHI signal description:</b><br>
+ * This sub-interface supports signals for the CHI protocol. The names of the
+ * signals match the names specified in the CHI specification. Please refer to
+ * the CHI specification for specific description of any of the signals.
+ */
+interface svt_chi_ic_sn_if (input logic clk, input logic resetn);
+
+  bit is_active;
+
+  //-----------------------------------------------------------------------
+  // Link Activation Status Signals
+  //-----------------------------------------------------------------------
+  logic TXSACTIVE;
+  logic RXSACTIVE;
+
+  //-----------------------------------------------------------------------
+  // Link Activation Status Signals
+  //-----------------------------------------------------------------------
+  logic RXLINKACTIVEREQ;
+  logic RXLINKACTIVEACK;
+  logic TXLINKACTIVEREQ;
+  logic TXLINKACTIVEACK;
+
+  //-----------------------------------------------------------------------
+  // TX Request Virtual Channel
+  //-----------------------------------------------------------------------
+  logic TXREQFLITPEND;
+  logic TXREQFLITV;
+  logic [`SVT_CHI_MAX_REQ_FLIT_WIDTH-1:0] TXREQFLIT;
+  logic TXREQLCRDV;
+
+  //-----------------------------------------------------------------------
+  // RX Response Virtual Channel
+  //-----------------------------------------------------------------------
+  logic RXRSPFLITPEND;
+  logic RXRSPFLITV;
+  logic [`SVT_CHI_MAX_RSP_FLIT_WIDTH-1:0] RXRSPFLIT;
+  logic RXRSPLCRDV;
+
+  //-----------------------------------------------------------------------
+  // RX Dat Virtual Channel
+  //-----------------------------------------------------------------------
+  logic RXDATFLITPEND;
+  logic RXDATFLITV;
+  logic [`SVT_CHI_MAX_DAT_FLIT_WIDTH-1:0] RXDATFLIT;
+  logic RXDATLCRDV;
+
+  //-----------------------------------------------------------------------
+  // TX Dat Virtual Channel
+  //-----------------------------------------------------------------------
+  logic TXDATFLITPEND;
+  logic TXDATFLITV;
+  logic [`SVT_CHI_MAX_DAT_FLIT_WIDTH-1:0] TXDATFLIT;
+  logic TXDATLCRDV;
+  
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+  `ifdef SVT_CHI_INTERFACE_PARITY_ENABLE
+
+  //-----------------------------------------------------------------------
+  // Check signals for Link Activation Status Signals
+  //-----------------------------------------------------------------------
+  logic TXSACTIVECHK;
+  logic RXSACTIVECHK;
+
+  //-----------------------------------------------------------------------
+  //Check signals for Link Activation Status Signals
+  //-----------------------------------------------------------------------
+  logic RXLINKACTIVEREQCHK;
+  logic RXLINKACTIVEACKCHK;
+  logic TXLINKACTIVEREQCHK;
+  logic TXLINKACTIVEACKCHK;
+
+  //-----------------------------------------------------------------------
+  //Check signals for TX Request Virtual Channel
+  //-----------------------------------------------------------------------
+  logic TXREQFLITPENDCHK;
+  logic TXREQFLITVCHK;
+  logic [`SVT_CHI_IF_PARITY_REQ_FLIT_CHK_WIDTH -1:0] TXREQFLITCHK;
+  logic TXREQLCRDVCHK;
+
+  //-----------------------------------------------------------------------
+  //Check signals for RX Response Virtual Channel
+  //-----------------------------------------------------------------------
+  logic RXRSPFLITPENDCHK;
+  logic RXRSPFLITVCHK;
+  logic [`SVT_CHI_IF_PARITY_RSP_FLIT_CHK_WIDTH -1:0] RXRSPFLITCHK;
+  logic RXRSPLCRDVCHK;
+
+  //-----------------------------------------------------------------------
+  // Check signals for RX Dat Virtual Channel
+  //-----------------------------------------------------------------------
+  logic RXDATFLITPENDCHK;
+  logic RXDATFLITVCHK;
+  logic [`SVT_CHI_IF_PARITY_DAT_FLIT_CHK_WIDTH -1:0] RXDATFLITCHK;
+  logic RXDATLCRDVCHK;
+
+  //-----------------------------------------------------------------------
+  //Check signals for TX Dat Virtual Channel
+  //-----------------------------------------------------------------------
+  logic TXDATFLITPENDCHK;
+  logic TXDATFLITVCHK;
+  logic [`SVT_CHI_IF_PARITY_DAT_FLIT_CHK_WIDTH -1:0] TXDATFLITCHK;
+  logic TXDATLCRDVCHK;
+  `endif
+`endif
+  //-----------------------------------------------------------------------
+  // Debug Port Signals 
+  //-----------------------------------------------------------------------
+  /** Object number of the transaction currently observed on REQ VC */
+  logic[(`SVT_CHI_DEBUG_PORT_WIDTH-1):0] req_obj_num;
+
+  /** Object number of the transaction currently observed on RX RSP VC */
+  logic[(`SVT_CHI_DEBUG_PORT_WIDTH-1):0] rx_rsp_obj_num;
+
+  /** Object number of the transaction currently observed on RX DAT VC */
+  logic[(`SVT_CHI_DEBUG_PORT_WIDTH-1):0] rx_dat_obj_num;
+
+  /** Object number of the transaction currently observed on TX RSP VC */
+  logic[(`SVT_CHI_DEBUG_PORT_WIDTH-1):0] tx_rsp_obj_num;
+
+  /** Object number of the transaction currently observed on TX DAT VC */
+  logic[(`SVT_CHI_DEBUG_PORT_WIDTH-1):0] tx_dat_obj_num;
+
+  /** Object number of the transaction currently observed on SNP VC */
+  logic[(`SVT_CHI_DEBUG_PORT_WIDTH-1):0] snp_req_obj_num;
+
+  /** Object number of the transaction currently observed on TX DAT VC, if
+    * it corresponds to a snoop transaction */
+  logic[(`SVT_CHI_DEBUG_PORT_WIDTH-1):0] snp_dat_obj_num;
+
+  /** Object number of the transaction currently observed on TX RSP VC, if
+    * it corresponds to a snoop transaction */
+  logic[(`SVT_CHI_DEBUG_PORT_WIDTH-1):0] snp_rsp_obj_num;
+
+  /** Current L-credit count observed on TX REQ VC */
+  logic[(`SVT_CHI_DEBUG_PORT_WIDTH-1):0] curr_req_lcrd_count;
+
+  /** Current L-credit count observed on TX DAT VC */
+  logic[(`SVT_CHI_DEBUG_PORT_WIDTH-1):0] curr_txdat_lcrd_count;
+
+  /** Current L-credit count observed on RX RSP VC */
+  logic[(`SVT_CHI_DEBUG_PORT_WIDTH-1):0] curr_rxrsp_lcrd_count;
+
+  /** Current L-credit count observed on RX DAT VC */
+  logic[(`SVT_CHI_DEBUG_PORT_WIDTH-1):0] curr_rxdat_lcrd_count;
+
+
+  // Clocking blocks
+  //-----------------------------------------------------------------------
+  /**
+   * Clocking block that defines VIP CHI SN Interface signal synchronization
+   * and directionality.
+   */
+  clocking rn_cb @(posedge clk);
+    default input #`SVT_CHI_SN_IF_SETUP_TIME output #`SVT_CHI_SN_IF_HOLD_TIME;
+
+    // Link Activation Status Signals
+    output TXSACTIVE;
+    input  RXSACTIVE;
+
+    // Link Activation Status Signals
+    input  RXLINKACTIVEREQ;
+    output RXLINKACTIVEACK;
+    output TXLINKACTIVEREQ;
+    input  TXLINKACTIVEACK;
+
+    // TX Request Virtual Channel
+    output  TXREQFLITPEND;
+    output  TXREQFLITV;
+    output  TXREQFLIT;
+    input TXREQLCRDV;
+
+    // RX Response Virtual Channel
+    input RXRSPFLITPEND;
+    input RXRSPFLITV;
+    input RXRSPFLIT;
+    output  RXRSPLCRDV;
+
+    // RX Dat Virtual Channel
+    input RXDATFLITPEND;
+    input RXDATFLITV;
+    input RXDATFLIT;
+    output RXDATLCRDV;
+
+    // TX Dat Virtual Channel
+    output TXDATFLITPEND;
+    output TXDATFLITV;
+    output TXDATFLIT;
+    input TXDATLCRDV;
+
+  `ifdef SVT_CHI_ISSUE_D_ENABLE
+    `ifdef SVT_CHI_INTERFACE_PARITY_ENABLE
+    //Check signals for Link Activation Status Signals
+    output TXSACTIVECHK;
+    input  RXSACTIVECHK;
+
+    //Check signals for Link Activation Status Signals
+    input  RXLINKACTIVEREQCHK;
+    output RXLINKACTIVEACKCHK;
+    output TXLINKACTIVEREQCHK;
+    input  TXLINKACTIVEACKCHK;
+
+    //Check signals for TX Request Virtual Channel
+    output  TXREQFLITPENDCHK;
+    output  TXREQFLITVCHK;
+    output  TXREQFLITCHK;
+    input TXREQLCRDVCHK;
+
+    //Check signals for RX Response Virtual Channel
+    input RXRSPFLITPENDCHK;
+    input RXRSPFLITVCHK;
+    input RXRSPFLITCHK;
+    output  RXRSPLCRDVCHK;
+
+    //Check signals for RX Dat Virtual Channel
+    input RXDATFLITPENDCHK;
+    input RXDATFLITVCHK;
+    input RXDATFLITCHK;
+    output RXDATLCRDVCHK;
+
+    //Check signals for TX Dat Virtual Channel
+    output TXDATFLITPENDCHK;
+    output TXDATFLITVCHK;
+    output TXDATFLITCHK;
+    input TXDATLCRDVCHK;
+    `endif
+  `endif
+  endclocking: rn_cb 
+
+  //-----------------------------------------------------------------------
+  /**
+   * Clocking block that defines VIP CHI SN Monitor Interface signal synchronization
+   * and directionality.
+   */
+  clocking monitor_cb @(posedge clk);
+    default input #`SVT_CHI_SN_IF_SETUP_TIME output #`SVT_CHI_SN_IF_HOLD_TIME;
+
+    // Link Activation Status Signals
+    input  RXSACTIVE;
+    input  TXSACTIVE;
+
+    // Link Activation Status Signals
+    input  RXLINKACTIVEREQ;
+    input  RXLINKACTIVEACK;
+    input  TXLINKACTIVEREQ;
+    input  TXLINKACTIVEACK;
+
+    // TX Request Virtual Channel
+    input  TXREQFLITPEND;
+    input  TXREQFLITV;
+    input  TXREQFLIT;
+    input  TXREQLCRDV;
+
+    // RX Response Virtual Channel
+    input  RXRSPFLITPEND;
+    input  RXRSPFLITV;
+    input  RXRSPFLIT;
+    input  RXRSPLCRDV;
+
+    // RX Dat Virtual Channel
+    input  RXDATFLITPEND;
+    input  RXDATFLITV;
+    input  RXDATFLIT;
+    input  RXDATLCRDV;
+
+    // TX Dat Virtual Channel
+    input  TXDATFLITPEND;
+    input  TXDATFLITV;
+    input  TXDATFLIT;
+    input  TXDATLCRDV;
+
+  `ifdef SVT_CHI_ISSUE_D_ENABLE 
+    `ifdef SVT_CHI_INTERFACE_PARITY_ENABLE
+    //Check signals for Link Activation Status Signals
+    input  RXSACTIVECHK;
+    input  TXSACTIVECHK;
+
+    //Check signals for Link Activation Status Signals
+    input  RXLINKACTIVEREQCHK;
+    input  RXLINKACTIVEACKCHK;
+    input  TXLINKACTIVEREQCHK;
+    input  TXLINKACTIVEACKCHK;
+
+    //Check signals for TX Request Virtual Channel
+    input  TXREQFLITPENDCHK;
+    input  TXREQFLITVCHK;
+    input  TXREQFLITCHK;
+    input  TXREQLCRDVCHK;
+
+    //Check signals for RX Response Virtual Channel
+    input  RXRSPFLITPENDCHK;
+    input  RXRSPFLITVCHK;
+    input  RXRSPFLITCHK;
+    input  RXRSPLCRDVCHK;
+
+    //Check signals for RX Dat Virtual Channel
+    input  RXDATFLITPENDCHK;
+    input  RXDATFLITVCHK;
+    input  RXDATFLITCHK;
+    input  RXDATLCRDVCHK;
+
+    //Check signals for TX Dat Virtual Channel
+    input  TXDATFLITPENDCHK;
+    input  TXDATFLITVCHK;
+    input  TXDATFLITCHK;
+    input  TXDATLCRDVCHK;
+    `endif
+  `endif
+  endclocking: monitor_cb
+
+  //------------------------------------------------------------------------
+  /** Modport used to connect the VIP HN to CHI interface signals. */
+  modport ic_sn_modport (clocking rn_cb, input resetn);
+  
+  //-----------------------------------------------------------------------
+  /** Modport used to connect the VIP Monitor to CHI interface signals. */
+  modport monitor_modport (clocking monitor_cb, input resetn);
+
+  /** Debug Modport */
+  modport debug_modport(output req_obj_num,
+                        output rx_rsp_obj_num,
+                        output rx_dat_obj_num,
+                        output tx_rsp_obj_num,
+                        output tx_dat_obj_num,
+                        output snp_req_obj_num,
+                        output snp_dat_obj_num,
+                        output snp_rsp_obj_num,
+                        output curr_req_lcrd_count,
+                        output curr_txdat_lcrd_count,
+                        output curr_rxrsp_lcrd_count,
+                        output curr_rxdat_lcrd_count
+          );
+
+  /**support for signal logging. */
+`SVT_IF_UTIL_SUPPORT_SIGNAL_LOGGING(1)
+endinterface: svt_chi_ic_sn_if
+
+`endif // GUARD_SVT_CHI_IC_SN_IF_SVI

@@ -1,0 +1,11 @@
+
+`ifndef GUARD_SVT_APB_MASTER_SOURCE_VMM_SVI
+`define GUARD_SVT_APB_MASTER_SOURCE_VMM_SVI
+
+`include "svt_apb_source.vmm.svi"
+
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_master_svt,R-2020.12,svt_apb_master_common)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_master_svt,R-2020.12,svt_apb_master.vmm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_master_svt,R-2020.12,svt_apb_master_callback)
+
+`endif //GUARD_SVT_APB_MASTER_SOURCE_VMM_SVI

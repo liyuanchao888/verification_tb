@@ -1,0 +1,23 @@
+
+`ifndef GUARD_SVT_APB_SOURCE_OVM_SVI
+`define GUARD_SVT_APB_SOURCE_OVM_SVI
+
+`ifndef DESIGNWARE_INCDIR
+  `include "svt_source.ovm.svi"
+`endif
+`include "svt_amba_common_source.ovm.svi"
+
+`include "svt_apb_defines.svi"
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_slave_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_slave_addr_range)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_system_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_master_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_slave_transaction)
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_mem_address_mapper)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_apb_mem_system_backdoor)
+
+`endif // GUARD_SVT_APB_SOURCE_OVM_SVI

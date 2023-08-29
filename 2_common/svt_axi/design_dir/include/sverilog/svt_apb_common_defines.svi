@@ -1,0 +1,576 @@
+
+`ifndef GUARD_SVT_APB_COMMON_DEFINES_SVI
+`define GUARD_SVT_APB_COMMON_DEFINES_SVI
+
+// User controllable
+
+// Defines for transaction type
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_TYPE_READ 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_TYPE_WRITE 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_TYPE_IDLE 2
+
+// Defines for prot value
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_PPROT0_NORMAL 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_PPROT0_PRIVILEGED 1
+
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_PPROT1_SECURE 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_PPROT1_NON_SECURE 1
+
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_PPROT2_DATA 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_PPROT2_INSTRUCTION 1
+
+
+// Defines for the address width
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_1 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_2 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_3 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_4 4
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_5 5
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_6 6
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_7 7
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_8 8
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_9 9
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_10 10
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_11 11
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_12 12
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_13 13
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_14 14
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_15 15
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_16 16
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_17 17
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_18 18
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_19 19
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_20 20
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_21 21
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_22 22
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_23 23
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_24 24
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_25 25
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_26 26
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_27 27
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_28 28
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_29 29
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_30 30
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_31 31
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_32 32
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PADDR_WIDTH_64 64
+
+// Defines for the address width
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PDATA_WIDTH_8 8
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PDATA_WIDTH_16 16
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PDATA_WIDTH_32 32
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_CONFIGURATION_PDATA_WIDTH_64 64
+
+// Defines for States of APB State Machine type
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_STATE_IDLE 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_STATE_SETUP 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_STATE_ENABLE 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_STATE_UNKNOWN 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_TRANSACTION_STATE_ABORTED 4
+
+// Defines for the generator source
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_NO_SOURCE 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_ATOMIC_GEN_SOURCE 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_SCENARIO_GEN_SOURCE 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_SIMPLE_RESPONSE_GEN_SOURCE 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_MEMORY_RESPONSE_GEN_SOURCE 4
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_USER_RESPONSE_GEN_SOURCE 5
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_INACTIVE_LOW_VAL  0
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_INACTIVE_HIGH_VAL 1
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_INACTIVE_X_VAL    2
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_INACTIVE_Z_VAL    3
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_INACTIVE_PREV_VAL 4
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_APB_DEFAULT_DATA_IDLE_VALUE
+  `define SVT_APB_DEFAULT_DATA_IDLE_VALUE `SVT_APB_INACTIVE_PREV_VAL
+`endif
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_PRINT_PREFIX(xact) \
+$sformatf("{XACT_TYPE(%0s) ADDRESS('h%0x) DATA('h%0x) } ",\
+          ((xact != null)?xact.xact_type.name:"null"),\
+          ((xact != null)?xact.address:0),\
+          ((xact != null)?xact.data:0)) 
+
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`ifdef SVT_VMM_TECHNOLOGY
+ `define SVT_APB_EVENT_DECL(ev_name)   `svt_decl_event(NOTIFY_``ev_name) 
+`else 
+ `define SVT_APB_EVENT_DECL(ev_name)   `svt_decl_event(EVENT_``ev_name)
+`endif
+
+//Defines for sequence of four Read and Write transactions coverage
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_RD_RD_RD_SEQ 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_RD_RD_WR_SEQ 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_RD_WR_RD_SEQ 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_RD_WR_WR_SEQ 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_WR_RD_RD_SEQ 4
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_WR_RD_WR_SEQ 5
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_WR_WR_RD_SEQ 6
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_WR_WR_WR_SEQ 7
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_RD_RD_RD_SEQ 8
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_RD_RD_WR_SEQ 9
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_RD_WR_RD_SEQ 10
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_RD_WR_WR_SEQ 11
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_WR_RD_RD_SEQ 12
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_WR_RD_WR_SEQ 13
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_WR_WR_RD_SEQ 14
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_WR_WR_WR_SEQ 15
+
+
+//Defines for sequence of four transactions with PSLVERR response coverage
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_OK_OK_OK_ERR_SEQ 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_OK_OK_ERR_OK_SEQ 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_OK_OK_ERR_ERR_SEQ 3
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_OK_ERR_OK_OK_SEQ 4
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_OK_ERR_OK_ERR_SEQ 5
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_OK_ERR_ERR_OK_SEQ 6
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_OK_ERR_ERR_ERR_SEQ 7
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_ERR_OK_OK_OK_SEQ 8
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_ERR_OK_OK_ERR_SEQ 9
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_ERR_OK_ERR_OK_SEQ 10
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_ERR_OK_ERR_ERR_SEQ 11
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_ERR_ERR_OK_OK_SEQ 12
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_ERR_ERR_OK_ERR_SEQ 13
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_ERR_ERR_ERR_OK_SEQ 14
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_ERR_ERR_ERR_ERR_SEQ 15
+
+
+//Defines for Aligned/Unaligned transfer coverage when Pdata_width is 16 bits
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_ADDR_UNALIGNED16 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_ADDR_ALIGNED16 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_ADDR_UNALIGNED16 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_ADDR_ALIGNED16 3
+
+
+//Defines for Aligned/Unaligned transfer coverage when Pdata_width is 32 bits
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_ADDR_UNALIGNED32 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_ADDR_ALIGNED32 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_ADDR_UNALIGNED32 2 
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_ADDR_ALIGNED32 3
+
+
+//Defines for Aligned/Unaligned transfer coverage when Pdata_width is 64 bits
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_ADDR_UNALIGNED64 0
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_WR_ADDR_ALIGNED64 1
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_ADDR_UNALIGNED64 2
+
+/**
+  @groupname AMBAUSERNONMODIFIABLE
+*/
+`define SVT_APB_RD_ADDR_ALIGNED64 3
+
+/**
+  @groupname AMBAUSERMODIFIABLE
+*/
+`ifndef SVT_AMBA_MEM_MODE_WIDTH
+ `define SVT_AMBA_MEM_MODE_WIDTH 2
+`endif
+
+`endif // GUARD_SVT_APB_COMMON_DEFINES_SVI

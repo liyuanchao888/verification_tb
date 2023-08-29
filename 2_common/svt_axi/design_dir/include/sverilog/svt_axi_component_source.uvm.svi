@@ -1,0 +1,30 @@
+
+`ifndef GUARD_SVT_AXI_COMPONENT_UVM_SOURCE_SVI
+`define GUARD_SVT_AXI_COMPONENT_UVM_SOURCE_SVI
+
+`ifndef DESIGNWARE_INCDIR
+  `include "svt_source.uvm.svi"
+`endif
+`include "svt_axi_source.uvm.svi"
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_passive_cache_line)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_passive_cache)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_checker)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_lp_checker)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_system_checker)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_common)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_system_common)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_util)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_master_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_master_snoop_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_master_sequencer_callback)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_slave_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_slave_snoop_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_port_perf_status)
+`ifndef SVT_EXCLUDE_VCAP
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_master_traffic_profile_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_traffic_profile_callback )
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_fifo_rate_control)
+`endif
+
+`endif // GUARD_SVT_AXI_COMPONENT_UVM_SOURCE_SVI

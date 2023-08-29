@@ -1,0 +1,12 @@
+
+`ifndef GUARD_SVT_APB_SLAVE_AGENT_SOURCE_UVM_SVI
+`define GUARD_SVT_APB_SLAVE_AGENT_SOURCE_UVM_SVI
+
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,apb_slave_svt,R-2020.12,svt_apb_slave_source.uvm)
+`include `SVT_SOURCE_MAP_MODEL_INCLUDE_SVI(amba_svt,apb_slave_monitor_svt,R-2020.12,svt_apb_slave_monitor_source.uvm)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_agent_svt,R-2020.12,svt_apb_slave_sequencer)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_agent_svt,R-2020.12,svt_apb_slave_memory)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_agent_svt,R-2020.12,svt_apb_slave_sequence_collection)
+`include `SVT_SOURCE_MAP_MODEL_MODULE(amba_svt,apb_slave_agent_svt,R-2020.12,svt_apb_slave_agent)
+
+`endif //GUARD_SVT_APB_SLAVE_AGENT_SOURCE_UVM_SVI

@@ -1,0 +1,761 @@
+
+
+`ifndef GUARD_SVT_AXI_MASTER_BIND_IF_SVI
+`define GUARD_SVT_AXI_MASTER_BIND_IF_SVI
+
+`include "svt_axi_defines.svi"
+//=======================================================================
+
+
+interface svt_axi_master_bind_if #( int AWADDR_WIDTH_PARAM            =   `SVT_AXI_MAX_ADDR_WIDTH,
+                                    int ARADDR_WIDTH_PARAM            =   `SVT_AXI_MAX_ADDR_WIDTH,
+                                    int AWLEN_WIDTH_PARAM             =   `SVT_AXI_MAX_BURST_LENGTH_WIDTH,
+                                    int ARLEN_WIDTH_PARAM             =   `SVT_AXI_MAX_BURST_LENGTH_WIDTH,  
+                                    int ARSIZE_WIDTH_PARAM            =   `SVT_AXI_SIZE_WIDTH,
+                                    int AWSIZE_WIDTH_PARAM            =   `SVT_AXI_SIZE_WIDTH,
+                                    int AWBURST_WIDTH_PARAM           =   `SVT_AXI_BURST_WIDTH,
+                                    int ARBURST_WIDTH_PARAM           =   `SVT_AXI_BURST_WIDTH,
+                                    int ARLOCK_WIDTH_PARAM            =   `SVT_AXI_LOCK_WIDTH,
+                                    int AWLOCK_WIDTH_PARAM            =   `SVT_AXI_LOCK_WIDTH,
+                                    int ARCACHE_WIDTH_PARAM           =   `SVT_AXI_CACHE_WIDTH,
+                                    int ARPROT_WIDTH_PARAM            =   `SVT_AXI_PROT_WIDTH,
+				    int ARTAGOP_WIDTH_PARAM           =   `SVT_AXI_TAGOP_WIDTH,
+                                    int ARVMIDEXT_WIDTH_PARAM         =   `SVT_AXI_MAX_VMIDEXT_WIDTH,
+                                    int ARID_WIDTH_PARAM              =   `SVT_AXI_MAX_ID_WIDTH,
+                                    int RID_WIDTH_PARAM               =   `SVT_AXI_MAX_ID_WIDTH,
+                                    int ARDOMAIN_WIDTH_PARAM          =   `SVT_AXI_ACE_DOMAIN_WIDTH,
+                                    int BID_WIDTH_PARAM               =   `SVT_AXI_MAX_ID_WIDTH,
+		                    int BTAGMATCH_WIDTH_PARAM         =   `SVT_AXI_MAX_TAGUPDATE_WIDTH,
+                                    int WID_WIDTH_PARAM               =   `SVT_AXI_MAX_ID_WIDTH,
+                                    int AWDOMAIN_WIDTH_PARAM          =   `SVT_AXI_ACE_DOMAIN_WIDTH,
+                                    int AWSNOOP_WIDTH_PARAM           =   `SVT_AXI_ACE_WSNOOP_WIDTH,
+                                    int AWBAR_WIDTH_PARAM             =   `SVT_AXI_ACE_BARRIER_WIDTH,
+				    int AWCMO_WIDTH_PARAM             =   `SVT_AXI_ACE_WCMO_WIDTH,
+                                    int RDATA_WIDTH_PARAM             =   `SVT_AXI_MAX_DATA_WIDTH,
+                                    int WSTRB_WIDTH_PARAM             =   `SVT_AXI_MAX_DATA_WIDTH/8,
+                                    int RRESP_WIDTH_PARAM             =   `SVT_AXI_RESP_WIDTH,
+                                    int AWREGION_WIDTH_PARAM          =   `SVT_AXI_REGION_WIDTH,         
+                                    int AWQOS_WIDTH_PARAM             =   `SVT_AXI_QOS_WIDTH,            
+                                    int AWCACHE_WIDTH_PARAM           =   `SVT_AXI_CACHE_WIDTH,
+                                    int AWPROT_WIDTH_PARAM            =   `SVT_AXI_PROT_WIDTH,
+                                    int AWID_WIDTH_PARAM              =   `SVT_AXI_MAX_ID_WIDTH,
+                                    int DOMAIN_WIDTH_PARAM            =   `SVT_AXI_ACE_DOMAIN_WIDTH,
+                                    int WSNOOP_WIDTH_PARAM            =   `SVT_AXI_ACE_WSNOOP_WIDTH,
+                                    int ARBAR_WIDTH_PARAM             =   `SVT_AXI_ACE_BARRIER_WIDTH,
+                                    int WDATA_WIDTH_PARAM             =   `SVT_AXI_MAX_DATA_WIDTH,
+                                    int BRESP_WIDTH_PARAM             =   `SVT_AXI_RESP_WIDTH,
+                                    int ARREGION_WIDTH_PARAM          =   `SVT_AXI_REGION_WIDTH,         
+                                    int ARQOS_WIDTH_PARAM             =   `SVT_AXI_QOS_WIDTH,            
+                                    int ARUSER_WIDTH_PARAM            =   `SVT_AXI_MAX_ADDR_USER_WIDTH,  
+                                    int WUSER_WIDTH_PARAM             =   `SVT_AXI_MAX_DATA_USER_WIDTH,
+                                    int AWUSER_WIDTH_PARAM            =   `SVT_AXI_MAX_ADDR_USER_WIDTH,  
+                                    int RUSER_WIDTH_PARAM             =   `SVT_AXI_MAX_DATA_USER_WIDTH,
+                                    int BUSER_WIDTH_PARAM             =   `SVT_AXI_MAX_BRESP_USER_WIDTH,      			    
+                                    int ACADDR_WIDTH_PARAM            =   `SVT_AXI_ACE_SNOOP_ADDR_WIDTH,
+                                    int ACSNOOP_WIDTH_PARAM           =   `SVT_AXI_ACE_SNOOP_TYPE_WIDTH,
+                                    int ACPROT_WIDTH_PARAM            =   `SVT_AXI_ACE_SNOOP_PROT_WIDTH,
+                                    int CRRESP_WIDTH_PARAM            =   `SVT_AXI_ACE_SNOOP_RESP_WIDTH,
+                                    int CDDATA_WIDTH_PARAM            =   `SVT_AXI_ACE_SNOOP_DATA_WIDTH,
+                                    int TDATA_WIDTH_PARAM             =   `SVT_AXI_MAX_TDATA_WIDTH,      
+                                    int TSTRB_WIDTH_PARAM             =   `SVT_AXI_TSTRB_WIDTH,          
+                                    int TDEST_WIDTH_PARAM             =   `SVT_AXI_MAX_TDEST_WIDTH,      
+                                    int TKEEP_WIDTH_PARAM             =   `SVT_AXI_TKEEP_WIDTH,          
+                                    int TID_WIDTH_PARAM               =   `SVT_AXI_MAX_TID_WIDTH,      
+                                    int TUSER_WIDTH_PARAM             =   `SVT_AXI_MAX_TUSER_WIDTH,
+                                    int ARSNOOP_WIDTH_PARAM           =   `SVT_AXI_ACE_RSNOOP_WIDTH,
+                                    int AWMMUSID_WIDTH_PARAM          =   `SVT_AXI_MAX_MMUSID_WIDTH,
+                                    int AWMMUSSID_WIDTH_PARAM         =   `SVT_AXI_MAX_MMUSSID_WIDTH,
+				    int AWTAGOP_WIDTH_PARAM           =   `SVT_AXI_MAX_TAG_WIDTH,
+                                    int AWATOP_WIDTH_PARAM            =   `SVT_ACE5_ATOMIC_TYPE_WIDTH,
+                                    int AWMPAM_WIDTH_PARAM            =   `SVT_AXI_MAX_MPAM_WIDTH,
+                                    int ARMPAM_WIDTH_PARAM            =   `SVT_AXI_MAX_MPAM_WIDTH,
+                                    int AWSTASHNID_WIDTH_PARAM        =   `SVT_AXI_STASH_NID_WIDTH,
+                                    int AWSTASHLPID_WIDTH_PARAM       =   `SVT_AXI_STASH_LPID_WIDTH,
+                                    int ARMMUSID_WIDTH_PARAM          =   `SVT_AXI_MAX_MMUSID_WIDTH,
+                                    int ARMMUSSID_WIDTH_PARAM         =   `SVT_AXI_MAX_MMUSSID_WIDTH,
+                                    int WPOISON_WIDTH_PARAM           =   `SVT_AXI_MAX_DATA_WIDTH/64,
+				    int WTAG_WIDTH_PARAM              =   `SVT_AXI_MAX_TAG_WIDTH,
+                                    int WTAGUPDATE_WIDTH_PARAM        =   `SVT_AXI_MAX_TAGUPDATE_WIDTH,
+                                    int CDPOISON_WIDTH_PARAM          =   `SVT_AXI_ACE_SNOOP_DATA_WIDTH/64,
+                                    int ACVMIDEXT_WIDTH_PARAM         =   `SVT_AXI_MAX_VMIDEXT_WIDTH,
+                                    int RPOISON_WIDTH_PARAM           =   `SVT_AXI_MAX_DATA_WIDTH/64,
+				    int RTAG_WIDTH_PARAM              =   `SVT_AXI_MAX_TAG_WIDTH,
+                                    int RCHUNKNUM_WIDTH_PARAM         =   `SVT_AXI_MAX_CHUNK_NUM_WIDTH,
+                                    int RCHUNKSTRB_WIDTH_PARAM        =   `SVT_AXI_MAX_CHUNK_STROBE_WIDTH,
+  //AXI ACE Parity Check Signals
+                                    int AWIDCHK_WIDTH_PARAM           =   `CEIL(`SVT_AXI_MAX_ID_WIDTH,8),
+                                    int AWADDRCHK_WIDTH_PARAM         =   `CEIL(`SVT_AXI_MAX_ADDR_WIDTH,8),
+                                    int WDATACHK_WIDTH_PARAM          =   `SVT_AXI_MAX_DATA_WIDTH/8,
+                                    int WSTRBCHK_WIDTH_PARAM          =   `CEIL(`SVT_AXI_MAX_DATA_WIDTH,64),
+                                    int BIDCHK_WIDTH_PARAM            =   `CEIL(`SVT_AXI_MAX_ID_WIDTH,8),
+                                    int ARIDCHK_WIDTH_PARAM           =   `CEIL(`SVT_AXI_MAX_ID_WIDTH,8),
+                                    int ARADDRCHK_WIDTH_PARAM         =   `CEIL(`SVT_AXI_MAX_ADDR_WIDTH,8),
+                                    int RIDCHK_WIDTH_PARAM            =   `CEIL(`SVT_AXI_MAX_ID_WIDTH,8),
+                                    int RDATACHK_WIDTH_PARAM          =   `SVT_AXI_MAX_DATA_WIDTH/8,
+                                    int ACADDRCHK_WIDTH_PARAM         =   `CEIL(`SVT_AXI_ACE_SNOOP_ADDR_WIDTH,8),
+                                    int CDDATACHK_WIDTH_PARAM         =   `SVT_AXI_ACE_SNOOP_DATA_WIDTH/8,
+
+                                    int AWUSERCHK_WIDTH_PARAM         =   `CEIL(`SVT_AXI_MAX_ADDR_USER_WIDTH,8),  
+                                    int WUSERCHK_WIDTH_PARAM          =   `CEIL(`SVT_AXI_MAX_DATA_USER_WIDTH,8),
+                                    int BUSERCHK_WIDTH_PARAM          =   `CEIL(`SVT_AXI_MAX_BRESP_USER_WIDTH,8),      			    
+                                    int ARUSERCHK_WIDTH_PARAM         =   `CEIL(`SVT_AXI_MAX_ADDR_USER_WIDTH,8),  
+                                    int RUSERCHK_WIDTH_PARAM          =   `CEIL(`SVT_AXI_MAX_DATA_USER_WIDTH,8)
+)                       
+(
+  inout                                           awvalid,
+  inout                                           awvalidchk,
+  inout [AWADDR_WIDTH_PARAM-1:0]                  awaddr,
+  inout [AWADDRCHK_WIDTH_PARAM-1:0]               awaddrchk,
+  inout [AWLEN_WIDTH_PARAM-1:0]                   awlen,
+  inout                                           awlenchk,
+  inout [AWSIZE_WIDTH_PARAM-1:0]                  awsize,
+  inout [AWBURST_WIDTH_PARAM-1:0]                 awburst,
+  inout [AWLOCK_WIDTH_PARAM-1:0]                  awlock,
+  inout [AWCACHE_WIDTH_PARAM-1:0]                 awcache,
+  inout [AWPROT_WIDTH_PARAM-1:0]                  awprot,
+  inout [AWID_WIDTH_PARAM-1:0]                    awid,
+  inout [AWIDCHK_WIDTH_PARAM-1:0]                 awidchk,
+  inout                                           awidunq,
+  input                                           awready,
+  input                                           awreadychk,
+  inout [AWDOMAIN_WIDTH_PARAM-1:0]	          awdomain,	
+  inout [AWSNOOP_WIDTH_PARAM-1:0]	          awsnoop,	
+  inout [AWBAR_WIDTH_PARAM-1:0]	                  awbar,
+  inout [AWCMO_WIDTH_PARAM-1:0]                   awcmo,
+  inout         			          awunique, 
+  inout                                           arvalid,
+  inout                                           arvalidchk,
+  inout [ARADDR_WIDTH_PARAM-1:0]                  araddr,
+  inout [ARADDRCHK_WIDTH_PARAM-1:0]               araddrchk,
+  inout [ARLEN_WIDTH_PARAM-1:0]                   arlen,
+  inout                                           arlenchk,
+  inout [ARSIZE_WIDTH_PARAM-1:0]                  arsize,
+  inout [ARBURST_WIDTH_PARAM-1:0]                 arburst,
+  inout [ARLOCK_WIDTH_PARAM-1:0]                  arlock,
+  inout [ARCACHE_WIDTH_PARAM-1:0]                 arcache,
+  inout [ARPROT_WIDTH_PARAM-1:0]                  arprot,
+  inout [ARTAGOP_WIDTH_PARAM-1:0]                 artagop,
+  inout [ARVMIDEXT_WIDTH_PARAM-1:0]               arvmidext,
+  inout [ARID_WIDTH_PARAM-1:0]                    arid,
+  inout [ARIDCHK_WIDTH_PARAM-1:0]                 aridchk,
+  inout                                           aridunq,
+  input                                           arready,
+  input                                           arreadychk,
+  inout [ARDOMAIN_WIDTH_PARAM-1:0]	  	  ardomain,	
+  inout [ARSNOOP_WIDTH_PARAM-1:0]	  	  arsnoop,	
+  inout [ARBAR_WIDTH_PARAM-1:0]	                  arbar,
+  input                                           rvalid,
+  input                                           rvalidchk,
+  input                                           rlast,
+  input                                           rlastchk,
+  input [RDATA_WIDTH_PARAM-1:0]                   rdata,
+  input [RDATACHK_WIDTH_PARAM-1:0]                rdatachk,
+  input [RRESP_WIDTH_PARAM-1:0]                   rresp,
+  input                                           rrespchk,
+  input [RID_WIDTH_PARAM-1:0]                     rid,
+  input [RIDCHK_WIDTH_PARAM-1:0]                  ridchk, 
+  input                                           ridunq,
+  inout                                           rready,
+  inout                                           rreadychk,
+  inout         			          rack,
+  inout         			          rackchk,
+  inout                                           wvalid,
+  inout                                           wvalidchk,
+  inout                                           wlast,
+  inout                                           wlastchk,
+  inout [WDATA_WIDTH_PARAM-1:0]                   wdata,
+  inout [WDATACHK_WIDTH_PARAM-1:0]                wdatachk,
+  inout [WSTRB_WIDTH_PARAM-1:0]                   wstrb,
+  inout [WSTRBCHK_WIDTH_PARAM-1:0]                wstrbchk,
+  inout [WID_WIDTH_PARAM-1:0]                     wid,
+  input                                           wready,
+  input                                           wreadychk,
+  input                                           bvalid,
+  input                                           bvalidchk,
+  input [BRESP_WIDTH_PARAM-1:0]                   bresp,
+  input                                           brespchk,
+  input [BID_WIDTH_PARAM-1:0]                     bid,
+  input [BIDCHK_WIDTH_PARAM-1:0]                  bidchk,
+  input                                           bidunq,
+  // AXI ACE5 Extension of Write Response channel 
+  input                                           bcomp,
+  input [BTAGMATCH_WIDTH_PARAM-1:0]               btagmatch,  
+  input                                           btrace,
+  inout 					  awakeup,	
+  inout 					  awakeupchk,	
+  inout                                           bready,
+  inout                                           breadychk,
+  inout	        		                  wack,
+  inout	        		                  wackchk,
+  inout [AWREGION_WIDTH_PARAM-1:0]                awregion,
+  inout [AWQOS_WIDTH_PARAM-1:0]                   awqos,
+  inout [AWUSER_WIDTH_PARAM-1:0]                  awuser,
+  inout [AWUSERCHK_WIDTH_PARAM-1:0]               awuserchk,
+  inout [ARREGION_WIDTH_PARAM-1:0]                arregion,
+  inout [ARQOS_WIDTH_PARAM-1:0]                   arqos,
+  inout [ARUSER_WIDTH_PARAM-1:0]                  aruser,
+  inout [ARUSERCHK_WIDTH_PARAM-1:0]               aruserchk,
+  inout [WUSER_WIDTH_PARAM-1:0]                   wuser,
+  inout [WUSERCHK_WIDTH_PARAM-1:0]                wuserchk,
+  input [RUSER_WIDTH_PARAM-1:0]                   ruser,
+  input [RUSERCHK_WIDTH_PARAM-1:0]                ruserchk,
+  input [BUSER_WIDTH_PARAM-1:0]                   buser,
+  input [BUSERCHK_WIDTH_PARAM-1:0]                buserchk,
+  input         			          acvalid,
+  input         			          acvalidchk,
+  input                                           acwakeup,	
+  input                                           acwakeupchk,	
+  inout         		                  acready,	
+  inout         		                  acreadychk,	
+  input [ACADDR_WIDTH_PARAM-1:0]	          acaddr,	        
+  input [ACADDRCHK_WIDTH_PARAM-1:0]	          acaddrchk,	        
+  input [ACSNOOP_WIDTH_PARAM-1:0]	          acsnoop,	
+  input [ACPROT_WIDTH_PARAM-1:0]	          acprot,		
+  inout         			          crvalid,	
+  inout         			          crvalidchk,	
+  input         		                  crready,	
+  input         		                  crreadychk,	
+  inout [CRRESP_WIDTH_PARAM-1:0]	          crresp,		
+  inout                         	          crrespchk,		
+  inout         			          cdvalid,	
+  inout         			          cdvalidchk,	
+  input         		                  cdready,	
+  input         		                  cdreadychk,	
+  inout [CDDATA_WIDTH_PARAM-1:0]	          cddata,		
+  inout	[CDDATACHK_WIDTH_PARAM-1:0]	          cddatachk,
+  inout         		  	          cdlast,
+  inout         		  	          cdlastchk,
+  inout                                           tvalid,
+  input                                           tready,
+  inout [TDATA_WIDTH_PARAM-1:0]                   tdata,
+  inout [TSTRB_WIDTH_PARAM-1:0]                   tstrb,
+  inout [TDEST_WIDTH_PARAM-1:0]                   tdest,
+  inout [TKEEP_WIDTH_PARAM-1:0]                   tkeep,
+  inout                                           tlast,
+  inout [TID_WIDTH_PARAM-1:0]                     tid,
+
+  //----------------------------------------------------------------------
+  // AXI G Read Data Chunking Interface Siganal
+  //----------------------------------------------------------------------
+  inout                                         archunken,
+  input                                         rchunkv,
+  input[RCHUNKNUM_WIDTH_PARAM-1:0]              rchunknum,
+  input[RCHUNKSTRB_WIDTH_PARAM-1:0]             rchunkstrb,
+ `ifdef SVT_AXI_QVN_ENABLE  
+  inout  [3:0] arvnet , 
+  inout  [3:0] awvnet , 
+  inout  [3:0] wvnet  , 
+  inout  [3:0] varqosvn3  , 
+  inout        varvalidvn3, 
+  input        varreadyvn3, 
+  inout  [3:0] vawqosvn3  , 
+  inout        vawvalidvn3, 
+  input        vawreadyvn3, 
+  inout        vwvalidvn3 , 
+  input        vwreadyvn3 , 
+  inout  [3:0] varqosvn2  , 
+  inout        varvalidvn2, 
+  input        varreadyvn2, 
+  inout  [3:0] vawqosvn2  , 
+  inout        vawvalidvn2, 
+  input        vawreadyvn2, 
+  inout        vwvalidvn2 , 
+  input        vwreadyvn2 , 
+  inout  [3:0] varqosvn1  , 
+  inout        varvalidvn1, 
+  input        varreadyvn1, 
+  inout  [3:0] vawqosvn1  , 
+  inout        vawvalidvn1, 
+  input        vawreadyvn1, 
+  inout        vwvalidvn1 , 
+  input        vwreadyvn1 , 
+  inout  [3:0] varqosvn0  , 
+  inout        varvalidvn0, 
+  input        varreadyvn0, 
+  inout  [3:0] vawqosvn0  , 
+  inout        vawvalidvn0, 
+  input        vawreadyvn0, 
+  inout        vwvalidvn0 , 
+  input        vwreadyvn0 , 
+`endif 
+  output                                          awtrace,
+  output	                                  awmmusecsid,
+  output	[AWMMUSID_WIDTH_PARAM-1:0]	  awmmusid,
+  output	                                  awmmussidv,
+  output	[AWMMUSSID_WIDTH_PARAM-1:0]	  awmmussid,
+  output	                                  awmmuatst,
+  output        [AWTAGOP_WIDTH_PARAM-1:0]         awtagop,
+  output	[AWATOP_WIDTH_PARAM-1:0]	  awatop,
+  output        [AWMPAM_WIDTH_PARAM-1:0]          awmpam,
+  output	[AWSTASHNID_WIDTH_PARAM-1:0]	  awstashnid,
+  output	[AWSTASHLPID_WIDTH_PARAM-1:0]     awstashlpid,
+  output	                                  awstashnid_en,
+  output	                                  awstashlpid_en,
+  output	                                  artrace,
+  output	                                  armmusecsid,
+  output	[ARMMUSID_WIDTH_PARAM-1:0]	  armmusid,
+  output	                                  armmussidv,
+  output	[ARMMUSSID_WIDTH_PARAM-1:0]	  armmussid,
+  output	                                  armmuatst,
+  output        [ARMPAM_WIDTH_PARAM-1:0]          armpam,
+  output	                                  wtrace,
+  output	[WPOISON_WIDTH_PARAM-1:0]	  wpoison,
+  output        [WTAG_WIDTH_PARAM-1:0]            wtag,
+  output        [WTAGUPDATE_WIDTH_PARAM-1:0]      wtagupdate,
+  output	[CDPOISON_WIDTH_PARAM-1:0]	  cdpoison,
+  output	                                  cdtrace,
+  input	        [ACVMIDEXT_WIDTH_PARAM-1:0]	  acvmidext,
+  input                                           actrace,
+  input	        [RPOISON_WIDTH_PARAM-1:0]	  rpoison,
+  input         [RTAG_WIDTH_PARAM-1:0]            rtag,
+  input                                           rtrace,
+  output                                          crtrace,
+  inout         [TUSER_WIDTH_PARAM-1:0]           tuser
+);
+endinterface
+
+//=======================================================================
+module svt_axi_master_connector #(is_active=1) (svt_axi_master_if master_if, svt_axi_master_bind_if master_bind_if);
+
+`ifdef SVT_MULTI_SIM_PROCEDURAL_COMBINATORIAL_DRIVE
+
+  always @(*) 
+  begin
+  // Inputs
+    master_if.awready  = master_bind_if.awready;
+    master_if.awreadychk  = master_bind_if.awreadychk;
+    master_if.arready  = master_bind_if.arready;
+    master_if.arreadychk  = master_bind_if.arreadychk;
+    master_if.rvalid   = master_bind_if.rvalid;
+    master_if.rvalidchk   = master_bind_if.rvalidchk;
+    master_if.rlast    = master_bind_if.rlast;
+    master_if.rlastchk    = master_bind_if.rlastchk;
+    master_if.rdata    = master_bind_if.rdata;
+    master_if.rdatachk = master_bind_if.rdatachk;
+    master_if.rresp    = master_bind_if.rresp;
+    master_if.rrespchk    = master_bind_if.rrespchk;
+    master_if.rid      = master_bind_if.rid;
+    master_if.ridchk   = master_bind_if.ridchk;
+    master_if.ridunq   = master_bind_if.ridunq;
+    master_if.wready   = master_bind_if.wready;
+    master_if.wreadychk   = master_bind_if.wreadychk;
+    master_if.bvalid   = master_bind_if.bvalid;
+    master_if.bvalidchk   = master_bind_if.bvalidchk;
+    master_if.bresp    = master_bind_if.bresp;
+    master_if.brespchk    = master_bind_if.brespchk;
+    master_if.bid      = master_bind_if.bid;
+    master_if.bidchk   = master_bind_if.bidchk;
+    master_if.bcomp    = master_bind_if.bcomp;
+    master_if.btagmatch= master_bind_if.btagmatch;
+    master_if.bidunq   = master_bind_if.bidunq;
+    master_if.ruser    = master_bind_if.ruser;
+    master_if.ruserchk = master_bind_if.ruserchk;
+    master_if.buser    = master_bind_if.buser;
+    master_if.buserchk = master_bind_if.buserchk;
+    master_if.acvalid  = master_bind_if.acvalid;
+    master_if.acvalidchk  = master_bind_if.acvalidchk;
+    master_if.acwakeup = master_bind_if.acwakeup;
+    master_if.acwakeupchk = master_bind_if.acwakeupchk;
+    master_if.acaddr   = master_bind_if.acaddr;
+    master_if.acaddrchk = master_bind_if.acaddrchk;
+    master_if.acsnoop  = master_bind_if.acsnoop;
+    master_if.acprot   = master_bind_if.acprot;
+    master_if.crready  = master_bind_if.crready;
+    master_if.crreadychk = master_bind_if.crreadychk;
+    master_if.cdready  = master_bind_if.cdready;
+    master_if.cdreadychk = master_bind_if.cdreadychk;
+    master_if.tready   = master_bind_if.tready; 
+  `ifdef SVT_AXI_QVN_ENABLE
+    master_if.varreadyvn3 =master_bind_if.varreadyvn3 ;
+    master_if.vawreadyvn3 =master_bind_if.vawreadyvn3 ;
+    master_if.vwreadyvn3  =master_bind_if.vwreadyvn3  ;
+    master_if.varreadyvn2 =master_bind_if.varreadyvn2 ;
+    master_if.vawreadyvn2 =master_bind_if.vawreadyvn2 ;
+    master_if.vwreadyvn2  =master_bind_if.vwreadyvn2  ;
+    master_if.varreadyvn1 =master_bind_if.varreadyvn1 ;
+    master_if.vawreadyvn1 =master_bind_if.vawreadyvn1 ;
+    master_if.vwreadyvn1  =master_bind_if.vwreadyvn1  ;
+    master_if.varreadyvn0 =master_bind_if.varreadyvn0 ;
+    master_if.vawreadyvn0 =master_bind_if.vawreadyvn0 ;
+    master_if.vwreadyvn0  =master_bind_if.vwreadyvn0  ;
+   `endif
+    master_if.acvmidext = master_bind_if.acvmidext;
+    master_if.actrace   = master_bind_if.actrace;
+    master_if.btrace    = master_bind_if.btrace;
+    master_if.rpoison   = master_bind_if.rpoison;
+    master_if.rtag      = master_bind_if.rtag;
+    master_if.rtrace    = master_bind_if.rtrace; 
+    master_if.rchunkv    = master_bind_if.rchunkv; 
+    master_if.rchunknum   = master_bind_if.rchunknum; 
+    master_if.rchunkstrb  = master_bind_if.rchunkstrb; 
+  end
+`else
+  // Inputs
+  assign master_if.awready  = master_bind_if.awready;
+  assign master_if.awreadychk  = master_bind_if.awreadychk;
+  assign master_if.arready  = master_bind_if.arready;
+  assign master_if.arreadychk  = master_bind_if.arreadychk;
+  assign master_if.rvalid   = master_bind_if.rvalid;
+  assign master_if.rvalidchk   = master_bind_if.rvalidchk;
+  assign master_if.rlast    = master_bind_if.rlast;
+  assign master_if.rlastchk    = master_bind_if.rlastchk;
+  assign master_if.rdata    = master_bind_if.rdata;
+  assign master_if.rdatachk = master_bind_if.rdatachk;
+  assign master_if.rresp    = master_bind_if.rresp;
+  assign master_if.rrespchk    = master_bind_if.rrespchk;
+  assign master_if.rid      = master_bind_if.rid;
+  assign master_if.ridchk   = master_bind_if.ridchk;
+  assign master_if.ridunq   = master_bind_if.ridunq;
+  assign master_if.wready   = master_bind_if.wready;
+  assign master_if.wreadychk   = master_bind_if.wreadychk;
+  assign master_if.bvalid   = master_bind_if.bvalid;
+  assign master_if.bvalidchk   = master_bind_if.bvalidchk;
+  assign master_if.bresp    = master_bind_if.bresp;
+  assign master_if.brespchk    = master_bind_if.brespchk;
+  assign master_if.bid      = master_bind_if.bid;
+  assign master_if.bidchk   = master_bind_if.bidchk;
+  assign master_if.bcomp    = master_bind_if.bcomp;
+  assign master_if.btagmatch= master_bind_if.btagmatch;
+  assign master_if.bidunq   = master_bind_if.bidunq;
+  assign master_if.ruser    = master_bind_if.ruser;
+  assign master_if.ruserchk = master_bind_if.ruserchk;
+  assign master_if.buser    = master_bind_if.buser;
+  assign master_if.buserchk = master_bind_if.buserchk;
+  assign master_if.acvalid  = master_bind_if.acvalid;
+  assign master_if.acvalidchk  = master_bind_if.acvalidchk;
+  assign master_if.acwakeup = master_bind_if.acwakeup;
+  assign master_if.acwakeupchk = master_bind_if.acwakeupchk;
+  assign master_if.acaddr   = master_bind_if.acaddr;
+  assign master_if.acaddrchk = master_bind_if.acaddrchk;
+  assign master_if.acsnoop  = master_bind_if.acsnoop;
+  assign master_if.acprot   = master_bind_if.acprot;
+  assign master_if.crready  = master_bind_if.crready;
+  assign master_if.crreadychk = master_bind_if.crreadychk;
+  assign master_if.cdready  = master_bind_if.cdready;
+  assign master_if.cdreadychk = master_bind_if.cdreadychk;
+  assign master_if.tready   = master_bind_if.tready;   
+ `ifdef SVT_AXI_QVN_ENABLE
+  assign  master_if.varreadyvn3 = master_bind_if.varreadyvn3 ;
+  assign  master_if.vawreadyvn3 = master_bind_if.vawreadyvn3 ;
+  assign  master_if.vwreadyvn3  = master_bind_if.vwreadyvn3  ;
+  assign  master_if.varreadyvn2 = master_bind_if.varreadyvn2 ;
+  assign  master_if.vawreadyvn2 = master_bind_if.vawreadyvn2 ;
+  assign  master_if.vwreadyvn2  = master_bind_if.vwreadyvn2  ;
+  assign  master_if.varreadyvn1 = master_bind_if.varreadyvn1 ;
+  assign  master_if.vawreadyvn1 = master_bind_if.vawreadyvn1 ;
+  assign  master_if.vwreadyvn1  = master_bind_if.vwreadyvn1  ;
+  assign  master_if.varreadyvn0 = master_bind_if.varreadyvn0 ;
+  assign  master_if.vawreadyvn0 = master_bind_if.vawreadyvn0 ;
+  assign  master_if.vwreadyvn0  = master_bind_if.vwreadyvn0  ;
+ `endif
+  assign master_if.acvmidext = master_bind_if.acvmidext;
+  assign master_if.actrace   = master_bind_if.actrace;
+  assign master_if.btrace    = master_bind_if.btrace;
+  assign master_if.rpoison   = master_bind_if.rpoison;
+  assign master_if.rtag      = master_bind_if.rtag;
+  assign master_if.rtrace    = master_bind_if.rtrace; 
+  assign master_if.rchunkv    = master_bind_if.rchunkv; 
+  assign master_if.rchunknum   = master_bind_if.rchunknum; 
+  assign master_if.rchunkstrb  = master_bind_if.rchunkstrb; 
+`endif 
+  // inouts
+  // If master is Active
+  assign master_bind_if.awvalid   = (is_active == 0) ? 'bz : master_if.awvalid;
+  assign master_bind_if.awvalidchk   = (is_active == 0) ? 'bz : master_if.awvalidchk;
+  assign master_bind_if.awaddr    = (is_active == 0) ? 'bz : master_if.awaddr;
+  assign master_bind_if.awaddrchk = (is_active == 0) ? 'bz : master_if.awaddrchk;
+  assign master_bind_if.awlen     = (is_active == 0) ? 'bz : master_if.awlen;
+  assign master_bind_if.awlenchk     = (is_active == 0) ? 'bz : master_if.awlenchk;
+  assign master_bind_if.awsize    = (is_active == 0) ? 'bz : master_if.awsize;
+  assign master_bind_if.awburst   = (is_active == 0) ? 'bz : master_if.awburst;
+  assign master_bind_if.awlock    = (is_active == 0) ? 'bz : master_if.awlock;
+  assign master_bind_if.awcache   = (is_active == 0) ? 'bz : master_if.awcache;
+  assign master_bind_if.awprot    = (is_active == 0) ? 'bz : master_if.awprot;
+  assign master_bind_if.awid      = (is_active == 0) ? 'bz : master_if.awid;
+  assign master_bind_if.awidchk   = (is_active == 0) ? 'bz : master_if.awidchk;
+  assign master_bind_if.awidunq   = (is_active == 0) ? 'bz : master_if.awidunq;
+  assign master_bind_if.awdomain  = (is_active == 0) ? 'bz : master_if.awdomain;
+  assign master_bind_if.awsnoop   = (is_active == 0) ? 'bz : master_if.awsnoop;
+  assign master_bind_if.awbar     = (is_active == 0) ? 'bz : master_if.awbar;
+  assign master_bind_if.awcmo     = (is_active == 0) ? 'bz : master_if.awcmo;
+  assign master_bind_if.awunique  = (is_active == 0) ? 'bz : master_if.awunique;
+  assign master_bind_if.arvalid   = (is_active == 0) ? 'bz : master_if.arvalid;
+  assign master_bind_if.arvalidchk   = (is_active == 0) ? 'bz : master_if.arvalidchk;
+  assign master_bind_if.araddr    = (is_active == 0) ? 'bz : master_if.araddr;
+  assign master_bind_if.araddrchk = (is_active == 0) ? 'bz : master_if.araddrchk;
+  assign master_bind_if.arlen     = (is_active == 0) ? 'bz : master_if.arlen;
+  assign master_bind_if.arlenchk     = (is_active == 0) ? 'bz : master_if.arlenchk;
+  assign master_bind_if.arsize    = (is_active == 0) ? 'bz : master_if.arsize;
+  assign master_bind_if.arburst   = (is_active == 0) ? 'bz : master_if.arburst;
+  assign master_bind_if.arlock    = (is_active == 0) ? 'bz : master_if.arlock;
+  assign master_bind_if.arcache   = (is_active == 0) ? 'bz : master_if.arcache;
+  assign master_bind_if.arprot    = (is_active == 0) ? 'bz : master_if.arprot;
+  assign master_bind_if.artagop   = (is_active == 0) ? 'bz : master_if.artagop;
+  assign master_bind_if.arvmidext = (is_active == 0) ? 'bz : master_if.arvmidext;
+  assign master_bind_if.arid      = (is_active == 0) ? 'bz : master_if.arid;
+  assign master_bind_if.aridchk   = (is_active == 0) ? 'bz : master_if.aridchk;
+  assign master_bind_if.aridunq   = (is_active == 0) ? 'bz : master_if.aridunq;
+  assign master_bind_if.ardomain  = (is_active == 0) ? 'bz : master_if.ardomain;
+  assign master_bind_if.arsnoop   = (is_active == 0) ? 'bz : master_if.arsnoop;
+  assign master_bind_if.arbar     = (is_active == 0) ? 'bz : master_if.arbar;
+  assign master_bind_if.rready    = (is_active == 0) ? 'bz : master_if.rready;
+  assign master_bind_if.rreadychk    = (is_active == 0) ? 'bz : master_if.rreadychk;
+  assign master_bind_if.rack      = (is_active == 0) ? 'bz : master_if.rack;
+  assign master_bind_if.rackchk      = (is_active == 0) ? 'bz : master_if.rackchk;
+  assign master_bind_if.wvalid    = (is_active == 0) ? 'bz : master_if.wvalid;
+  assign master_bind_if.wvalidchk    = (is_active == 0) ? 'bz : master_if.wvalidchk;
+  assign master_bind_if.wlast     = (is_active == 0) ? 'bz : master_if.wlast;
+  assign master_bind_if.wlastchk     = (is_active == 0) ? 'bz : master_if.wlastchk;
+  assign master_bind_if.wdata     = (is_active == 0) ? 'bz : master_if.wdata;
+  assign master_bind_if.wdatachk  = (is_active == 0) ? 'bz : master_if.wdatachk;
+  assign master_bind_if.wstrb     = (is_active == 0) ? 'bz : master_if.wstrb;
+  assign master_bind_if.wstrbchk  = (is_active == 0) ? 'bz : master_if.wstrbchk;
+  assign master_bind_if.wid       = (is_active == 0) ? 'bz : master_if.wid;
+  assign master_bind_if.bready    = (is_active == 0) ? 'bz : master_if.bready;
+  assign master_bind_if.breadychk    = (is_active == 0) ? 'bz : master_if.breadychk;
+  assign master_bind_if.wack      = (is_active == 0) ? 'bz : master_if.wack;
+  assign master_bind_if.wackchk      = (is_active == 0) ? 'bz : master_if.wackchk;
+  assign master_bind_if.awakeup   = (is_active == 0) ? 'bz : master_if.awakeup;
+  assign master_bind_if.awakeupchk   = (is_active == 0) ? 'bz : master_if.awakeupchk;
+  assign master_bind_if.awregion  = (is_active == 0) ? 'bz : master_if.awregion;
+  assign master_bind_if.awqos     = (is_active == 0) ? 'bz : master_if.awqos;
+  assign master_bind_if.awuser    = (is_active == 0) ? 'bz : master_if.awuser;
+  assign master_bind_if.awuserchk = (is_active == 0) ? 'bz : master_if.awuserchk;
+  assign master_bind_if.arregion  = (is_active == 0) ? 'bz : master_if.arregion;
+  assign master_bind_if.arqos     = (is_active == 0) ? 'bz : master_if.arqos;
+  assign master_bind_if.aruser    = (is_active == 0) ? 'bz : master_if.aruser;
+  assign master_bind_if.aruserchk = (is_active == 0) ? 'bz : master_if.aruserchk;
+  assign master_bind_if.wuser     = (is_active == 0) ? 'bz : master_if.wuser;
+  assign master_bind_if.wuserchk  = (is_active == 0) ? 'bz : master_if.wuserchk;
+  assign master_bind_if.acready   = (is_active == 0) ? 'bz : master_if.acready;
+  assign master_bind_if.acreadychk = (is_active == 0) ? 'bz : master_if.acreadychk;
+  assign master_bind_if.crvalid   = (is_active == 0) ? 'bz : master_if.crvalid;
+  assign master_bind_if.crvalidchk = (is_active == 0) ? 'bz : master_if.crvalidchk;
+  assign master_bind_if.crresp	  = (is_active == 0) ? 'bz : master_if.crresp;
+  assign master_bind_if.crrespchk = (is_active == 0) ? 'bz : master_if.crrespchk;
+  assign master_bind_if.cdvalid   = (is_active == 0) ? 'bz : master_if.cdvalid;
+  assign master_bind_if.cdvalidchk = (is_active == 0) ? 'bz : master_if.cdvalidchk;
+  assign master_bind_if.cddata	  = (is_active == 0) ? 'bz : master_if.cddata;
+  assign master_bind_if.cddatachk = (is_active == 0) ? 'bz : master_if.cddatachk;
+  assign master_bind_if.cdlast    = (is_active == 0) ? 'bz : master_if.cdlast;
+  assign master_bind_if.cdlastchk = (is_active == 0) ? 'bz : master_if.cdlastchk;
+  assign master_bind_if.tvalid    = (is_active == 0) ? 'bz : master_if.tvalid;
+  assign master_bind_if.tdata     = (is_active == 0) ? 'bz : master_if.tdata;
+  assign master_bind_if.tstrb     = (is_active == 0) ? 'bz : master_if.tstrb;
+  assign master_bind_if.tdest     = (is_active == 0) ? 'bz : master_if.tdest;
+  assign master_bind_if.tkeep     = (is_active == 0) ? 'bz : master_if.tkeep;
+  assign master_bind_if.tlast     = (is_active == 0) ? 'bz : master_if.tlast;
+  assign master_bind_if.tid       = (is_active == 0) ? 'bz : master_if.tid;
+  assign master_bind_if.tuser     = (is_active == 0) ? 'bz : master_if.tuser;  
+ `ifdef SVT_AXI_QVN_ENABLE
+   assign  master_bind_if.arvnet      = (is_active == 0) ? 'bz : master_if.arvnet     ;
+   assign  master_bind_if.awvnet      = (is_active == 0) ? 'bz : master_if.awvnet     ;
+   assign  master_bind_if.wvnet       = (is_active == 0) ? 'bz : master_if.wvnet      ;
+   assign  master_bind_if.varqosvn3   = (is_active == 0) ? 'bz : master_if.varqosvn3   ;
+   assign  master_bind_if.varvalidvn3 = (is_active == 0) ? 'bz : master_if.varvalidvn3 ;
+   assign  master_bind_if.vawqosvn3   = (is_active == 0) ? 'bz : master_if.vawqosvn3   ;
+   assign  master_bind_if.vawvalidvn3 = (is_active == 0) ? 'bz : master_if.vawvalidvn3 ;
+   assign  master_bind_if.vwvalidvn3  = (is_active == 0) ? 'bz : master_if.vwvalidvn3  ;
+   assign  master_bind_if.varqosvn2   = (is_active == 0) ? 'bz : master_if.varqosvn2   ;
+   assign  master_bind_if.varvalidvn2 = (is_active == 0) ? 'bz : master_if.varvalidvn2 ;
+   assign  master_bind_if.vawqosvn2   = (is_active == 0) ? 'bz : master_if.vawqosvn2   ;
+   assign  master_bind_if.vawvalidvn2 = (is_active == 0) ? 'bz : master_if.vawvalidvn2 ;
+   assign  master_bind_if.vwvalidvn2  = (is_active == 0) ? 'bz : master_if.vwvalidvn2  ;
+   assign  master_bind_if.varqosvn1   = (is_active == 0)?  'bz : master_if.varqosvn1   ;
+   assign  master_bind_if.varvalidvn1 = (is_active == 0)?  'bz : master_if.varvalidvn1 ;
+   assign  master_bind_if.vawqosvn1   = (is_active == 0)?  'bz : master_if.vawqosvn1   ;
+   assign  master_bind_if.vawvalidvn1 = (is_active == 0)?  'bz : master_if.vawvalidvn1 ;
+   assign  master_bind_if.vwvalidvn1  = (is_active == 0)?  'bz : master_if.vwvalidvn1  ;
+   assign  master_bind_if.varqosvn0   = (is_active == 0)?  'bz : master_if.varqosvn0   ;
+   assign  master_bind_if.varvalidvn0 = (is_active == 0)?  'bz : master_if.varvalidvn0 ;
+   assign  master_bind_if.vawqosvn0   = (is_active == 0)?  'bz : master_if.vawqosvn0   ;
+   assign  master_bind_if.vawvalidvn0 = (is_active == 0)?  'bz : master_if.vawvalidvn0 ;
+   assign  master_bind_if.vwvalidvn0  = (is_active == 0)?  'bz : master_if.vwvalidvn0  ;
+ `endif
+   assign master_bind_if.awtrace        = (is_active == 0) ? 'bz : master_if.awtrace;
+   assign master_bind_if.awmmusecsid    = (is_active == 0) ? 'bz : master_if.awmmusecsid;
+   assign master_bind_if.awmmusid       = (is_active == 0) ? 'bz : master_if.awmmusid;
+   assign master_bind_if.awmmussidv     = (is_active == 0) ? 'bz : master_if.awmmussidv;
+   assign master_bind_if.awmmussid      = (is_active == 0) ? 'bz : master_if.awmmussid;
+   assign master_bind_if.awmmuatst      = (is_active == 0) ? 'bz : master_if.awmmuatst;
+   assign master_bind_if.awtagop        = (is_active == 0) ? 'bz : master_if.awtagop;
+   assign master_bind_if.awatop         = (is_active == 0) ? 'bz : master_if.awatop;
+   assign master_bind_if.awmpam         = (is_active == 0) ? 'bz : master_if.awmpam;
+   assign master_bind_if.awstashnid     = (is_active == 0) ? 'bz : master_if.awstashnid;
+   assign master_bind_if.awstashlpid    = (is_active == 0) ? 'bz : master_if.awstashlpid;
+   assign master_bind_if.awstashnid_en  = (is_active == 0) ? 'bz : master_if.awstashnid_en;
+   assign master_bind_if.awstashlpid_en = (is_active == 0) ? 'bz : master_if.awstashlpid_en;
+   assign master_bind_if.armpam         = (is_active == 0) ? 'bz : master_if.armpam;
+   assign master_bind_if.artrace        = (is_active == 0) ? 'bz : master_if.artrace;
+   assign master_bind_if.armmusecsid    = (is_active == 0) ? 'bz : master_if.armmusecsid;
+   assign master_bind_if.armmusid       = (is_active == 0) ? 'bz : master_if.armmusid;
+   assign master_bind_if.armmussidv     = (is_active == 0) ? 'bz : master_if.armmussidv;
+   assign master_bind_if.armmussid      = (is_active == 0) ? 'bz : master_if.armmussid;
+   assign master_bind_if.armmuatst      = (is_active == 0) ? 'bz : master_if.armmuatst;
+   assign master_bind_if.wtrace         = (is_active == 0) ? 'bz : master_if.wtrace;
+   assign master_bind_if.wpoison        = (is_active == 0) ? 'bz : master_if.wpoison;
+   assign master_bind_if.wtag           = (is_active == 0) ? 'bz : master_if.wtag;
+   assign master_bind_if.wtagupdate     = (is_active == 0) ? 'bz : master_if.wtagupdate;
+   assign master_bind_if.cdpoison       = (is_active == 0) ? 'bz : master_if.cdpoison;
+   assign master_bind_if.cdtrace        = (is_active == 0) ? 'bz : master_if.cdtrace;
+   assign master_bind_if.crtrace        = (is_active == 0) ? 'bz : master_if.crtrace;
+   assign master_bind_if.archunken      = (is_active == 0) ? 'bz : master_if.archunken;
+
+  always @(*) 
+    begin
+  // If master is Passive
+     if(is_active == 0) begin
+       master_if.awvalid   = master_bind_if.awvalid;
+       master_if.awvalidchk   = master_bind_if.awvalidchk;
+       master_if.awaddr    = master_bind_if.awaddr;
+       master_if.awaddrchk = master_bind_if.awaddrchk;
+       master_if.awlen     = master_bind_if.awlen;
+       master_if.awlenchk     = master_bind_if.awlenchk;
+       master_if.awsize    = master_bind_if.awsize;
+       master_if.awburst   = master_bind_if.awburst;
+       master_if.awlock    = master_bind_if.awlock;
+       master_if.awcache   = master_bind_if.awcache;
+       master_if.awprot    = master_bind_if.awprot;
+       master_if.awid      = master_bind_if.awid;
+       master_if.awidchk   = master_bind_if.awidchk;
+       master_if.awidunq   = master_bind_if.awidunq;
+       master_if.awdomain  = master_bind_if.awdomain;
+       master_if.awsnoop   = master_bind_if.awsnoop;
+       master_if.awbar     = master_bind_if.awbar;
+       master_if.awcmo     = master_bind_if.awcmo;
+       master_if.awunique  = master_bind_if.awunique;
+       master_if.arvalid   = master_bind_if.arvalid;
+       master_if.arvalidchk   = master_bind_if.arvalidchk;
+       master_if.araddr    = master_bind_if.araddr;
+       master_if.araddrchk = master_bind_if.araddrchk;
+       master_if.arlen     = master_bind_if.arlen;
+       master_if.arlenchk     = master_bind_if.arlenchk;
+       master_if.arsize    = master_bind_if.arsize;
+       master_if.arburst   = master_bind_if.arburst;
+       master_if.arlock    = master_bind_if.arlock;
+       master_if.arcache   = master_bind_if.arcache;
+       master_if.arprot    = master_bind_if.arprot;
+       master_if.artagop   = master_bind_if.artagop;
+       master_if.arvmidext   = master_bind_if.arvmidext;
+       master_if.arid      = master_bind_if.arid;
+       master_if.aridchk   = master_bind_if.aridchk;
+       master_if.aridunq   = master_bind_if.aridunq;
+       master_if.ardomain  = master_bind_if.ardomain;
+       master_if.arsnoop   = master_bind_if.arsnoop;
+       master_if.arbar     = master_bind_if.arbar;
+       master_if.rready    = master_bind_if.rready;
+       master_if.rreadychk    = master_bind_if.rreadychk;
+       master_if.rack      = master_bind_if.rack;
+       master_if.rackchk      = master_bind_if.rackchk;
+       master_if.wvalid    = master_bind_if.wvalid;
+       master_if.wvalidchk    = master_bind_if.wvalidchk;
+       master_if.wlast     = master_bind_if.wlast;
+       master_if.wlastchk     = master_bind_if.wlastchk;
+       master_if.wdata     = master_bind_if.wdata;
+       master_if.wdatachk     = master_bind_if.wdatachk;
+       master_if.wstrb     = master_bind_if.wstrb;
+       master_if.wstrbchk  = master_bind_if.wstrbchk;
+       master_if.wid       = master_bind_if.wid;
+       master_if.bready    = master_bind_if.bready;
+       master_if.breadychk    = master_bind_if.breadychk;
+       master_if.wack      = master_bind_if.wack;
+       master_if.wackchk      = master_bind_if.wackchk;
+       master_if.awregion  = master_bind_if.awregion;
+       master_if.awqos     = master_bind_if.awqos;
+       master_if.awuser    = master_bind_if.awuser;
+       master_if.awuserchk = master_bind_if.awuserchk;
+       master_if.arregion  = master_bind_if.arregion;
+       master_if.arqos     = master_bind_if.arqos;
+       master_if.aruser    = master_bind_if.aruser;
+       master_if.aruserchk = master_bind_if.aruserchk;
+       master_if.wuser     = master_bind_if.wuser;
+       master_if.wuserchk  = master_bind_if.wuserchk;
+       master_if.acready   = master_bind_if.acready;
+       master_if.acreadychk = master_bind_if.acreadychk;
+       master_if.crvalid   = master_bind_if.crvalid;
+       master_if.crvalidchk = master_bind_if.crvalidchk;
+       master_if.crresp    = master_bind_if.crresp;
+       master_if.crrespchk = master_bind_if.crrespchk;
+       master_if.cdvalid   = master_bind_if.cdvalid;
+       master_if.cdvalidchk = master_bind_if.cdvalidchk;
+       master_if.cddata    = master_bind_if.cddata;
+       master_if.cddatachk    = master_bind_if.cddatachk;
+       master_if.cdlast    = master_bind_if.cdlast;
+       master_if.cdlastchk = master_bind_if.cdlastchk;
+       master_if.tvalid    = master_bind_if.tvalid;
+       master_if.tdata     = master_bind_if.tdata;
+       master_if.tstrb     = master_bind_if.tstrb;
+       master_if.tdest     = master_bind_if.tdest;
+       master_if.tkeep     = master_bind_if.tkeep;
+       master_if.tlast     = master_bind_if.tlast;
+       master_if.tid       = master_bind_if.tid;
+       master_if.tuser     = master_bind_if.tuser;
+    `ifdef SVT_AXI_QVN_ENABLE
+       master_if.arvnet      = master_if.arvnet     ;
+       master_if.awvnet      = master_if.awvnet     ;
+       master_if.wvnet       = master_if.wvnet      ;
+                                                   
+       master_if.varqosvn3   = master_if.varqosvn3   ;
+       master_if.varvalidvn3 = master_if.varvalidvn3 ;
+       master_if.vawqosvn3   = master_if.vawqosvn3   ;
+       master_if.vawvalidvn3 = master_if.vawvalidvn3 ;
+       master_if.vwvalidvn3  = master_if.vwvalidvn3  ;
+                                                   
+       master_if.varqosvn2   = master_if.varqosvn2   ;
+       master_if.varvalidvn2 = master_if.varvalidvn2 ;
+       master_if.vawqosvn2   = master_if.vawqosvn2   ;
+       master_if.vawvalidvn2 = master_if.vawvalidvn2 ;
+       master_if.vwvalidvn2  = master_if.vwvalidvn2  ;
+                                                   
+       master_if.varqosvn1   = master_if.varqosvn1   ;
+       master_if.varvalidvn1 = master_if.varvalidvn1 ;
+       master_if.vawqosvn1   = master_if.vawqosvn1   ;
+       master_if.vawvalidvn1 = master_if.vawvalidvn1 ;
+       master_if.vwvalidvn1  = master_if.vwvalidvn1  ;
+                                                   
+       master_if.varqosvn0   = master_if.varqosvn0   ;
+       master_if.varvalidvn0 = master_if.varvalidvn0 ;
+       master_if.vawqosvn0   = master_if.vawqosvn0   ;
+       master_if.vawvalidvn0 = master_if.vawvalidvn0 ;
+       master_if.vwvalidvn0  = master_if.vwvalidvn0  ;
+    `endif
+       master_if.awtrace         =  master_bind_if.awtrace;
+       master_if.awmmusecsid     =  master_bind_if.awmmusecsid;
+       master_if.awmmusid        =  master_bind_if.awmmusid;
+       master_if.awmmussidv      =  master_bind_if.awmmussidv;
+       master_if.awmmussid       =  master_bind_if.awmmussid;
+       master_if.awmmuatst       =  master_bind_if.awmmuatst;
+       master_if.awtagop         =  master_bind_if.awtagop;
+       master_if.awatop          =  master_bind_if.awatop;
+       master_if.awmpam          =  master_bind_if.awmpam;
+       master_if.awstashnid      =  master_bind_if.awstashnid;
+       master_if.awstashlpid     =  master_bind_if.awstashlpid;
+       master_if.awstashnid_en   =  master_bind_if.awstashnid_en;
+       master_if.awstashlpid_en  =  master_bind_if.awstashlpid_en;
+       master_if.artrace         =  master_bind_if.artrace;
+       master_if.armmusecsid     =  master_bind_if.armmusecsid;
+       master_if.armmusid        =  master_bind_if.armmusid;
+       master_if.armmussidv      =  master_bind_if.armmussidv;
+       master_if.armmussid       =  master_bind_if.armmussid;
+       master_if.armmuatst       =  master_bind_if.armmuatst;
+       master_if.armpam          =  master_bind_if.armpam;
+       master_if.wtrace          =  master_bind_if.wtrace;
+       master_if.wpoison         =  master_bind_if.wpoison;
+       master_if.wtag            =  master_bind_if.wtag;
+       master_if.wtagupdate      =  master_bind_if.wtagupdate;
+       master_if.cdpoison        =  master_bind_if.cdpoison;
+       master_if.cdtrace         =  master_bind_if.cdtrace;
+       master_if.awakeup         =  master_bind_if.awakeup;
+       master_if.awakeupchk         =  master_bind_if.awakeupchk;
+       master_if.crtrace         =  master_bind_if.crtrace;
+       master_if.archunken       =  master_bind_if.archunken;
+     end
+    end
+endmodule
+
+`endif // GUARD_SVT_AXI_MASTER_BIND_IF_SVI
+
+
+
+
+

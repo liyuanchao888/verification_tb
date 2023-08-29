@@ -1,0 +1,335 @@
+
+`ifndef GUARD_SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_SVI
+`define GUARD_SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_SVI
+
+/** @cond PRIVATE */
+
+//======================================================================
+// Transaction level coverage macros 
+//====================================================================== 
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_TRANS_SET_INST_NAME(group_name) \
+   group_name.set_inst_name($psprintf("%0s_%0s", cfg.inst, `SVT_DATA_UTIL_ARG_TO_STRING(group_name)));
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_ARRAY_TRANS_LOW_SET_INST_NAME(group_name,signal_width) \
+  group_name``_toggle_cov = new[signal_width]; \
+  for (int i=0; i < signal_width; i++) begin \
+    string s_inst_name = $psprintf("%0s_%0s_%0d", cfg.inst, `SVT_DATA_UTIL_ARG_TO_STRING(group_name),i); \
+    svt_apb_master_transition_low_cov transition_inst = new(); \
+    transition_inst.transition_psel_penable_pready_low.set_inst_name(s_inst_name); \
+    group_name``_toggle_cov[i] = transition_inst; \
+  end
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_ARRAY_TRANS_SET_INST_NAME(group_name,signal_width) \
+  group_name``_toggle_cov = new[signal_width]; \
+  for (int i=0; i < signal_width; i++) begin \
+    string s_inst_name = $psprintf("%0s_%0s_%0d", cfg.inst, `SVT_DATA_UTIL_ARG_TO_STRING(group_name),i); \
+    svt_apb_master_transition_cov transition_inst = new(); \
+    transition_inst.transition_psel_penable_pready.set_inst_name(s_inst_name); \
+    group_name``_toggle_cov[i] = transition_inst; \
+  end
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_ARRAY_TRANS_HIGH_SET_INST_NAME(group_name,signal_width) \
+  group_name``_toggle_cov = new[signal_width]; \
+  for (int i=0; i < signal_width; i++) begin \
+    string s_inst_name = $psprintf("%0s_%0s_%0d", cfg.inst, `SVT_DATA_UTIL_ARG_TO_STRING(group_name),i); \
+    svt_apb_master_transition_high_cov transition_inst = new(); \
+    transition_inst.transition_psel_penable_pready_high.set_inst_name(s_inst_name); \
+    group_name``_toggle_cov[i] = transition_inst; \
+  end
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_WRITE_XACT_TYPE \
+  write_xact_type : coverpoint cov_xact.xact_type { \
+    bins write_xact  = {svt_apb_transaction::WRITE}; \
+    option.weight = 0; \
+  }
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_READ_XACT_TYPE \
+  read_xact_type : coverpoint cov_xact.xact_type { \
+    bins read_xact   = {svt_apb_transaction::READ}; \
+    option.weight = 0; \
+  }
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_IDLE \
+  idle : coverpoint cov_xact.num_idle_cycles { \
+    option.weight = 0; \
+     bins idle_zero = {0};\
+     bins idle_non_zero = {[1:$]}; \
+  }
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_ADDR_8 \
+  address : coverpoint cov_xact.address { \
+    option.weight = 0; \
+     bins addr_range_min = {0}; \
+     bins addr_range_mid = {[1:('d2**(upper_bound)-2)]}; \
+     bins addr_range_max_8 = {(('d2**(upper_bound))-1)} ; \
+ }
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_ADDR_16 \
+  address : coverpoint cov_xact.address { \
+    option.weight = 0; \
+     bins addr_range_min = {0}; \
+     bins addr_range_mid = {[1:('d2**(upper_bound)-2)]}; \
+     bins addr_range_max_16 = {(('d2**(upper_bound))-2)}; \
+  }
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_ADDR_32 \
+  address : coverpoint cov_xact.address { \
+    option.weight = 0; \
+     bins addr_range_min = {0}; \
+     bins addr_range_mid = {[1:('d2**(upper_bound)-2)]}; \
+    bins addr_range_max_32 = {(('d2**(upper_bound))-4)}; \
+  }
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_ADDR_64 \
+  address : coverpoint cov_xact.address { \
+    option.weight = 0; \
+     bins addr_range_min = {0}; \
+     bins addr_range_mid = {[1:('d2**(upper_bound)-2)]}; \
+     bins addr_range_max_64 = {(('d2**(upper_bound))-8)}; \
+  }
+
+
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_PSTRB \
+  pstrb : coverpoint cov_xact.pstrb { \
+    option.weight = 0; \
+  }
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_PPROT0 \
+  pprot0 : coverpoint cov_xact.pprot0 { \
+    bins normal     = {svt_apb_transaction::NORMAL}; \
+    bins privileged = {svt_apb_transaction::PRIVILEGED}; \
+    option.weight = 0; \
+  }
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_PPROT1 \
+  pprot1 : coverpoint cov_xact.pprot1 { \
+    bins secure     = {svt_apb_transaction::SECURE}; \
+    bins non_secure = {svt_apb_transaction::NON_SECURE}; \
+    option.weight = 0; \
+  }
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_PPROT2 \
+  pprot2 : coverpoint cov_xact.pprot2 { \
+    bins data        = {svt_apb_transaction::DATA}; \
+    bins instruction = {svt_apb_transaction::INSTRUCTION}; \
+    option.weight = 0; \
+  }
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_WAIT \
+  cov_wait : coverpoint cov_xact.num_wait_cycles { \
+    option.weight = 0; \
+     bins wait_zero = {0};\
+     bins wait_non_zero = {[1:$]}; \
+  }
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_PSLVERR \
+  pslverr : coverpoint cov_xact.pslverr_enable { \
+    option.weight = 0; \
+     bins no_error = {0};\
+     bins error =    {1}; \
+  }
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_PSLVERR_TRANSITION \
+  pslverr : coverpoint cov_xact_pslverr { \
+     bins no_error = {0};\
+     bins error =    {1}; \
+  }
+
+//======================================================================
+// Signal level coverage macros 
+//====================================================================== 
+
+/**
+ *  Macro consists covergroup having single bit as coverpoint and declaration of
+ *  transition bins of single bit signal
+ */
+  //covergroup toggle_cov @(sample_event); \
+  /** Removed the sampling enevt as it will call the sample*/
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_CREATE_CG \
+  covergroup toggle_cov ;\
+    option.per_instance = 1; \
+    option.goal = 100; \
+    coverpoint signal_index { \
+      bins toggle_bit_0to1 = (0 => 1); \
+      bins toggle_bit_1to0 = (1 => 0); \
+    } \
+  endgroup
+
+/**
+ * Macro to give group name by appending signal name and bit index (e.g.
+ * signal_toggle_awid_0) for ease of reading coverage report  
+ */
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_TOGGLE_COV_SIGNAME_TO_GRP_NAME(signal_name, bitindex) \
+   $psprintf("%0s_signal_toggle_%0s_bit%0d", cfg.inst, `SVT_DATA_UTIL_ARG_TO_STRING(signal_name), bitindex)
+
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_TOGGLE_COV_BITVEC_ARRAY_SIGNAME_TO_GRP_NAME(signal_name, bitindex, arrindex) \
+  $psprintf("%0s_signal_toggle_%0s[%0d]_bit%0d", cfg.inst, `SVT_DATA_UTIL_ARG_TO_STRING(signal_name), arrindex, bitindex)
+
+/**
+ *  Macro used by variable width APB signal instaces to trigger the
+ *  local event and triggering coverage group.
+ */    
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_COVER_SAMPLE_SIGNAL(signal_name) \
+  foreach (signal_name``_toggle_cov[i]) begin \
+    signal_name``_toggle_cov[i].bit_cov(apb_monitor_mp.apb_monitor_cb.signal_name[i]); \
+  end 
+
+/**
+ *  Macro used by variable width APB single bit signals to trigger the
+ *  local event and triggering coverage group.
+ */    
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_COVER_SAMPLE_SIGNAL_BIT(signal_name) \
+  foreach (signal_name``_toggle_cov[i]) begin \
+    signal_name``_toggle_cov[i].bit_cov(apb_monitor_mp.apb_monitor_cb.signal_name); \
+  end 
+
+/**
+ *  Macro used by variable width APB3 single bit signals to trigger the
+ *  local event and triggering coverage group.
+ */    
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_COVER_SAMPLE_SIGNAL_BITVEC_ARRAY(signal_name) \
+  foreach (signal_name``_toggle_cov[i,j]) begin \
+    signal_name``_toggle_cov[i][j].bit_cov(apb_monitor_mp.apb_monitor_cb.signal_name[j][i]); \
+  end
+
+/**
+ * Macro used to create number of instances as per the respective width of the
+ * signal 
+ */
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_CREATE_REQ_INSTANCES(signal_name, signal_width, signal_enable) \
+ if(signal_enable) begin \
+  signal_name``_toggle_cov = new[signal_width]; \
+  for (int i=0; i < signal_width; i++) begin \
+    string s_inst_name = `SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_TOGGLE_COV_SIGNAME_TO_GRP_NAME(signal_name, i); \
+    svt_apb_master_toggle_bit_cov toggle_bit_inst = new(); \
+    toggle_bit_inst.toggle_cov.set_inst_name(s_inst_name); \
+    signal_name``_toggle_cov[i] = toggle_bit_inst; \
+  end \
+ end \
+ else begin \
+ end
+
+/**
+ * Macro used to create number of instances as per the respective width of the
+ * signal 
+ */
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_CREATE_BITVEC_ARRAY_REQ_INSTANCES(signal_name, signal_width, array_size, signal_enable) \
+ if(signal_enable) begin \
+   signal_name``_toggle_cov = new[signal_width]; \
+   foreach (signal_name``_toggle_cov[i]) begin \
+     signal_name``_toggle_cov[i] = new [array_size]; \
+   end \
+   foreach (signal_name``_toggle_cov[i,j]) begin \
+     string s_inst_name = `SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_TOGGLE_COV_BITVEC_ARRAY_SIGNAME_TO_GRP_NAME(signal_name, i, j); \
+     svt_apb_master_toggle_bit_cov toggle_bit_inst = new(); \
+     toggle_bit_inst.toggle_cov.set_inst_name(s_inst_name); \
+     signal_name``_toggle_cov[i][j] = toggle_bit_inst; \
+   end\
+ end \
+ else begin \
+ end
+
+/**
+ * Macro to declare covergroup template
+ */
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_CG(signal_name, sample_event) \
+  covergroup signal_state_``signal_name @(sample_event); \
+    option.per_instance = 1; \
+    option.goal = 100; 
+
+/**
+ * Macro to declare covergroup template for a signal array
+ */
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_ARRAY_CG(signal_name, arrayidx, sample_event) \
+  covergroup signal_state_``signal_name``_``arrayidx @(sample_event); \
+    option.per_instance = 1; \
+    option.goal = 100; 
+
+/**
+ * Macro to create state covergroup instances 
+ */
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_SET_STATE_CG_INST_NAME(signal_name) \
+   signal_state_``signal_name = new(); \
+   s_inst_name = `SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_STATE_COV_SIGNAME_TO_GRP_NAME(signal_name); \
+   signal_state_``signal_name.set_inst_name(s_inst_name); 
+/** 
+ * Macro to give cover group name by appending class name for ease of reading of
+ * coverage report in case of state coverage
+ */
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_STATE_COV_SIGNAME_TO_GRP_NAME(signal_name) \
+   $psprintf("%0s_signal_state_%0s", cfg.inst, `SVT_DATA_UTIL_ARG_TO_STRING(signal_name))
+
+/**
+ *  Following macros takes protocol signal, it's respective mapbmum value
+ *  defined in *defines.svi and sample event as arguements and defines signal's
+ *  min,mid,max bin value ranges in covergroup.
+ */
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_RANGE_CG(signal_name, signal_max_val, sample_event) \
+ \
+ `SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_CG(signal_name, sample_event) \
+   signal_name``_min_mid_max : coverpoint apb_monitor_mp.apb_monitor_cb.signal_name \
+                { \
+                   bins signal_name``_range_min = {0};\
+`ifdef SVT_MULTI_SIM_COVPOINT_GREATER_THAN_32_BITS \
+  // Need to come up with an alternative \
+`else \
+                   bins signal_name``_range_mid = {[1:(1024'd2**(signal_max_val)-2)]}; \
+                   bins signal_name``_range_max = {((1024'd2**(signal_max_val))-1)}; \
+`endif \
+                } \
+  endgroup
+
+/**
+ *  Following macros takes protocol signal, it's respective mapbmum value
+ *  defined in *defines.svi and sample event as arguements and defines signal's
+ *  min,mid,max bin value ranges in covergroup.
+ */
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_ARRAY_RANGE_CG(signal_name, signal_max_val, arrindex, sample_event) \
+ `SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_ARRAY_CG(signal_name, arrindex, sample_event) \
+   signal_name``arrindex``_min_mid_max : coverpoint apb_monitor_mp.apb_monitor_cb.signal_name[arrindex] \
+                { \
+                   bins signal_name``_arrindex``_range_min = {0};\
+`ifdef SVT_MULTI_SIM_COVPOINT_GREATER_THAN_32_BITS \
+  // Need to come up with an alternative \
+`else \
+                   bins signal_name``_arrindex``_range_mid = {[1:(1024'd2**(signal_max_val)-2)]}; \
+                   bins signal_name``_arrindex``_range_max = {((1024'd2**(signal_max_val))-1)}; \
+`endif \
+                } \
+  endgroup
+
+/**
+ *  Macro to create coverpoints for cg trans_apb_state_after_reset_deasserted to check IDLE and SETUP state during reset deassertion
+ */
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_APB_STATE_AFTER_RESET_DEASSERTED \
+    option.per_instance = 1; \
+    apb_state : coverpoint {apb_if_mon_mp.apb_monitor_cb.psel,apb_if_mon_mp.apb_monitor_cb.penable} { \
+      bins IDLE_STATE = {2'b00}; \
+      bins SETUP_STATE = {2'b10}; \
+    } 
+
+/**
+ *  Macro to create coverpoints for cg trans_read_x_on_prdata_when_pslverr to check if x on prdata when pslverrr = 1, pready = 1 and penable = 1 for read xact
+ */
+`define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_READ_X_ON_PRDATA_WHEN_PSLVERR \
+    option.per_instance = 1; \
+    prdata_read_xact : coverpoint cov_read_x_on_prdata { \
+      bins x_on_prdata = {1}; \
+    } 
+
+ /**
+  *  Macro to create coverpoints for covergroup trans_apb_states_covered to
+  *  check IDLE, SETUP and ACCESS states
+  */
+ `define SVT_APB_MASTER_MONITOR_DEF_COV_UTIL_APB_STATES_COVERED \
+     option.per_instance = 1; \
+     apb_state : coverpoint {apb_if_mon_mp.apb_monitor_cb.psel,apb_if_mon_mp.apb_monitor_cb.penable} { \
+       bins IDLE_STATE = {2'b00}; \
+       bins SETUP_STATE = {2'b10}; \
+       bins ACCESS_STATE = {2'b11};\
+}
+
+
+/** @endcond */
+
+`endif

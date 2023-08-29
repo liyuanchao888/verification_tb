@@ -1,0 +1,107 @@
+`define USE_CCI400_VIP_DEFINES
+
+`define CCI400_REG_BASE_ADDR                    'h09_0000
+
+// Common Control Registers
+`define CCI400_REG_Control_Override	        `CCI400_REG_BASE_ADDR+'h0000
+`define CCI400_REG_Speculation_Control	        `CCI400_REG_BASE_ADDR+'h0004
+`define CCI400_REG_Secure_Access	        `CCI400_REG_BASE_ADDR+'h0008
+`define CCI400_REG_Status       	        `CCI400_REG_BASE_ADDR+'h000C
+`define CCI400_REG_Imprecise       	        `CCI400_REG_BASE_ADDR+'h0010
+`define CCI400_REG_PerfMon_Control	        `CCI400_REG_BASE_ADDR+'h0100
+
+// Peripheral ID Registers
+`define CCI400_REG_Peripheral_ID0 	        `CCI400_REG_BASE_ADDR+'h0FE0
+`define CCI400_REG_Peripheral_ID1 	        `CCI400_REG_BASE_ADDR+'h0FE4
+`define CCI400_REG_Peripheral_ID2 	        `CCI400_REG_BASE_ADDR+'h0FE8
+`define CCI400_REG_Peripheral_ID3 	        `CCI400_REG_BASE_ADDR+'h0FEC
+`define CCI400_REG_Peripheral_ID4 	        `CCI400_REG_BASE_ADDR+'h0FD0
+`define CCI400_REG_Peripheral_ID5 	        `CCI400_REG_BASE_ADDR+'h0FD4
+`define CCI400_REG_Peripheral_ID6 	        `CCI400_REG_BASE_ADDR+'h0FD8
+`define CCI400_REG_Peripheral_ID7 	        `CCI400_REG_BASE_ADDR+'h0FDC
+
+// Component ID Registers
+`define CCI400_REG_Component_ID0 	        `CCI400_REG_BASE_ADDR+'h0FF0
+`define CCI400_REG_Component_ID1 	        `CCI400_REG_BASE_ADDR+'h0FF4
+`define CCI400_REG_Component_ID2 	        `CCI400_REG_BASE_ADDR+'h0FF8
+`define CCI400_REG_Component_ID3 	        `CCI400_REG_BASE_ADDR+'h0FFC
+
+// Slave Interface 0 Registers
+`define CCI400_REG_Snoop_Control_s0	        `CCI400_REG_BASE_ADDR+'h1000
+`define CCI400_REG_Shareable_Override_s0	`CCI400_REG_BASE_ADDR+'h1004
+`define CCI400_REG_RdChnl_QoS_Override_s0       `CCI400_REG_BASE_ADDR+'h1100
+`define CCI400_REG_WrChnl_QoS_Override_s0       `CCI400_REG_BASE_ADDR+'h1104
+`define CCI400_REG_QoS_Control_s0               `CCI400_REG_BASE_ADDR+'h110C
+`define CCI400_REG_Max_OT_s0                    `CCI400_REG_BASE_ADDR+'h1110
+`define CCI400_REG_Target_Latency_s0            `CCI400_REG_BASE_ADDR+'h1130
+`define CCI400_REG_Latency_Regulation_s0        `CCI400_REG_BASE_ADDR+'h1134
+`define CCI400_REG_QoS_Range_s0                 `CCI400_REG_BASE_ADDR+'h1138
+
+// Slave Interface 1 Registers
+`define CCI400_REG_Snoop_Control_s1	        `CCI400_REG_BASE_ADDR+'h2000
+`define CCI400_REG_Shareable_Override_s1	`CCI400_REG_BASE_ADDR+'h2004
+`define CCI400_REG_RdChnl_QoS_Override_s1       `CCI400_REG_BASE_ADDR+'h2100
+`define CCI400_REG_WrChnl_QoS_Override_s1       `CCI400_REG_BASE_ADDR+'h2104
+`define CCI400_REG_QoS_Control_s1               `CCI400_REG_BASE_ADDR+'h210C
+`define CCI400_REG_Max_OT_s1                    `CCI400_REG_BASE_ADDR+'h2110
+`define CCI400_REG_Target_Latency_s1            `CCI400_REG_BASE_ADDR+'h2130
+`define CCI400_REG_Latency_Regulation_s1        `CCI400_REG_BASE_ADDR+'h2134
+`define CCI400_REG_QoS_Range_s1                 `CCI400_REG_BASE_ADDR+'h2138
+
+// Slave Interface 2 Registers
+`define CCI400_REG_Snoop_Control_s2	        `CCI400_REG_BASE_ADDR+'h3000
+`define CCI400_REG_Shareable_Override_s2	`CCI400_REG_BASE_ADDR+'h3004
+`define CCI400_REG_RdChnl_QoS_Override_s2       `CCI400_REG_BASE_ADDR+'h3100
+`define CCI400_REG_WrChnl_QoS_Override_s2       `CCI400_REG_BASE_ADDR+'h3104
+`define CCI400_REG_QoS_Control_s2               `CCI400_REG_BASE_ADDR+'h310C
+`define CCI400_REG_Max_OT_s2                    `CCI400_REG_BASE_ADDR+'h3110
+`define CCI400_REG_Target_Latency_s2            `CCI400_REG_BASE_ADDR+'h3130
+`define CCI400_REG_Latency_Regulation_s2        `CCI400_REG_BASE_ADDR+'h3134
+`define CCI400_REG_QoS_Range_s2                 `CCI400_REG_BASE_ADDR+'h3138
+
+// Slave Interface 3 Registers
+`define CCI400_REG_Snoop_Control_s3	        `CCI400_REG_BASE_ADDR+'h4000
+`define CCI400_REG_Shareable_Override_s3	`CCI400_REG_BASE_ADDR+'h4004
+`define CCI400_REG_RdChnl_QoS_Override_s3       `CCI400_REG_BASE_ADDR+'h4100
+`define CCI400_REG_WrChnl_QoS_Override_s3       `CCI400_REG_BASE_ADDR+'h4104
+`define CCI400_REG_QoS_Control_s3               `CCI400_REG_BASE_ADDR+'h410C
+`define CCI400_REG_Max_OT_s3                    `CCI400_REG_BASE_ADDR+'h4110
+`define CCI400_REG_Target_Latency_s3            `CCI400_REG_BASE_ADDR+'h4130
+`define CCI400_REG_Latency_Regulation_s3        `CCI400_REG_BASE_ADDR+'h4134
+`define CCI400_REG_QoS_Range_s3                 `CCI400_REG_BASE_ADDR+'h4138
+
+// Slave Interface 4 Registers
+`define CCI400_REG_Snoop_Control_s4	        `CCI400_REG_BASE_ADDR+'h5000
+`define CCI400_REG_Shareable_Override_s4	`CCI400_REG_BASE_ADDR+'h5004
+`define CCI400_REG_RdChnl_QoS_Override_s4       `CCI400_REG_BASE_ADDR+'h5100
+`define CCI400_REG_WrChnl_QoS_Override_s4       `CCI400_REG_BASE_ADDR+'h5104
+`define CCI400_REG_QoS_Control_s4               `CCI400_REG_BASE_ADDR+'h510C
+`define CCI400_REG_Max_OT_s4                    `CCI400_REG_BASE_ADDR+'h5110
+`define CCI400_REG_Target_Latency_s4            `CCI400_REG_BASE_ADDR+'h5130
+`define CCI400_REG_Latency_Regulation_s4        `CCI400_REG_BASE_ADDR+'h5134
+`define CCI400_REG_QoS_Range_s4                 `CCI400_REG_BASE_ADDR+'h5138
+
+
+// Cycle Counters
+`define CCI400_REG_Cycle_Counter	        `CCI400_REG_BASE_ADDR+'h9004
+`define CCI400_REG_Cycle_Control	        `CCI400_REG_BASE_ADDR+'h9008
+`define CCI400_REG_Cycle_Overflow	        `CCI400_REG_BASE_ADDR+'h900C
+
+// Performance Counter Registers 
+`define CCI400_REG_Event_Sel_pc0	        `CCI400_REG_BASE_ADDR+'hA000
+`define CCI400_REG_Event_Count_pc0	        `CCI400_REG_BASE_ADDR+'hA004
+`define CCI400_REG_Event_Control_pc0	        `CCI400_REG_BASE_ADDR+'hA008
+`define CCI400_REG_Event_Overflow_pc0	        `CCI400_REG_BASE_ADDR+'hA00C
+`define CCI400_REG_Event_Sel_pc1	        `CCI400_REG_BASE_ADDR+'hB000
+`define CCI400_REG_Event_Count_pc1	        `CCI400_REG_BASE_ADDR+'hB004
+`define CCI400_REG_Event_Control_pc1	        `CCI400_REG_BASE_ADDR+'hB008
+`define CCI400_REG_Event_Overflow_pc1	        `CCI400_REG_BASE_ADDR+'hB00C
+`define CCI400_REG_Event_Sel_pc2	        `CCI400_REG_BASE_ADDR+'hC000
+`define CCI400_REG_Event_Count_pc2	        `CCI400_REG_BASE_ADDR+'hC004
+`define CCI400_REG_Event_Control_pc2	        `CCI400_REG_BASE_ADDR+'hC008
+`define CCI400_REG_Event_Overflow_pc2	        `CCI400_REG_BASE_ADDR+'hC00C
+`define CCI400_REG_Event_Sel_pc3	        `CCI400_REG_BASE_ADDR+'hD000
+`define CCI400_REG_Event_Count_pc3	        `CCI400_REG_BASE_ADDR+'hD004
+`define CCI400_REG_Event_Control_pc3	        `CCI400_REG_BASE_ADDR+'hD008
+`define CCI400_REG_Event_Overflow_pc3	        `CCI400_REG_BASE_ADDR+'hD00C
+

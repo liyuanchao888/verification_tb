@@ -1,0 +1,2633 @@
+//=======================================================================
+// COPYRIGHT (C) 2019 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//
+//-----------------------------------------------------------------------
+
+`ifndef GUARD_SVT_CHI_PORT_DEFINES_SVI
+`define GUARD_SVT_CHI_PORT_DEFINES_SVI
+
+// First read in the user-specified defines (if any), that may take precedence
+// over some of the following defaults...
+`ifdef SVT_CHI_INCLUDE_USER_DEFINES
+  `ifndef SVT_CHI_INCLUDED_USER_DEFINES
+    `define SVT_CHI_INCLUDED_USER_DEFINES
+    `include "svt_chi_user_defines.svi"
+  `endif
+`endif // SVT_CHI_INCLUDE_USER_DEFINES
+
+`ifndef SVT_CHI_RN_IF_HOLD_TIME
+  `define SVT_CHI_RN_IF_HOLD_TIME 0.1
+`endif
+
+`ifndef SVT_CHI_RN_IF_SETUP_TIME
+  `define SVT_CHI_RN_IF_SETUP_TIME 0.1
+`endif
+
+`ifndef SVT_CHI_SN_IF_HOLD_TIME
+  `define SVT_CHI_SN_IF_HOLD_TIME 0.1
+`endif
+
+`ifndef SVT_CHI_SN_IF_SETUP_TIME
+  `define SVT_CHI_SN_IF_SETUP_TIME 0.1
+`endif
+
+`ifndef SVT_CHI_MONITOR_IF_HOLD_TIME
+  `define SVT_CHI_MONITOR_IF_HOLD_TIME 0.1
+`endif
+
+`ifndef SVT_CHI_MONITOR_IF_SETUP_TIME
+  `define SVT_CHI_MONITOR_IF_SETUP_TIME 0.1
+`endif
+
+//------------------------------------------
+// Define internal spec issue macros
+//------------------------------------------
+`ifndef SVT_CHI_INTERNAL_SPEC_ISSUE_MACROS_DEFINED
+
+  `define SVT_CHI_INTERNAL_SPEC_ISSUE_MACROS_DEFINED
+
+  `ifdef SVT_CHI_ISSUE_E_ENABLE
+    `define SVT_CHI_ISSUE_E_ONLY_FEATURES_ENABLE
+    `define SVT_CHI_ISSUE_D_ENABLE
+    `define SVT_CHI_ISSUE_C_ENABLE
+    `define SVT_CHI_ISSUE_B_ENABLE
+    `define SVT_CHI_ISSUE_A_ENABLE
+  `elsif SVT_CHI_ISSUE_D_ENABLE
+    `define SVT_CHI_ISSUE_D_ONLY_FEATURES_ENABLE
+    `define SVT_CHI_ISSUE_C_ENABLE
+    `define SVT_CHI_ISSUE_B_ENABLE
+    `define SVT_CHI_ISSUE_A_ENABLE
+  `elsif SVT_CHI_ISSUE_C_ENABLE
+    `define SVT_CHI_ISSUE_C_ONLY_FEATURES_ENABLE
+    `define SVT_CHI_ISSUE_B_ENABLE
+    `define SVT_CHI_ISSUE_A_ENABLE
+  `elsif SVT_CHI_ISSUE_B_ENABLE
+    `define SVT_CHI_ISSUE_B_ONLY_FEATURES_ENABLE
+    `define SVT_CHI_ISSUE_A_ENABLE
+  `else
+    `define SVT_CHI_ISSUE_A_ONLY_FEATURES_ENABLE
+    `define SVT_CHI_ISSUE_A_ENABLE
+  `endif
+
+`endif //  `ifndef SVT_CHI_INTERNAL_SPEC_ISSUE_MACROS_DEFINED
+//------------------------------------------
+
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+  // o If `SVT_CHI_NODE_ID_WIDTH is defined :: Backward compatibility case
+  //     - Flag a warning that this is deprecated, use `SVT_CHI_MAX_NODE_ID_WIDTH instead
+  //     - If `SVT_CHI_MAX_NODE_ID_WIDTH is also defined
+  //       + Flag a warning that both `SVT_CHI_NODE_ID_WIDTH, `SVT_CHI_MAX_NODE_ID_WIDTH
+  //         are defined, and indicate only value of `SVT_CHI_MAX_NODE_ID_WIDTH will be used.
+  //     - else: `SVT_CHI_MAX_NODE_ID_WIDTH is not defined
+  //       + Define `SVT_CHI_MAX_NODE_ID_WIDTH same as `SVT_CHI_NODE_ID_WIDTH
+  // o else: `SVT_CHI_NODE_ID_WIDTH is not defined :: Recommended use case
+  //     - If `SVT_CHI_MAX_NODE_ID_WIDTH is not defined
+  //       + Setup a default value for `SVT_CHI_MAX_NODE_ID_WIDTH 
+  `ifdef SVT_CHI_NODE_ID_WIDTH
+    `define SVT_CHI_NODE_ID_WIDTH_DEFINED_IN_TB
+    `ifdef SVT_CHI_MAX_NODE_ID_WIDTH
+      `define SVT_CHI_NODE_ID_WIDTH_AND_MAX_NODE_ID_WIDTH_DEFINED_IN_TB
+    `else
+      `define SVT_CHI_MAX_NODE_ID_WIDTH `SVT_CHI_NODE_ID_WIDTH
+    `endif
+  `else
+    `ifndef SVT_CHI_MAX_NODE_ID_WIDTH
+      `define SVT_CHI_MAX_NODE_ID_WIDTH 7 
+    `endif     
+  `endif
+
+`else
+ `define SVT_CHI_MAX_NODE_ID_WIDTH 7 
+`endif
+
+/** 
+ * Width of Addr field of a Message Request 
+ * For CHI Issue-B: this is redefinable 
+ * For CHI Issue-A: this is fixed to 44
+ */
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+  `ifndef SVT_CHI_MAX_ADDR_WIDTH
+    `define SVT_CHI_MAX_ADDR_WIDTH 44
+  `endif
+`else
+  `define SVT_CHI_MAX_ADDR_WIDTH 44
+`endif
+
+`ifdef SVT_CHI_TAGGED_ADDR_SPACE_ENABLE
+  `define SVT_CHI_TAG_ADDR_WIDTH 1
+`else 
+  `define SVT_CHI_TAG_ADDR_WIDTH 0
+`endif
+
+`define SVT_CHI_MAX_TAGGED_ADDR_WIDTH (`SVT_CHI_MAX_ADDR_WIDTH + `SVT_CHI_TAG_ADDR_WIDTH)
+
+`define SVT_CHI_REQ_ADDR_WIDTH `SVT_CHI_MAX_ADDR_WIDTH
+
+/** Width of address index field: 44 bit address width => 6 bits are needed to represent a given index */
+`define SVT_CHI_ADDR_IDX_WIDTH 6
+
+/** Width of Addr field of a Snoop Message Request */
+`define SVT_CHI_SNP_ADDR_WIDTH ((`SVT_CHI_REQ_ADDR_WIDTH)-3)
+
+/** Width of Datacheck field-- applicable for CHI Issue B */
+
+/**
+ * This defines the width of RSVDC field width of the TXDATFLIT and RXDATFLIT
+ */
+`ifndef SVT_CHI_DAT_FLIT_MAX_RSVDC_WIDTH
+  `define SVT_CHI_DAT_FLIT_MAX_RSVDC_WIDTH 4
+`endif
+
+/**
+ * This defines the width of RSVDC field width of the TXREQFLIT and RXREQFLIT
+ */
+`ifndef SVT_CHI_REQ_FLIT_MAX_RSVDC_WIDTH
+  `define SVT_CHI_REQ_FLIT_MAX_RSVDC_WIDTH 4
+`endif
+
+
+/**
+ * This defines the width of the DATA field width of the TXDATFLIT and RXDATFLIT
+ * and also affects the BE field. It is also used by svt_chi_flit::data attribute.
+ */
+`ifndef SVT_CHI_DAT_FLIT_MAX_DATA_WIDTH
+ `define SVT_CHI_DAT_FLIT_MAX_DATA_WIDTH 128
+`endif
+
+/** Width of Posion field-- applicable for CHI Issue B */
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+  `ifdef SVT_CHI_POISON_WIDTH_ENABLE
+    `define SVT_CHI_POISON_INTERNAL_WIDTH_ENABLE 1
+  `else
+    `define SVT_CHI_POISON_INTERNAL_WIDTH_ENABLE 0
+  `endif
+  `define SVT_CHI_DAT_FLIT_MAX_POISON_WIDTH (`SVT_CHI_DAT_FLIT_MAX_DATA_WIDTH/64)
+`endif
+
+/** Width of DAT VC Opcode field */
+/** Widths of Opcode fields for different FLIT types  -- Defined in svt_chi_port_defines.svi file */
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+  `define SVT_CHI_REQ_VC_FLIT_OP_WIDTH 7
+`elsif SVT_CHI_ISSUE_B_ENABLE
+  `define SVT_CHI_REQ_VC_FLIT_OP_WIDTH 6
+`else
+  `define SVT_CHI_REQ_VC_FLIT_OP_WIDTH 5
+`endif
+
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+  `define SVT_CHI_SNP_VC_FLIT_OP_WIDTH 5
+`else
+  `define SVT_CHI_SNP_VC_FLIT_OP_WIDTH 4
+`endif
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+  `define SVT_CHI_RSP_VC_FLIT_OP_WIDTH 5
+`else
+  `define SVT_CHI_RSP_VC_FLIT_OP_WIDTH 4
+`endif
+
+`ifdef SVT_CHI_ISSUE_C_ENABLE
+  `define SVT_CHI_DAT_VC_FLIT_OP_WIDTH 4
+`else
+  `define SVT_CHI_DAT_VC_FLIT_OP_WIDTH 3
+`endif
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+  `define SVT_CHI_SUPER_MAX_DAT_FLIT_WIDTH 784
+`elsif SVT_CHI_ISSUE_D_ENABLE
+  `define SVT_CHI_SUPER_MAX_DAT_FLIT_WIDTH 758
+`elsif SVT_CHI_ISSUE_C_ENABLE
+  `define SVT_CHI_SUPER_MAX_DAT_FLIT_WIDTH 750
+`elsif SVT_CHI_ISSUE_B_ENABLE
+  `define SVT_CHI_SUPER_MAX_DAT_FLIT_WIDTH 749
+`else
+  `define SVT_CHI_SUPER_MAX_DAT_FLIT_WIDTH 654  
+`endif
+
+/** Width of Datacheck field-- applicable for CHI Issue B */
+`ifdef SVT_CHI_ISSUE_B_ENABLE
+  `ifdef SVT_CHI_DATACHECK_WIDTH_ENABLE
+    `define SVT_CHI_DATACHECK_INTERNAL_WIDTH_ENABLE 1
+  `else
+    `define SVT_CHI_DATACHECK_INTERNAL_WIDTH_ENABLE 0
+  `endif
+  `define SVT_CHI_DAT_FLIT_MAX_DATACHECK_WIDTH (`SVT_CHI_DAT_FLIT_MAX_DATA_WIDTH/8)
+`endif
+
+/** Width of MPAM field-- applicable for CHI Issue D
+  * Interface Parity field-- applicable for CHI ISSUE D
+  * .
+  */
+`ifdef SVT_CHI_ISSUE_D_ENABLE
+  `ifdef SVT_CHI_MPAM_WIDTH_ENABLE
+    `define SVT_CHI_MPAM_INTERNAL_WIDTH_ENABLE 1
+  `else
+    `define SVT_CHI_MPAM_INTERNAL_WIDTH_ENABLE 0
+  `endif
+
+  `ifdef SVT_CHI_INTERFACE_PARITY_ENABLE
+    `define SVT_CHI_INTERFACE_PARITY_ENABLE_INTERNAL 1
+  `else
+    `define SVT_CHI_INTERFACE_PARITY_ENABLE_INTERNAL 0
+  `endif
+
+  `define SVT_CHI_MPAM_WIDTH 11
+`endif
+
+/**
+ * This defines the width of the BYTE ENABLE field width of the TXDATFLIT and
+ * RXDATFLIT signals. It is also used by svt_chi_flit::byte_enable attribute.
+ */
+`define SVT_CHI_DAT_FLIT_MAX_BE_WIDTH (`SVT_CHI_DAT_FLIT_MAX_DATA_WIDTH/8)
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+  `define SVT_CHI_DAT_FLIT_MAX_TAG_WIDTH (`SVT_CHI_DAT_FLIT_MAX_DATA_WIDTH/32) //16bit
+  `define SVT_CHI_DAT_FLIT_MAX_TAG_UPDATE_WIDTH (`SVT_CHI_DAT_FLIT_MAX_DATA_WIDTH/128) //4bit
+`endif
+
+`ifdef SVT_CHI_ISSUE_E_ENABLE
+ `define SVT_CHI_INTERFACE_PARITY_GRANULARITY 8
+ `define SVT_CHI_MAX_REQ_FLIT_WIDTH (66+(3*`SVT_CHI_MAX_NODE_ID_WIDTH)+`SVT_CHI_REQ_ADDR_WIDTH+(`SVT_CHI_MPAM_WIDTH*`SVT_CHI_MPAM_INTERNAL_WIDTH_ENABLE)+`SVT_CHI_REQ_FLIT_MAX_RSVDC_WIDTH)
+ `define SVT_CHI_MAX_RSP_FLIT_WIDTH (51+(2*`SVT_CHI_MAX_NODE_ID_WIDTH))
+ `define SVT_CHI_MAX_SNP_FLIT_WIDTH (37+(2*`SVT_CHI_MAX_NODE_ID_WIDTH)+`SVT_CHI_SNP_ADDR_WIDTH+(`SVT_CHI_MPAM_WIDTH*`SVT_CHI_MPAM_INTERNAL_WIDTH_ENABLE))
+ `define SVT_CHI_MAX_DAT_FLIT_WIDTH (47+(`SVT_CHI_DAT_VC_FLIT_OP_WIDTH)+(3*`SVT_CHI_MAX_NODE_ID_WIDTH)+`SVT_CHI_DAT_FLIT_MAX_TAG_WIDTH+`SVT_CHI_DAT_FLIT_MAX_TAG_UPDATE_WIDTH+`SVT_CHI_DAT_FLIT_MAX_RSVDC_WIDTH+`SVT_CHI_DAT_FLIT_MAX_BE_WIDTH+`SVT_CHI_DAT_FLIT_MAX_DATA_WIDTH +(`SVT_CHI_DATACHECK_INTERNAL_WIDTH_ENABLE * `SVT_CHI_DAT_FLIT_MAX_DATACHECK_WIDTH)+(`SVT_CHI_POISON_INTERNAL_WIDTH_ENABLE * `SVT_CHI_DAT_FLIT_MAX_POISON_WIDTH))
+`define SVT_CHI_IF_PARITY_REQ_FLIT_CHK_WIDTH ((`SVT_CHI_MAX_REQ_FLIT_WIDTH/`SVT_CHI_INTERFACE_PARITY_GRANULARITY) + ((`SVT_CHI_MAX_REQ_FLIT_WIDTH%`SVT_CHI_INTERFACE_PARITY_GRANULARITY)==0 ?0:1))
+`define SVT_CHI_IF_PARITY_RSP_FLIT_CHK_WIDTH ((`SVT_CHI_MAX_RSP_FLIT_WIDTH/`SVT_CHI_INTERFACE_PARITY_GRANULARITY) + ((`SVT_CHI_MAX_RSP_FLIT_WIDTH%`SVT_CHI_INTERFACE_PARITY_GRANULARITY)==0 ?0:1))
+`define SVT_CHI_IF_PARITY_DAT_FLIT_CHK_WIDTH ((`SVT_CHI_MAX_DAT_FLIT_WIDTH/`SVT_CHI_INTERFACE_PARITY_GRANULARITY) + ((`SVT_CHI_MAX_DAT_FLIT_WIDTH%`SVT_CHI_INTERFACE_PARITY_GRANULARITY)==0 ?0:1))
+`define SVT_CHI_IF_PARITY_SNP_FLIT_CHK_WIDTH ((`SVT_CHI_MAX_SNP_FLIT_WIDTH/`SVT_CHI_INTERFACE_PARITY_GRANULARITY) + ((`SVT_CHI_MAX_SNP_FLIT_WIDTH%`SVT_CHI_INTERFACE_PARITY_GRANULARITY)==0 ?0:1))
+`elsif SVT_CHI_ISSUE_D_ENABLE
+ `define SVT_CHI_INTERFACE_PARITY_GRANULARITY 8
+ `define SVT_CHI_MAX_REQ_FLIT_WIDTH (56+(3*`SVT_CHI_MAX_NODE_ID_WIDTH)+`SVT_CHI_REQ_ADDR_WIDTH+(`SVT_CHI_MPAM_WIDTH*`SVT_CHI_MPAM_INTERNAL_WIDTH_ENABLE)+`SVT_CHI_REQ_FLIT_MAX_RSVDC_WIDTH)
+ `define SVT_CHI_MAX_RSP_FLIT_WIDTH (44+(2*`SVT_CHI_MAX_NODE_ID_WIDTH))
+ `define SVT_CHI_MAX_SNP_FLIT_WIDTH (33+(2*`SVT_CHI_MAX_NODE_ID_WIDTH)+`SVT_CHI_SNP_ADDR_WIDTH+(`SVT_CHI_MPAM_WIDTH*`SVT_CHI_MPAM_INTERNAL_WIDTH_ENABLE))
+ `define SVT_CHI_MAX_DAT_FLIT_WIDTH (41+(`SVT_CHI_DAT_VC_FLIT_OP_WIDTH)+(3*`SVT_CHI_MAX_NODE_ID_WIDTH)+`SVT_CHI_DAT_FLIT_MAX_RSVDC_WIDTH+`SVT_CHI_DAT_FLIT_MAX_BE_WIDTH+`SVT_CHI_DAT_FLIT_MAX_DATA_WIDTH +(`SVT_CHI_DATACHECK_INTERNAL_WIDTH_ENABLE * `SVT_CHI_DAT_FLIT_MAX_DATACHECK_WIDTH)+(`SVT_CHI_POISON_INTERNAL_WIDTH_ENABLE * `SVT_CHI_DAT_FLIT_MAX_POISON_WIDTH))
+`define SVT_CHI_IF_PARITY_REQ_FLIT_CHK_WIDTH ((`SVT_CHI_MAX_REQ_FLIT_WIDTH/`SVT_CHI_INTERFACE_PARITY_GRANULARITY) + ((`SVT_CHI_MAX_REQ_FLIT_WIDTH%`SVT_CHI_INTERFACE_PARITY_GRANULARITY)==0 ?0:1))
+`define SVT_CHI_IF_PARITY_RSP_FLIT_CHK_WIDTH ((`SVT_CHI_MAX_RSP_FLIT_WIDTH/`SVT_CHI_INTERFACE_PARITY_GRANULARITY) + ((`SVT_CHI_MAX_RSP_FLIT_WIDTH%`SVT_CHI_INTERFACE_PARITY_GRANULARITY)==0 ?0:1))
+`define SVT_CHI_IF_PARITY_DAT_FLIT_CHK_WIDTH ((`SVT_CHI_MAX_DAT_FLIT_WIDTH/`SVT_CHI_INTERFACE_PARITY_GRANULARITY) + ((`SVT_CHI_MAX_DAT_FLIT_WIDTH%`SVT_CHI_INTERFACE_PARITY_GRANULARITY)==0 ?0:1))
+`define SVT_CHI_IF_PARITY_SNP_FLIT_CHK_WIDTH ((`SVT_CHI_MAX_SNP_FLIT_WIDTH/`SVT_CHI_INTERFACE_PARITY_GRANULARITY) + ((`SVT_CHI_MAX_SNP_FLIT_WIDTH%`SVT_CHI_INTERFACE_PARITY_GRANULARITY)==0 ?0:1))
+ `elsif SVT_CHI_ISSUE_B_ENABLE
+ `define SVT_CHI_MAX_REQ_FLIT_WIDTH (52+(3*`SVT_CHI_MAX_NODE_ID_WIDTH)+`SVT_CHI_REQ_ADDR_WIDTH+`SVT_CHI_REQ_FLIT_MAX_RSVDC_WIDTH)
+ `define SVT_CHI_MAX_RSP_FLIT_WIDTH (37+(2*`SVT_CHI_MAX_NODE_ID_WIDTH))
+ `define SVT_CHI_MAX_SNP_FLIT_WIDTH (29+(2*`SVT_CHI_MAX_NODE_ID_WIDTH)+`SVT_CHI_SNP_ADDR_WIDTH)
+ `define SVT_CHI_MAX_DAT_FLIT_WIDTH (33+(`SVT_CHI_DAT_VC_FLIT_OP_WIDTH)+(3*`SVT_CHI_MAX_NODE_ID_WIDTH)+`SVT_CHI_DAT_FLIT_MAX_RSVDC_WIDTH+`SVT_CHI_DAT_FLIT_MAX_BE_WIDTH+`SVT_CHI_DAT_FLIT_MAX_DATA_WIDTH +(`SVT_CHI_DATACHECK_INTERNAL_WIDTH_ENABLE * `SVT_CHI_DAT_FLIT_MAX_DATACHECK_WIDTH)+(`SVT_CHI_POISON_INTERNAL_WIDTH_ENABLE * `SVT_CHI_DAT_FLIT_MAX_POISON_WIDTH))
+`else
+ `define SVT_CHI_MAX_REQ_FLIT_WIDTH (96+`SVT_CHI_REQ_FLIT_MAX_RSVDC_WIDTH)
+ `define SVT_CHI_MAX_RSP_FLIT_WIDTH 45
+ `define SVT_CHI_MAX_SNP_FLIT_WIDTH 65
+ `define SVT_CHI_MAX_DAT_FLIT_WIDTH (46+`SVT_CHI_DAT_FLIT_MAX_RSVDC_WIDTH+`SVT_CHI_DAT_FLIT_MAX_BE_WIDTH+`SVT_CHI_DAT_FLIT_MAX_DATA_WIDTH)
+`endif
+
+`define SVT_CHI_MAX_NUM_INTERCONNECTS   1
+
+`ifndef SVT_CHI_DEBUG_PORT_WIDTH
+`define SVT_CHI_DEBUG_PORT_WIDTH 32
+`endif
+
+`ifndef SVT_CHI_HN_NODE_IDX_WIDTH
+`define SVT_CHI_HN_NODE_IDX_WIDTH 6
+`endif
+
+//=======================================================================
+// RN footprint infrastructure
+`define SVT_CHI_VALID_IDX_NUM_RNS_0 \
+ // Nothing to do
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_1 \
+ `define SVT_CHI_VALID_RN_IDX_0
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_2 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_1 \
+ `define SVT_CHI_VALID_RN_IDX_1
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_3 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_2 \
+ `define SVT_CHI_VALID_RN_IDX_2
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_4 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_3 \
+ `define SVT_CHI_VALID_RN_IDX_3
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_5 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_4 \
+ `define SVT_CHI_VALID_RN_IDX_4
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_6 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_5 \
+ `define SVT_CHI_VALID_RN_IDX_5
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_7 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_6 \
+ `define SVT_CHI_VALID_RN_IDX_6
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_8 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_7 \
+ `define SVT_CHI_VALID_RN_IDX_7
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_9 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_8 \
+ `define SVT_CHI_VALID_RN_IDX_8
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_10 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_9 \
+ `define SVT_CHI_VALID_RN_IDX_9
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_11 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_10 \
+ `define SVT_CHI_VALID_RN_IDX_10
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_12 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_11 \
+ `define SVT_CHI_VALID_RN_IDX_11
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_13 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_12 \
+ `define SVT_CHI_VALID_RN_IDX_12
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_14 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_13 \
+ `define SVT_CHI_VALID_RN_IDX_13
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_15 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_14 \
+ `define SVT_CHI_VALID_RN_IDX_14
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_16 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_15 \
+ `define SVT_CHI_VALID_RN_IDX_15
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_17 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_16 \
+ `define SVT_CHI_VALID_RN_IDX_16
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_18 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_17 \
+ `define SVT_CHI_VALID_RN_IDX_17
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_19 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_18 \
+ `define SVT_CHI_VALID_RN_IDX_18
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_20 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_19 \
+ `define SVT_CHI_VALID_RN_IDX_19
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_21 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_20 \
+ `define SVT_CHI_VALID_RN_IDX_20
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_22 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_21 \
+ `define SVT_CHI_VALID_RN_IDX_21
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_23 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_22 \
+ `define SVT_CHI_VALID_RN_IDX_22
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_24 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_23 \
+ `define SVT_CHI_VALID_RN_IDX_23
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_25 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_24 \
+ `define SVT_CHI_VALID_RN_IDX_24
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_26 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_25 \
+ `define SVT_CHI_VALID_RN_IDX_25
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_27 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_26 \
+ `define SVT_CHI_VALID_RN_IDX_26
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_28 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_27 \
+ `define SVT_CHI_VALID_RN_IDX_27
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_29 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_28 \
+ `define SVT_CHI_VALID_RN_IDX_28
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_30 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_29 \
+ `define SVT_CHI_VALID_RN_IDX_29
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_31 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_30 \
+ `define SVT_CHI_VALID_RN_IDX_30
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_32 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_31 \
+ `define SVT_CHI_VALID_RN_IDX_31
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_33 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_32 \
+ `define SVT_CHI_VALID_RN_IDX_32
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_34 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_33 \
+ `define SVT_CHI_VALID_RN_IDX_33
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_35 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_34 \
+ `define SVT_CHI_VALID_RN_IDX_34
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_36 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_35 \
+ `define SVT_CHI_VALID_RN_IDX_35
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_37 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_36 \
+ `define SVT_CHI_VALID_RN_IDX_36
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_38 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_37 \
+ `define SVT_CHI_VALID_RN_IDX_37
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_39 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_38 \
+ `define SVT_CHI_VALID_RN_IDX_38
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_40 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_39 \
+ `define SVT_CHI_VALID_RN_IDX_39
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_41 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_40 \
+ `define SVT_CHI_VALID_RN_IDX_40
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_42 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_41 \
+ `define SVT_CHI_VALID_RN_IDX_41
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_43 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_42 \
+ `define SVT_CHI_VALID_RN_IDX_42
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_44 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_43 \
+ `define SVT_CHI_VALID_RN_IDX_43
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_45 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_44 \
+ `define SVT_CHI_VALID_RN_IDX_44
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_46 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_45 \
+ `define SVT_CHI_VALID_RN_IDX_45
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_47 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_46 \
+ `define SVT_CHI_VALID_RN_IDX_46
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_48 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_47 \
+ `define SVT_CHI_VALID_RN_IDX_47
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_49 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_48 \
+ `define SVT_CHI_VALID_RN_IDX_48
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_50 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_49 \
+ `define SVT_CHI_VALID_RN_IDX_49
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_51 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_50 \
+ `define SVT_CHI_VALID_RN_IDX_50
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_52 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_51 \
+ `define SVT_CHI_VALID_RN_IDX_51
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_53 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_52 \
+ `define SVT_CHI_VALID_RN_IDX_52
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_54 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_53 \
+ `define SVT_CHI_VALID_RN_IDX_53
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_55 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_54 \
+ `define SVT_CHI_VALID_RN_IDX_54
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_56 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_55 \
+ `define SVT_CHI_VALID_RN_IDX_55
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_57 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_56 \
+ `define SVT_CHI_VALID_RN_IDX_56
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_58 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_57 \
+ `define SVT_CHI_VALID_RN_IDX_57
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_59 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_58 \
+ `define SVT_CHI_VALID_RN_IDX_58
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_60 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_59 \
+ `define SVT_CHI_VALID_RN_IDX_59
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_61 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_60 \
+ `define SVT_CHI_VALID_RN_IDX_60
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_62 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_61 \
+ `define SVT_CHI_VALID_RN_IDX_61
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_63 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_62 \
+ `define SVT_CHI_VALID_RN_IDX_62
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_64 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_63 \
+ `define SVT_CHI_VALID_RN_IDX_63
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_65 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_64 \
+ `define SVT_CHI_VALID_RN_IDX_64
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_66 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_65 \
+ `define SVT_CHI_VALID_RN_IDX_65
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_67 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_66 \
+ `define SVT_CHI_VALID_RN_IDX_66
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_68 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_67 \
+ `define SVT_CHI_VALID_RN_IDX_67
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_69 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_68 \
+ `define SVT_CHI_VALID_RN_IDX_68
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_70 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_69 \
+ `define SVT_CHI_VALID_RN_IDX_69
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_71 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_70 \
+ `define SVT_CHI_VALID_RN_IDX_70
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_72 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_71 \
+ `define SVT_CHI_VALID_RN_IDX_71
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_73 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_72 \
+ `define SVT_CHI_VALID_RN_IDX_72
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_74 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_73 \
+ `define SVT_CHI_VALID_RN_IDX_73
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_75 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_74 \
+ `define SVT_CHI_VALID_RN_IDX_74
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_76 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_75 \
+ `define SVT_CHI_VALID_RN_IDX_75
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_77 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_76 \
+ `define SVT_CHI_VALID_RN_IDX_76
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_78 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_77 \
+ `define SVT_CHI_VALID_RN_IDX_77
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_79 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_78 \
+ `define SVT_CHI_VALID_RN_IDX_78
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_80 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_79 \
+ `define SVT_CHI_VALID_RN_IDX_79
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_81 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_80 \
+ `define SVT_CHI_VALID_RN_IDX_80
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_82 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_81 \
+ `define SVT_CHI_VALID_RN_IDX_81
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_83 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_82 \
+ `define SVT_CHI_VALID_RN_IDX_82
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_84 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_83 \
+ `define SVT_CHI_VALID_RN_IDX_83
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_85 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_84 \
+ `define SVT_CHI_VALID_RN_IDX_84
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_86 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_85 \
+ `define SVT_CHI_VALID_RN_IDX_85
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_87 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_86 \
+ `define SVT_CHI_VALID_RN_IDX_86
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_88 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_87 \
+ `define SVT_CHI_VALID_RN_IDX_87
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_89 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_88 \
+ `define SVT_CHI_VALID_RN_IDX_88
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_90 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_89 \
+ `define SVT_CHI_VALID_RN_IDX_89
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_91 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_90 \
+ `define SVT_CHI_VALID_RN_IDX_90
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_92 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_91 \
+ `define SVT_CHI_VALID_RN_IDX_91
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_93 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_92 \
+ `define SVT_CHI_VALID_RN_IDX_92
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_94 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_93 \
+ `define SVT_CHI_VALID_RN_IDX_93
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_95 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_94 \
+ `define SVT_CHI_VALID_RN_IDX_94
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_96 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_95 \
+ `define SVT_CHI_VALID_RN_IDX_95
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_97 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_96 \
+ `define SVT_CHI_VALID_RN_IDX_96
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_98 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_97 \
+ `define SVT_CHI_VALID_RN_IDX_97
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_99 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_98 \
+ `define SVT_CHI_VALID_RN_IDX_98
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_100 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_99 \
+ `define SVT_CHI_VALID_RN_IDX_99
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_101 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_100 \
+ `define SVT_CHI_VALID_RN_IDX_100
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_102 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_101 \
+ `define SVT_CHI_VALID_RN_IDX_101
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_103 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_102 \
+ `define SVT_CHI_VALID_RN_IDX_102
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_104 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_103 \
+ `define SVT_CHI_VALID_RN_IDX_103
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_105 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_104 \
+ `define SVT_CHI_VALID_RN_IDX_104
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_106 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_105 \
+ `define SVT_CHI_VALID_RN_IDX_105
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_107 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_106 \
+ `define SVT_CHI_VALID_RN_IDX_106
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_108 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_107 \
+ `define SVT_CHI_VALID_RN_IDX_107
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_109 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_108 \
+ `define SVT_CHI_VALID_RN_IDX_108
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_110 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_109 \
+ `define SVT_CHI_VALID_RN_IDX_109
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_111 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_110 \
+ `define SVT_CHI_VALID_RN_IDX_110
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_112 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_111 \
+ `define SVT_CHI_VALID_RN_IDX_111
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_113 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_112 \
+ `define SVT_CHI_VALID_RN_IDX_112
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_114 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_113 \
+ `define SVT_CHI_VALID_RN_IDX_113
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_115 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_114 \
+ `define SVT_CHI_VALID_RN_IDX_114
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_116 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_115 \
+ `define SVT_CHI_VALID_RN_IDX_115
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_117 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_116 \
+ `define SVT_CHI_VALID_RN_IDX_116
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_118 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_117 \
+ `define SVT_CHI_VALID_RN_IDX_117
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_119 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_118 \
+ `define SVT_CHI_VALID_RN_IDX_118
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_120 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_119 \
+ `define SVT_CHI_VALID_RN_IDX_119
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_121 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_120 \
+ `define SVT_CHI_VALID_RN_IDX_120
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_122 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_121 \
+ `define SVT_CHI_VALID_RN_IDX_121
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_123 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_122 \
+ `define SVT_CHI_VALID_RN_IDX_122
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_124 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_123 \
+ `define SVT_CHI_VALID_RN_IDX_123
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_125 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_124 \
+ `define SVT_CHI_VALID_RN_IDX_124
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_126 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_125 \
+ `define SVT_CHI_VALID_RN_IDX_125
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_127 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_126 \
+ `define SVT_CHI_VALID_RN_IDX_126
+
+`define SVT_CHI_VALID_IDX_NUM_RNS_128 \
+ `SVT_CHI_VALID_IDX_NUM_RNS_127 \
+ `define SVT_CHI_VALID_RN_IDX_127
+
+
+`ifdef SVT_CHI_MAX_NUM_RNS_0
+ `SVT_CHI_VALID_IDX_NUM_RNS_0
+ `define SVT_CHI_MAX_NUM_RNS 0
+`else
+ `ifdef SVT_CHI_MAX_NUM_RNS_1
+  `SVT_CHI_VALID_IDX_NUM_RNS_1
+  `define SVT_CHI_MAX_NUM_RNS 1
+ `else
+  `ifdef SVT_CHI_MAX_NUM_RNS_2
+   `SVT_CHI_VALID_IDX_NUM_RNS_2
+   `define SVT_CHI_MAX_NUM_RNS 2
+  `else
+   `ifdef SVT_CHI_MAX_NUM_RNS_3
+     `SVT_CHI_VALID_IDX_NUM_RNS_3
+     `define SVT_CHI_MAX_NUM_RNS 3
+   `else
+    `ifdef SVT_CHI_MAX_NUM_RNS_4
+      `SVT_CHI_VALID_IDX_NUM_RNS_4
+      `define SVT_CHI_MAX_NUM_RNS 4
+    `else
+     `ifdef SVT_CHI_MAX_NUM_RNS_5
+       `SVT_CHI_VALID_IDX_NUM_RNS_5
+       `define SVT_CHI_MAX_NUM_RNS 5
+     `else
+      `ifdef SVT_CHI_MAX_NUM_RNS_6
+        `SVT_CHI_VALID_IDX_NUM_RNS_6
+        `define SVT_CHI_MAX_NUM_RNS 6
+      `else
+       `ifdef SVT_CHI_MAX_NUM_RNS_7
+         `SVT_CHI_VALID_IDX_NUM_RNS_7
+         `define SVT_CHI_MAX_NUM_RNS 7
+       `else
+        `ifdef SVT_CHI_MAX_NUM_RNS_8
+          `SVT_CHI_VALID_IDX_NUM_RNS_8
+          `define SVT_CHI_MAX_NUM_RNS 8
+        `else
+         `ifdef SVT_CHI_MAX_NUM_RNS_9
+           `SVT_CHI_VALID_IDX_NUM_RNS_9
+           `define SVT_CHI_MAX_NUM_RNS 9
+         `else
+          `ifdef SVT_CHI_MAX_NUM_RNS_10
+            `SVT_CHI_VALID_IDX_NUM_RNS_10
+            `define SVT_CHI_MAX_NUM_RNS 10
+          `else
+           `ifdef SVT_CHI_MAX_NUM_RNS_11
+             `SVT_CHI_VALID_IDX_NUM_RNS_11
+             `define SVT_CHI_MAX_NUM_RNS 11
+           `else
+            `ifdef SVT_CHI_MAX_NUM_RNS_12
+              `SVT_CHI_VALID_IDX_NUM_RNS_12
+              `define SVT_CHI_MAX_NUM_RNS 12
+            `else
+             `ifdef SVT_CHI_MAX_NUM_RNS_13
+               `SVT_CHI_VALID_IDX_NUM_RNS_13
+               `define SVT_CHI_MAX_NUM_RNS 13
+             `else
+              `ifdef SVT_CHI_MAX_NUM_RNS_14
+                `SVT_CHI_VALID_IDX_NUM_RNS_14
+                `define SVT_CHI_MAX_NUM_RNS 14
+              `else
+               `ifdef SVT_CHI_MAX_NUM_RNS_15
+                 `SVT_CHI_VALID_IDX_NUM_RNS_15
+                 `define SVT_CHI_MAX_NUM_RNS 15
+               `else
+                `ifdef SVT_CHI_MAX_NUM_RNS_16
+                  `SVT_CHI_VALID_IDX_NUM_RNS_16
+                  `define SVT_CHI_MAX_NUM_RNS 16
+                `else
+                 `ifdef SVT_CHI_MAX_NUM_RNS_17
+                   `SVT_CHI_VALID_IDX_NUM_RNS_17
+                   `define SVT_CHI_MAX_NUM_RNS 17
+                 `else
+                  `ifdef SVT_CHI_MAX_NUM_RNS_18
+                    `SVT_CHI_VALID_IDX_NUM_RNS_18
+                    `define SVT_CHI_MAX_NUM_RNS 18
+                  `else
+                   `ifdef SVT_CHI_MAX_NUM_RNS_19
+                     `SVT_CHI_VALID_IDX_NUM_RNS_19
+                     `define SVT_CHI_MAX_NUM_RNS 19
+                   `else
+                    `ifdef SVT_CHI_MAX_NUM_RNS_20
+                      `SVT_CHI_VALID_IDX_NUM_RNS_20
+                      `define SVT_CHI_MAX_NUM_RNS 20
+                    `else
+                     `ifdef SVT_CHI_MAX_NUM_RNS_21
+                       `SVT_CHI_VALID_IDX_NUM_RNS_21
+                       `define SVT_CHI_MAX_NUM_RNS 21
+                     `else
+                      `ifdef SVT_CHI_MAX_NUM_RNS_22
+                        `SVT_CHI_VALID_IDX_NUM_RNS_22
+                        `define SVT_CHI_MAX_NUM_RNS 22
+                      `else
+                       `ifdef SVT_CHI_MAX_NUM_RNS_23
+                         `SVT_CHI_VALID_IDX_NUM_RNS_23
+                         `define SVT_CHI_MAX_NUM_RNS 23
+                       `else
+                        `ifdef SVT_CHI_MAX_NUM_RNS_24
+                          `SVT_CHI_VALID_IDX_NUM_RNS_24
+                          `define SVT_CHI_MAX_NUM_RNS 24
+                        `else
+                         `ifdef SVT_CHI_MAX_NUM_RNS_25
+                           `SVT_CHI_VALID_IDX_NUM_RNS_25
+                           `define SVT_CHI_MAX_NUM_RNS 25
+                         `else
+                          `ifdef SVT_CHI_MAX_NUM_RNS_26
+                            `SVT_CHI_VALID_IDX_NUM_RNS_26
+                            `define SVT_CHI_MAX_NUM_RNS 26
+                          `else
+                           `ifdef SVT_CHI_MAX_NUM_RNS_27
+                             `SVT_CHI_VALID_IDX_NUM_RNS_27
+                             `define SVT_CHI_MAX_NUM_RNS 27
+                           `else
+                            `ifdef SVT_CHI_MAX_NUM_RNS_28
+                              `SVT_CHI_VALID_IDX_NUM_RNS_28
+                              `define SVT_CHI_MAX_NUM_RNS 28
+                            `else
+                             `ifdef SVT_CHI_MAX_NUM_RNS_29
+                               `SVT_CHI_VALID_IDX_NUM_RNS_29
+                               `define SVT_CHI_MAX_NUM_RNS 29
+                             `else
+                              `ifdef SVT_CHI_MAX_NUM_RNS_30
+                                `SVT_CHI_VALID_IDX_NUM_RNS_30
+                                `define SVT_CHI_MAX_NUM_RNS 30
+                              `else
+                               `ifdef SVT_CHI_MAX_NUM_RNS_31
+                                 `SVT_CHI_VALID_IDX_NUM_RNS_31
+                                 `define SVT_CHI_MAX_NUM_RNS 31
+                               `else
+                                `ifdef SVT_CHI_MAX_NUM_RNS_32
+                                  `SVT_CHI_VALID_IDX_NUM_RNS_32
+                                  `define SVT_CHI_MAX_NUM_RNS 32
+                                `else
+                                 `ifdef SVT_CHI_MAX_NUM_RNS_33
+                                   `SVT_CHI_VALID_IDX_NUM_RNS_33
+                                   `define SVT_CHI_MAX_NUM_RNS 33
+                                 `else
+                                  `ifdef SVT_CHI_MAX_NUM_RNS_34
+                                    `SVT_CHI_VALID_IDX_NUM_RNS_34
+                                    `define SVT_CHI_MAX_NUM_RNS 34
+                                  `else
+                                   `ifdef SVT_CHI_MAX_NUM_RNS_35
+                                     `SVT_CHI_VALID_IDX_NUM_RNS_35
+                                     `define SVT_CHI_MAX_NUM_RNS 35
+                                   `else
+                                    `ifdef SVT_CHI_MAX_NUM_RNS_36
+                                      `SVT_CHI_VALID_IDX_NUM_RNS_36
+                                      `define SVT_CHI_MAX_NUM_RNS 36
+                                    `else
+                                     `ifdef SVT_CHI_MAX_NUM_RNS_37
+                                       `SVT_CHI_VALID_IDX_NUM_RNS_37
+                                       `define SVT_CHI_MAX_NUM_RNS 37
+                                     `else
+                                      `ifdef SVT_CHI_MAX_NUM_RNS_38
+                                        `SVT_CHI_VALID_IDX_NUM_RNS_38
+                                        `define SVT_CHI_MAX_NUM_RNS 38
+                                      `else
+                                       `ifdef SVT_CHI_MAX_NUM_RNS_39
+                                         `SVT_CHI_VALID_IDX_NUM_RNS_39
+                                         `define SVT_CHI_MAX_NUM_RNS 39                                
+                                       `else
+                                        `ifdef SVT_CHI_MAX_NUM_RNS_40
+                                          `SVT_CHI_VALID_IDX_NUM_RNS_40
+                                          `define SVT_CHI_MAX_NUM_RNS 40
+                                        `else
+                                         `ifdef SVT_CHI_MAX_NUM_RNS_41
+                                           `SVT_CHI_VALID_IDX_NUM_RNS_41
+                                           `define SVT_CHI_MAX_NUM_RNS 41
+                                         `else
+                                          `ifdef SVT_CHI_MAX_NUM_RNS_42
+                                            `SVT_CHI_VALID_IDX_NUM_RNS_42
+                                            `define SVT_CHI_MAX_NUM_RNS 42
+                                          `else
+                                           `ifdef SVT_CHI_MAX_NUM_RNS_43
+                                             `SVT_CHI_VALID_IDX_NUM_RNS_43
+                                             `define SVT_CHI_MAX_NUM_RNS 43
+                                           `else
+                                            `ifdef SVT_CHI_MAX_NUM_RNS_44
+                                              `SVT_CHI_VALID_IDX_NUM_RNS_44
+                                              `define SVT_CHI_MAX_NUM_RNS 44
+                                            `else
+                                             `ifdef SVT_CHI_MAX_NUM_RNS_45
+                                               `SVT_CHI_VALID_IDX_NUM_RNS_45
+                                               `define SVT_CHI_MAX_NUM_RNS 45
+                                             `else
+                                              `ifdef SVT_CHI_MAX_NUM_RNS_46
+                                                `SVT_CHI_VALID_IDX_NUM_RNS_46
+                                                `define SVT_CHI_MAX_NUM_RNS 46
+                                              `else
+                                               `ifdef SVT_CHI_MAX_NUM_RNS_47
+                                                 `SVT_CHI_VALID_IDX_NUM_RNS_47
+                                                 `define SVT_CHI_MAX_NUM_RNS 47
+                                               `else
+                                                `ifdef SVT_CHI_MAX_NUM_RNS_48
+                                                  `SVT_CHI_VALID_IDX_NUM_RNS_48
+                                                  `define SVT_CHI_MAX_NUM_RNS 48
+                                                `else
+                                                 `ifdef SVT_CHI_MAX_NUM_RNS_49
+                                                   `SVT_CHI_VALID_IDX_NUM_RNS_49
+                                                   `define SVT_CHI_MAX_NUM_RNS 49           
+                                                 `else
+                                                  `ifdef SVT_CHI_MAX_NUM_RNS_50
+                                                    `SVT_CHI_VALID_IDX_NUM_RNS_50
+                                                    `define SVT_CHI_MAX_NUM_RNS 50
+                                                  `else
+                                                   `ifdef SVT_CHI_MAX_NUM_RNS_51
+                                                     `SVT_CHI_VALID_IDX_NUM_RNS_51
+                                                     `define SVT_CHI_MAX_NUM_RNS 51
+                                                   `else
+                                                    `ifdef SVT_CHI_MAX_NUM_RNS_52
+                                                      `SVT_CHI_VALID_IDX_NUM_RNS_52
+                                                      `define SVT_CHI_MAX_NUM_RNS 52
+                                                    `else
+                                                     `ifdef SVT_CHI_MAX_NUM_RNS_53
+                                                       `SVT_CHI_VALID_IDX_NUM_RNS_53
+                                                       `define SVT_CHI_MAX_NUM_RNS 53
+                                                     `else
+                                                      `ifdef SVT_CHI_MAX_NUM_RNS_54
+                                                        `SVT_CHI_VALID_IDX_NUM_RNS_54
+                                                        `define SVT_CHI_MAX_NUM_RNS 54
+                                                      `else
+                                                       `ifdef SVT_CHI_MAX_NUM_RNS_55
+                                                         `SVT_CHI_VALID_IDX_NUM_RNS_55
+                                                         `define SVT_CHI_MAX_NUM_RNS 55
+                                                       `else
+                                                        `ifdef SVT_CHI_MAX_NUM_RNS_56
+                                                          `SVT_CHI_VALID_IDX_NUM_RNS_56
+                                                          `define SVT_CHI_MAX_NUM_RNS 56
+                                                        `else
+                                                         `ifdef SVT_CHI_MAX_NUM_RNS_57
+                                                           `SVT_CHI_VALID_IDX_NUM_RNS_57
+                                                           `define SVT_CHI_MAX_NUM_RNS 57
+                                                         `else
+                                                          `ifdef SVT_CHI_MAX_NUM_RNS_58
+                                                            `SVT_CHI_VALID_IDX_NUM_RNS_58
+                                                            `define SVT_CHI_MAX_NUM_RNS 58
+                                                          `else
+                                                           `ifdef SVT_CHI_MAX_NUM_RNS_59
+                                                             `SVT_CHI_VALID_IDX_NUM_RNS_59
+                                                             `define SVT_CHI_MAX_NUM_RNS 59 
+                                                           `else
+                                                            `ifdef SVT_CHI_MAX_NUM_RNS_60
+                                                              `SVT_CHI_VALID_IDX_NUM_RNS_60
+                                                              `define SVT_CHI_MAX_NUM_RNS 60
+                                                            `else
+                                                             `ifdef SVT_CHI_MAX_NUM_RNS_61
+                                                               `SVT_CHI_VALID_IDX_NUM_RNS_61
+                                                               `define SVT_CHI_MAX_NUM_RNS 61
+                                                             `else
+                                                              `ifdef SVT_CHI_MAX_NUM_RNS_62
+                                                                `SVT_CHI_VALID_IDX_NUM_RNS_62
+                                                                `define SVT_CHI_MAX_NUM_RNS 62
+                                                              `else
+                                                               `ifdef SVT_CHI_MAX_NUM_RNS_63
+                                                                 `SVT_CHI_VALID_IDX_NUM_RNS_63
+                                                                 `define SVT_CHI_MAX_NUM_RNS 63
+                                                               `else
+                                                                `ifdef SVT_CHI_MAX_NUM_RNS_64
+                                                                  `SVT_CHI_VALID_IDX_NUM_RNS_64
+                                                                  `define SVT_CHI_MAX_NUM_RNS 64
+                                                                `else
+                                                                 `ifdef SVT_CHI_MAX_NUM_RNS_65
+                                                                   `SVT_CHI_VALID_IDX_NUM_RNS_65
+                                                                   `define SVT_CHI_MAX_NUM_RNS 65
+                                                                 `else
+                                                                  `ifdef SVT_CHI_MAX_NUM_RNS_66
+                                                                    `SVT_CHI_VALID_IDX_NUM_RNS_66
+                                                                    `define SVT_CHI_MAX_NUM_RNS 66
+                                                                  `else
+                                                                   `ifdef SVT_CHI_MAX_NUM_RNS_67
+                                                                     `SVT_CHI_VALID_IDX_NUM_RNS_67
+                                                                     `define SVT_CHI_MAX_NUM_RNS 67
+                                                                   `else
+                                                                    `ifdef SVT_CHI_MAX_NUM_RNS_68
+                                                                      `SVT_CHI_VALID_IDX_NUM_RNS_68
+                                                                      `define SVT_CHI_MAX_NUM_RNS 68
+                                                                    `else
+                                                                     `ifdef SVT_CHI_MAX_NUM_RNS_69
+                                                                       `SVT_CHI_VALID_IDX_NUM_RNS_69
+                                                                       `define SVT_CHI_MAX_NUM_RNS 69 
+                                                                     `else
+                                                                      `ifdef SVT_CHI_MAX_NUM_RNS_70
+                                                                        `SVT_CHI_VALID_IDX_NUM_RNS_70
+                                                                        `define SVT_CHI_MAX_NUM_RNS 70
+                                                                      `else
+                                                                       `ifdef SVT_CHI_MAX_NUM_RNS_71
+                                                                         `SVT_CHI_VALID_IDX_NUM_RNS_71
+                                                                         `define SVT_CHI_MAX_NUM_RNS 71
+                                                                       `else
+                                                                        `ifdef SVT_CHI_MAX_NUM_RNS_72
+                                                                          `SVT_CHI_VALID_IDX_NUM_RNS_72
+                                                                          `define SVT_CHI_MAX_NUM_RNS 72
+                                                                        `else
+                                                                         `ifdef SVT_CHI_MAX_NUM_RNS_73
+                                                                           `SVT_CHI_VALID_IDX_NUM_RNS_73
+                                                                           `define SVT_CHI_MAX_NUM_RNS 73
+                                                                         `else
+                                                                          `ifdef SVT_CHI_MAX_NUM_RNS_74
+                                                                            `SVT_CHI_VALID_IDX_NUM_RNS_74
+                                                                            `define SVT_CHI_MAX_NUM_RNS 74
+                                                                          `else
+                                                                           `ifdef SVT_CHI_MAX_NUM_RNS_75
+                                                                             `SVT_CHI_VALID_IDX_NUM_RNS_75
+                                                                             `define SVT_CHI_MAX_NUM_RNS 75
+                                                                           `else
+                                                                            `ifdef SVT_CHI_MAX_NUM_RNS_76
+                                                                              `SVT_CHI_VALID_IDX_NUM_RNS_76
+                                                                              `define SVT_CHI_MAX_NUM_RNS 76
+                                                                            `else
+                                                                             `ifdef SVT_CHI_MAX_NUM_RNS_77
+                                                                               `SVT_CHI_VALID_IDX_NUM_RNS_77
+                                                                               `define SVT_CHI_MAX_NUM_RNS 77
+                                                                             `else
+                                                                              `ifdef SVT_CHI_MAX_NUM_RNS_78
+                                                                                `SVT_CHI_VALID_IDX_NUM_RNS_78
+                                                                                `define SVT_CHI_MAX_NUM_RNS 78
+                                                                              `else
+                                                                               `ifdef SVT_CHI_MAX_NUM_RNS_79
+                                                                                 `SVT_CHI_VALID_IDX_NUM_RNS_79
+                                                                                 `define SVT_CHI_MAX_NUM_RNS 79 
+                                                                               `else
+                                                                                `ifdef SVT_CHI_MAX_NUM_RNS_80
+                                                                                  `SVT_CHI_VALID_IDX_NUM_RNS_80
+                                                                                  `define SVT_CHI_MAX_NUM_RNS 80
+                                                                                `else
+                                                                                 `ifdef SVT_CHI_MAX_NUM_RNS_81
+                                                                                   `SVT_CHI_VALID_IDX_NUM_RNS_81
+                                                                                   `define SVT_CHI_MAX_NUM_RNS 81
+                                                                                 `else
+                                                                                  `ifdef SVT_CHI_MAX_NUM_RNS_82
+                                                                                    `SVT_CHI_VALID_IDX_NUM_RNS_82
+                                                                                    `define SVT_CHI_MAX_NUM_RNS 82
+                                                                                  `else
+                                                                                   `ifdef SVT_CHI_MAX_NUM_RNS_83
+                                                                                     `SVT_CHI_VALID_IDX_NUM_RNS_83
+                                                                                     `define SVT_CHI_MAX_NUM_RNS 83
+                                                                                   `else
+                                                                                    `ifdef SVT_CHI_MAX_NUM_RNS_84
+                                                                                      `SVT_CHI_VALID_IDX_NUM_RNS_84
+                                                                                      `define SVT_CHI_MAX_NUM_RNS 84
+                                                                                    `else
+                                                                                     `ifdef SVT_CHI_MAX_NUM_RNS_85
+                                                                                       `SVT_CHI_VALID_IDX_NUM_RNS_85
+                                                                                       `define SVT_CHI_MAX_NUM_RNS 85
+                                                                                     `else
+                                                                                      `ifdef SVT_CHI_MAX_NUM_RNS_86
+                                                                                        `SVT_CHI_VALID_IDX_NUM_RNS_86
+                                                                                        `define SVT_CHI_MAX_NUM_RNS 86
+                                                                                      `else
+                                                                                       `ifdef SVT_CHI_MAX_NUM_RNS_87
+                                                                                         `SVT_CHI_VALID_IDX_NUM_RNS_87
+                                                                                         `define SVT_CHI_MAX_NUM_RNS 87
+                                                                                       `else
+                                                                                        `ifdef SVT_CHI_MAX_NUM_RNS_88
+                                                                                          `SVT_CHI_VALID_IDX_NUM_RNS_88
+                                                                                          `define SVT_CHI_MAX_NUM_RNS 88
+                                                                                        `else
+                                                                                         `ifdef SVT_CHI_MAX_NUM_RNS_89
+                                                                                           `SVT_CHI_VALID_IDX_NUM_RNS_89
+                                                                                           `define SVT_CHI_MAX_NUM_RNS 89 
+                                                                                         `else
+                                                                                          `ifdef SVT_CHI_MAX_NUM_RNS_90
+                                                                                            `SVT_CHI_VALID_IDX_NUM_RNS_90
+                                                                                            `define SVT_CHI_MAX_NUM_RNS 90
+                                                                                          `else
+                                                                                           `ifdef SVT_CHI_MAX_NUM_RNS_91
+                                                                                             `SVT_CHI_VALID_IDX_NUM_RNS_91
+                                                                                             `define SVT_CHI_MAX_NUM_RNS 91
+                                                                                           `else
+                                                                                            `ifdef SVT_CHI_MAX_NUM_RNS_92
+                                                                                              `SVT_CHI_VALID_IDX_NUM_RNS_92
+                                                                                              `define SVT_CHI_MAX_NUM_RNS 92
+                                                                                            `else
+                                                                                             `ifdef SVT_CHI_MAX_NUM_RNS_93
+                                                                                               `SVT_CHI_VALID_IDX_NUM_RNS_93
+                                                                                               `define SVT_CHI_MAX_NUM_RNS 93
+                                                                                             `else
+                                                                                              `ifdef SVT_CHI_MAX_NUM_RNS_94
+                                                                                                `SVT_CHI_VALID_IDX_NUM_RNS_94
+                                                                                                `define SVT_CHI_MAX_NUM_RNS 94
+                                                                                              `else
+                                                                                               `ifdef SVT_CHI_MAX_NUM_RNS_95
+                                                                                                 `SVT_CHI_VALID_IDX_NUM_RNS_95
+                                                                                                 `define SVT_CHI_MAX_NUM_RNS 95
+                                                                                               `else
+                                                                                                `ifdef SVT_CHI_MAX_NUM_RNS_96
+                                                                                                  `SVT_CHI_VALID_IDX_NUM_RNS_96
+                                                                                                  `define SVT_CHI_MAX_NUM_RNS 96
+                                                                                                `else
+                                                                                                 `ifdef SVT_CHI_MAX_NUM_RNS_97
+                                                                                                   `SVT_CHI_VALID_IDX_NUM_RNS_97
+                                                                                                   `define SVT_CHI_MAX_NUM_RNS 97
+                                                                                                 `else
+                                                                                                  `ifdef SVT_CHI_MAX_NUM_RNS_98
+                                                                                                    `SVT_CHI_VALID_IDX_NUM_RNS_98
+                                                                                                    `define SVT_CHI_MAX_NUM_RNS 98
+                                                                                                  `else
+                                                                                                   `ifdef SVT_CHI_MAX_NUM_RNS_99
+                                                                                                     `SVT_CHI_VALID_IDX_NUM_RNS_99
+                                                                                                     `define SVT_CHI_MAX_NUM_RNS 99 
+                                                                                                   `else
+                                                                                                    `ifdef SVT_CHI_MAX_NUM_RNS_100
+                                                                                                      `SVT_CHI_VALID_IDX_NUM_RNS_100
+                                                                                                      `define SVT_CHI_MAX_NUM_RNS 100
+                                                                                                    `else
+                                                                                                     `ifdef SVT_CHI_MAX_NUM_RNS_101
+                                                                                                       `SVT_CHI_VALID_IDX_NUM_RNS_101
+                                                                                                       `define SVT_CHI_MAX_NUM_RNS 101
+                                                                                                     `else
+                                                                                                      `ifdef SVT_CHI_MAX_NUM_RNS_102
+                                                                                                        `SVT_CHI_VALID_IDX_NUM_RNS_102
+                                                                                                        `define SVT_CHI_MAX_NUM_RNS 102
+                                                                                                      `else
+                                                                                                       `ifdef SVT_CHI_MAX_NUM_RNS_103
+                                                                                                         `SVT_CHI_VALID_IDX_NUM_RNS_103
+                                                                                                         `define SVT_CHI_MAX_NUM_RNS 103
+                                                                                                       `else
+                                                                                                        `ifdef SVT_CHI_MAX_NUM_RNS_104
+                                                                                                          `SVT_CHI_VALID_IDX_NUM_RNS_104
+                                                                                                          `define SVT_CHI_MAX_NUM_RNS 104
+                                                                                                        `else
+                                                                                                         `ifdef SVT_CHI_MAX_NUM_RNS_105
+                                                                                                           `SVT_CHI_VALID_IDX_NUM_RNS_105
+                                                                                                           `define SVT_CHI_MAX_NUM_RNS 105
+                                                                                                         `else
+                                                                                                          `ifdef SVT_CHI_MAX_NUM_RNS_106
+                                                                                                            `SVT_CHI_VALID_IDX_NUM_RNS_106
+                                                                                                            `define SVT_CHI_MAX_NUM_RNS 106
+                                                                                                          `else
+                                                                                                           `ifdef SVT_CHI_MAX_NUM_RNS_107
+                                                                                                             `SVT_CHI_VALID_IDX_NUM_RNS_107
+                                                                                                             `define SVT_CHI_MAX_NUM_RNS 107
+                                                                                                           `else
+                                                                                                            `ifdef SVT_CHI_MAX_NUM_RNS_108
+                                                                                                              `SVT_CHI_VALID_IDX_NUM_RNS_108
+                                                                                                              `define SVT_CHI_MAX_NUM_RNS 108
+                                                                                                            `else
+                                                                                                             `ifdef SVT_CHI_MAX_NUM_RNS_109
+                                                                                                               `SVT_CHI_VALID_IDX_NUM_RNS_109
+                                                                                                               `define SVT_CHI_MAX_NUM_RNS 109 
+                                                                                                             `else
+                                                                                                              `ifdef SVT_CHI_MAX_NUM_RNS_110
+                                                                                                                `SVT_CHI_VALID_IDX_NUM_RNS_110
+                                                                                                                `define SVT_CHI_MAX_NUM_RNS 110
+                                                                                                              `else
+                                                                                                               `ifdef SVT_CHI_MAX_NUM_RNS_111
+                                                                                                                 `SVT_CHI_VALID_IDX_NUM_RNS_111
+                                                                                                                 `define SVT_CHI_MAX_NUM_RNS 111
+                                                                                                               `else
+                                                                                                                `ifdef SVT_CHI_MAX_NUM_RNS_112
+                                                                                                                  `SVT_CHI_VALID_IDX_NUM_RNS_112
+                                                                                                                  `define SVT_CHI_MAX_NUM_RNS 112
+                                                                                                                `else
+                                                                                                                 `ifdef SVT_CHI_MAX_NUM_RNS_113
+                                                                                                                   `SVT_CHI_VALID_IDX_NUM_RNS_113
+                                                                                                                   `define SVT_CHI_MAX_NUM_RNS 113
+                                                                                                                 `else
+                                                                                                                  `ifdef SVT_CHI_MAX_NUM_RNS_114
+                                                                                                                    `SVT_CHI_VALID_IDX_NUM_RNS_114
+                                                                                                                    `define SVT_CHI_MAX_NUM_RNS 114
+                                                                                                                  `else
+                                                                                                                   `ifdef SVT_CHI_MAX_NUM_RNS_115
+                                                                                                                     `SVT_CHI_VALID_IDX_NUM_RNS_115
+                                                                                                                     `define SVT_CHI_MAX_NUM_RNS 115
+                                                                                                                   `else
+                                                                                                                    `ifdef SVT_CHI_MAX_NUM_RNS_116
+                                                                                                                      `SVT_CHI_VALID_IDX_NUM_RNS_116
+                                                                                                                      `define SVT_CHI_MAX_NUM_RNS 116
+                                                                                                                    `else
+                                                                                                                     `ifdef SVT_CHI_MAX_NUM_RNS_117
+                                                                                                                       `SVT_CHI_VALID_IDX_NUM_RNS_117
+                                                                                                                       `define SVT_CHI_MAX_NUM_RNS 117
+                                                                                                                     `else
+                                                                                                                      `ifdef SVT_CHI_MAX_NUM_RNS_118
+                                                                                                                        `SVT_CHI_VALID_IDX_NUM_RNS_118
+                                                                                                                        `define SVT_CHI_MAX_NUM_RNS 118
+                                                                                                                      `else
+                                                                                                                       `ifdef SVT_CHI_MAX_NUM_RNS_119
+                                                                                                                         `SVT_CHI_VALID_IDX_NUM_RNS_119
+                                                                                                                         `define SVT_CHI_MAX_NUM_RNS 119 
+                                                                                                                       `else
+                                                                                                                        `ifdef SVT_CHI_MAX_NUM_RNS_120
+                                                                                                                          `SVT_CHI_VALID_IDX_NUM_RNS_120
+                                                                                                                          `define SVT_CHI_MAX_NUM_RNS 120
+                                                                                                                        `else
+                                                                                                                         `ifdef SVT_CHI_MAX_NUM_RNS_121
+                                                                                                                           `SVT_CHI_VALID_IDX_NUM_RNS_121
+                                                                                                                           `define SVT_CHI_MAX_NUM_RNS 121
+                                                                                                                         `else
+                                                                                                                          `ifdef SVT_CHI_MAX_NUM_RNS_122
+                                                                                                                            `SVT_CHI_VALID_IDX_NUM_RNS_122
+                                                                                                                            `define SVT_CHI_MAX_NUM_RNS 122
+                                                                                                                          `else
+                                                                                                                           `ifdef SVT_CHI_MAX_NUM_RNS_123
+                                                                                                                             `SVT_CHI_VALID_IDX_NUM_RNS_123
+                                                                                                                             `define SVT_CHI_MAX_NUM_RNS 123
+                                                                                                                           `else
+                                                                                                                            `ifdef SVT_CHI_MAX_NUM_RNS_124
+                                                                                                                              `SVT_CHI_VALID_IDX_NUM_RNS_124
+                                                                                                                              `define SVT_CHI_MAX_NUM_RNS 124
+                                                                                                                            `else
+                                                                                                                             `ifdef SVT_CHI_MAX_NUM_RNS_125
+                                                                                                                               `SVT_CHI_VALID_IDX_NUM_RNS_125
+                                                                                                                               `define SVT_CHI_MAX_NUM_RNS 125
+                                                                                                                             `else
+                                                                                                                              `ifdef SVT_CHI_MAX_NUM_RNS_126
+                                                                                                                                `SVT_CHI_VALID_IDX_NUM_RNS_126
+                                                                                                                                `define SVT_CHI_MAX_NUM_RNS 126
+                                                                                                                              `else
+                                                                                                                               `ifdef SVT_CHI_MAX_NUM_RNS_127
+                                                                                                                                 `SVT_CHI_VALID_IDX_NUM_RNS_127
+                                                                                                                                 `define SVT_CHI_MAX_NUM_RNS 127
+                                                                                                                               `else
+                                                                                                                                `ifdef SVT_CHI_MAX_NUM_RNS_128
+                                                                                                                                  `SVT_CHI_VALID_IDX_NUM_RNS_128
+                                                                                                                                  `define SVT_CHI_MAX_NUM_RNS 128
+                                                                                                                                `else
+                                                                                                                                 // default value
+                                                                                                                                 `SVT_CHI_VALID_IDX_NUM_RNS_16
+                                                                                                                                 `define SVT_CHI_MAX_NUM_RNS 16
+                                                                                                                                `endif
+                                                                                                                               `endif
+                                                                                                                              `endif
+                                                                                                                             `endif
+                                                                                                                            `endif
+                                                                                                                           `endif
+                                                                                                                          `endif
+                                                                                                                         `endif
+                                                                                                                        `endif
+                                                                                                                       `endif
+                                                                                                                      `endif
+                                                                                                                     `endif
+                                                                                                                    `endif
+                                                                                                                   `endif
+                                                                                                                  `endif
+                                                                                                                 `endif
+                                                                                                                `endif
+                                                                                                               `endif
+                                                                                                              `endif
+                                                                                                             `endif
+                                                                                                            `endif
+                                                                                                           `endif
+                                                                                                          `endif
+                                                                                                         `endif
+                                                                                                        `endif
+                                                                                                       `endif
+                                                                                                      `endif
+                                                                                                     `endif
+                                                                                                    `endif
+                                                                                                   `endif
+                                                                                                  `endif
+                                                                                                 `endif
+                                                                                                `endif
+                                                                                               `endif
+                                                                                              `endif
+                                                                                             `endif
+                                                                                            `endif
+                                                                                           `endif
+                                                                                          `endif
+                                                                                         `endif
+                                                                                        `endif
+                                                                                       `endif
+                                                                                      `endif
+                                                                                     `endif
+                                                                                    `endif
+                                                                                   `endif
+                                                                                  `endif
+                                                                                 `endif
+                                                                                `endif
+                                                                               `endif
+                                                                              `endif
+                                                                             `endif
+                                                                            `endif
+                                                                           `endif
+                                                                          `endif
+                                                                         `endif
+                                                                        `endif
+                                                                       `endif
+                                                                      `endif
+                                                                     `endif
+                                                                    `endif
+                                                                   `endif
+                                                                  `endif
+                                                                 `endif
+                                                                `endif
+                                                               `endif
+                                                              `endif
+                                                             `endif
+                                                            `endif
+                                                           `endif
+                                                          `endif
+                                                         `endif
+                                                        `endif
+                                                       `endif
+                                                      `endif
+                                                     `endif
+                                                    `endif
+                                                   `endif
+                                                  `endif
+                                                 `endif
+                                                `endif
+                                               `endif
+                                              `endif
+                                             `endif
+                                            `endif
+                                           `endif
+                                          `endif
+                                         `endif
+                                        `endif
+                                       `endif
+                                      `endif
+                                     `endif
+                                    `endif
+                                   `endif
+                                  `endif
+                                 `endif
+                                `endif
+                               `endif
+                              `endif
+                             `endif
+                            `endif
+                           `endif
+                          `endif
+                         `endif
+                        `endif
+                       `endif
+                      `endif
+                     `endif
+                    `endif
+                   `endif
+                  `endif
+                 `endif
+                `endif
+               `endif
+              `endif
+             `endif
+            `endif
+           `endif
+          `endif
+         `endif
+        `endif
+       `endif
+      `endif
+     `endif
+    `endif
+   `endif
+  `endif
+ `endif
+`endif
+
+
+//=======================================================================
+// SN footprint infrastructure
+`define SVT_CHI_VALID_IDX_NUM_SNS_0 \
+ // Nothing to do
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_1 \
+ `define SVT_CHI_VALID_SN_IDX_0
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_2 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_1 \
+ `define SVT_CHI_VALID_SN_IDX_1
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_3 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_2 \
+ `define SVT_CHI_VALID_SN_IDX_2
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_4 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_3 \
+ `define SVT_CHI_VALID_SN_IDX_3
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_5 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_4 \
+ `define SVT_CHI_VALID_SN_IDX_4
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_6 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_5 \
+ `define SVT_CHI_VALID_SN_IDX_5
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_7 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_6 \
+ `define SVT_CHI_VALID_SN_IDX_6
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_8 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_7 \
+ `define SVT_CHI_VALID_SN_IDX_7
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_9 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_8 \
+ `define SVT_CHI_VALID_SN_IDX_8
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_10 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_9 \
+ `define SVT_CHI_VALID_SN_IDX_9
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_11 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_10 \
+ `define SVT_CHI_VALID_SN_IDX_10
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_12 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_11 \
+ `define SVT_CHI_VALID_SN_IDX_11
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_13 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_12 \
+ `define SVT_CHI_VALID_SN_IDX_12
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_14 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_13 \
+ `define SVT_CHI_VALID_SN_IDX_13
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_15 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_14 \
+ `define SVT_CHI_VALID_SN_IDX_14
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_16 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_15 \
+ `define SVT_CHI_VALID_SN_IDX_15
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_17 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_16 \
+ `define SVT_CHI_VALID_SN_IDX_16
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_18 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_17 \
+ `define SVT_CHI_VALID_SN_IDX_17
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_19 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_18 \
+ `define SVT_CHI_VALID_SN_IDX_18
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_20 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_19 \
+ `define SVT_CHI_VALID_SN_IDX_19
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_21 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_20 \
+ `define SVT_CHI_VALID_SN_IDX_20
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_22 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_21 \
+ `define SVT_CHI_VALID_SN_IDX_21
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_23 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_22 \
+ `define SVT_CHI_VALID_SN_IDX_22
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_24 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_23 \
+ `define SVT_CHI_VALID_SN_IDX_23
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_25 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_24 \
+ `define SVT_CHI_VALID_SN_IDX_24
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_26 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_25 \
+ `define SVT_CHI_VALID_SN_IDX_25
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_27 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_26 \
+ `define SVT_CHI_VALID_SN_IDX_26
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_28 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_27 \
+ `define SVT_CHI_VALID_SN_IDX_27
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_29 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_28 \
+ `define SVT_CHI_VALID_SN_IDX_28
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_30 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_29 \
+ `define SVT_CHI_VALID_SN_IDX_29
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_31 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_30 \
+ `define SVT_CHI_VALID_SN_IDX_30
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_32 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_31 \
+ `define SVT_CHI_VALID_SN_IDX_31
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_33 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_32 \
+ `define SVT_CHI_VALID_SN_IDX_32
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_34 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_33 \
+ `define SVT_CHI_VALID_SN_IDX_33
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_35 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_34 \
+ `define SVT_CHI_VALID_SN_IDX_34
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_36 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_35 \
+ `define SVT_CHI_VALID_SN_IDX_35
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_37 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_36 \
+ `define SVT_CHI_VALID_SN_IDX_36
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_38 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_37 \
+ `define SVT_CHI_VALID_SN_IDX_37
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_39 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_38 \
+ `define SVT_CHI_VALID_SN_IDX_38
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_40 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_39 \
+ `define SVT_CHI_VALID_SN_IDX_39
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_41 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_40 \
+ `define SVT_CHI_VALID_SN_IDX_40
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_42 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_41 \
+ `define SVT_CHI_VALID_SN_IDX_41
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_43 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_42 \
+ `define SVT_CHI_VALID_SN_IDX_42
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_44 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_43 \
+ `define SVT_CHI_VALID_SN_IDX_43
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_45 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_44 \
+ `define SVT_CHI_VALID_SN_IDX_44
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_46 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_45 \
+ `define SVT_CHI_VALID_SN_IDX_45
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_47 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_46 \
+ `define SVT_CHI_VALID_SN_IDX_46
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_48 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_47 \
+ `define SVT_CHI_VALID_SN_IDX_47
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_49 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_48 \
+ `define SVT_CHI_VALID_SN_IDX_48
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_50 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_49 \
+ `define SVT_CHI_VALID_SN_IDX_49
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_51 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_50 \
+ `define SVT_CHI_VALID_SN_IDX_50
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_52 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_51 \
+ `define SVT_CHI_VALID_SN_IDX_51
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_53 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_52 \
+ `define SVT_CHI_VALID_SN_IDX_52
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_54 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_53 \
+ `define SVT_CHI_VALID_SN_IDX_53
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_55 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_54 \
+ `define SVT_CHI_VALID_SN_IDX_54
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_56 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_55 \
+ `define SVT_CHI_VALID_SN_IDX_55
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_57 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_56 \
+ `define SVT_CHI_VALID_SN_IDX_56
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_58 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_57 \
+ `define SVT_CHI_VALID_SN_IDX_57
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_59 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_58 \
+ `define SVT_CHI_VALID_SN_IDX_58
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_60 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_59 \
+ `define SVT_CHI_VALID_SN_IDX_59
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_61 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_60 \
+ `define SVT_CHI_VALID_SN_IDX_60
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_62 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_61 \
+ `define SVT_CHI_VALID_SN_IDX_61
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_63 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_62 \
+ `define SVT_CHI_VALID_SN_IDX_62
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_64 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_63 \
+ `define SVT_CHI_VALID_SN_IDX_63
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_65 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_64 \
+ `define SVT_CHI_VALID_SN_IDX_64
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_66 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_65 \
+ `define SVT_CHI_VALID_SN_IDX_65
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_67 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_66 \
+ `define SVT_CHI_VALID_SN_IDX_66
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_68 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_67 \
+ `define SVT_CHI_VALID_SN_IDX_67
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_69 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_68 \
+ `define SVT_CHI_VALID_SN_IDX_68
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_70 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_69 \
+ `define SVT_CHI_VALID_SN_IDX_69
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_71 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_70 \
+ `define SVT_CHI_VALID_SN_IDX_70
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_72 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_71 \
+ `define SVT_CHI_VALID_SN_IDX_71
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_73 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_72 \
+ `define SVT_CHI_VALID_SN_IDX_72
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_74 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_73 \
+ `define SVT_CHI_VALID_SN_IDX_73
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_75 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_74 \
+ `define SVT_CHI_VALID_SN_IDX_74
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_76 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_75 \
+ `define SVT_CHI_VALID_SN_IDX_75
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_77 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_76 \
+ `define SVT_CHI_VALID_SN_IDX_76
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_78 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_77 \
+ `define SVT_CHI_VALID_SN_IDX_77
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_79 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_78 \
+ `define SVT_CHI_VALID_SN_IDX_78
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_80 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_79 \
+ `define SVT_CHI_VALID_SN_IDX_79
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_81 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_80 \
+ `define SVT_CHI_VALID_SN_IDX_80
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_82 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_81 \
+ `define SVT_CHI_VALID_SN_IDX_81
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_83 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_82 \
+ `define SVT_CHI_VALID_SN_IDX_82
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_84 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_83 \
+ `define SVT_CHI_VALID_SN_IDX_83
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_85 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_84 \
+ `define SVT_CHI_VALID_SN_IDX_84
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_86 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_85 \
+ `define SVT_CHI_VALID_SN_IDX_85
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_87 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_86 \
+ `define SVT_CHI_VALID_SN_IDX_86
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_88 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_87 \
+ `define SVT_CHI_VALID_SN_IDX_87
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_89 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_88 \
+ `define SVT_CHI_VALID_SN_IDX_88
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_90 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_89 \
+ `define SVT_CHI_VALID_SN_IDX_89
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_91 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_90 \
+ `define SVT_CHI_VALID_SN_IDX_90
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_92 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_91 \
+ `define SVT_CHI_VALID_SN_IDX_91
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_93 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_92 \
+ `define SVT_CHI_VALID_SN_IDX_92
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_94 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_93 \
+ `define SVT_CHI_VALID_SN_IDX_93
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_95 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_94 \
+ `define SVT_CHI_VALID_SN_IDX_94
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_96 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_95 \
+ `define SVT_CHI_VALID_SN_IDX_95
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_97 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_96 \
+ `define SVT_CHI_VALID_SN_IDX_96
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_98 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_97 \
+ `define SVT_CHI_VALID_SN_IDX_97
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_99 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_98 \
+ `define SVT_CHI_VALID_SN_IDX_98
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_100 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_99 \
+ `define SVT_CHI_VALID_SN_IDX_99
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_101 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_100 \
+ `define SVT_CHI_VALID_SN_IDX_100
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_102 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_101 \
+ `define SVT_CHI_VALID_SN_IDX_101
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_103 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_102 \
+ `define SVT_CHI_VALID_SN_IDX_102
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_104 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_103 \
+ `define SVT_CHI_VALID_SN_IDX_103
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_105 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_104 \
+ `define SVT_CHI_VALID_SN_IDX_104
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_106 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_105 \
+ `define SVT_CHI_VALID_SN_IDX_105
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_107 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_106 \
+ `define SVT_CHI_VALID_SN_IDX_106
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_108 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_107 \
+ `define SVT_CHI_VALID_SN_IDX_107
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_109 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_108 \
+ `define SVT_CHI_VALID_SN_IDX_108
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_110 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_109 \
+ `define SVT_CHI_VALID_SN_IDX_109
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_111 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_110 \
+ `define SVT_CHI_VALID_SN_IDX_110
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_112 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_111 \
+ `define SVT_CHI_VALID_SN_IDX_111
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_113 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_112 \
+ `define SVT_CHI_VALID_SN_IDX_112
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_114 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_113 \
+ `define SVT_CHI_VALID_SN_IDX_113
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_115 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_114 \
+ `define SVT_CHI_VALID_SN_IDX_114
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_116 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_115 \
+ `define SVT_CHI_VALID_SN_IDX_115
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_117 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_116 \
+ `define SVT_CHI_VALID_SN_IDX_116
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_118 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_117 \
+ `define SVT_CHI_VALID_SN_IDX_117
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_119 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_118 \
+ `define SVT_CHI_VALID_SN_IDX_118
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_120 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_119 \
+ `define SVT_CHI_VALID_SN_IDX_119
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_121 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_120 \
+ `define SVT_CHI_VALID_SN_IDX_120
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_122 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_121 \
+ `define SVT_CHI_VALID_SN_IDX_121
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_123 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_122 \
+ `define SVT_CHI_VALID_SN_IDX_122
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_124 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_123 \
+ `define SVT_CHI_VALID_SN_IDX_123
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_125 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_124 \
+ `define SVT_CHI_VALID_SN_IDX_124
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_126 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_125 \
+ `define SVT_CHI_VALID_SN_IDX_125
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_127 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_126 \
+ `define SVT_CHI_VALID_SN_IDX_126
+
+`define SVT_CHI_VALID_IDX_NUM_SNS_128 \
+ `SVT_CHI_VALID_IDX_NUM_SNS_127 \
+ `define SVT_CHI_VALID_SN_IDX_127
+
+
+`ifdef SVT_CHI_MAX_NUM_SNS_0
+ `SVT_CHI_VALID_IDX_NUM_SNS_0
+ `define SVT_CHI_MAX_NUM_SNS 0
+`else
+ `ifdef SVT_CHI_MAX_NUM_SNS_1
+  `SVT_CHI_VALID_IDX_NUM_SNS_1
+  `define SVT_CHI_MAX_NUM_SNS 1
+ `else
+  `ifdef SVT_CHI_MAX_NUM_SNS_2
+   `SVT_CHI_VALID_IDX_NUM_SNS_2
+   `define SVT_CHI_MAX_NUM_SNS 2
+  `else
+   `ifdef SVT_CHI_MAX_NUM_SNS_3
+     `SVT_CHI_VALID_IDX_NUM_SNS_3
+     `define SVT_CHI_MAX_NUM_SNS 3
+   `else
+    `ifdef SVT_CHI_MAX_NUM_SNS_4
+      `SVT_CHI_VALID_IDX_NUM_SNS_4
+      `define SVT_CHI_MAX_NUM_SNS 4
+    `else
+     `ifdef SVT_CHI_MAX_NUM_SNS_5
+       `SVT_CHI_VALID_IDX_NUM_SNS_5
+       `define SVT_CHI_MAX_NUM_SNS 5
+     `else
+      `ifdef SVT_CHI_MAX_NUM_SNS_6
+        `SVT_CHI_VALID_IDX_NUM_SNS_6
+        `define SVT_CHI_MAX_NUM_SNS 6
+      `else
+       `ifdef SVT_CHI_MAX_NUM_SNS_7
+         `SVT_CHI_VALID_IDX_NUM_SNS_7
+         `define SVT_CHI_MAX_NUM_SNS 7
+       `else
+        `ifdef SVT_CHI_MAX_NUM_SNS_8
+          `SVT_CHI_VALID_IDX_NUM_SNS_8
+          `define SVT_CHI_MAX_NUM_SNS 8
+        `else
+         `ifdef SVT_CHI_MAX_NUM_SNS_9
+           `SVT_CHI_VALID_IDX_NUM_SNS_9
+           `define SVT_CHI_MAX_NUM_SNS 9
+         `else
+          `ifdef SVT_CHI_MAX_NUM_SNS_10
+            `SVT_CHI_VALID_IDX_NUM_SNS_10
+            `define SVT_CHI_MAX_NUM_SNS 10
+          `else
+           `ifdef SVT_CHI_MAX_NUM_SNS_11
+             `SVT_CHI_VALID_IDX_NUM_SNS_11
+             `define SVT_CHI_MAX_NUM_SNS 11
+           `else
+            `ifdef SVT_CHI_MAX_NUM_SNS_12
+              `SVT_CHI_VALID_IDX_NUM_SNS_12
+              `define SVT_CHI_MAX_NUM_SNS 12
+            `else
+             `ifdef SVT_CHI_MAX_NUM_SNS_13
+               `SVT_CHI_VALID_IDX_NUM_SNS_13
+               `define SVT_CHI_MAX_NUM_SNS 13
+             `else
+              `ifdef SVT_CHI_MAX_NUM_SNS_14
+                `SVT_CHI_VALID_IDX_NUM_SNS_14
+                `define SVT_CHI_MAX_NUM_SNS 14
+              `else
+               `ifdef SVT_CHI_MAX_NUM_SNS_15
+                 `SVT_CHI_VALID_IDX_NUM_SNS_15
+                 `define SVT_CHI_MAX_NUM_SNS 15
+               `else
+                `ifdef SVT_CHI_MAX_NUM_SNS_16
+                  `SVT_CHI_VALID_IDX_NUM_SNS_16
+                  `define SVT_CHI_MAX_NUM_SNS 16
+                `else
+                 `ifdef SVT_CHI_MAX_NUM_SNS_17
+                   `SVT_CHI_VALID_IDX_NUM_SNS_17
+                   `define SVT_CHI_MAX_NUM_SNS 18
+                 `else
+                  `ifdef SVT_CHI_MAX_NUM_SNS_18
+                    `SVT_CHI_VALID_IDX_NUM_SNS_18
+                    `define SVT_CHI_MAX_NUM_SNS 19
+                  `else
+                   `ifdef SVT_CHI_MAX_NUM_SNS_19
+                     `SVT_CHI_VALID_IDX_NUM_SNS_19
+                     `define SVT_CHI_MAX_NUM_SNS 19
+                   `else
+                    `ifdef SVT_CHI_MAX_NUM_SNS_20
+                      `SVT_CHI_VALID_IDX_NUM_SNS_20
+                      `define SVT_CHI_MAX_NUM_SNS 20
+                    `else
+                     `ifdef SVT_CHI_MAX_NUM_SNS_21
+                       `SVT_CHI_VALID_IDX_NUM_SNS_21
+                       `define SVT_CHI_MAX_NUM_SNS 21
+                     `else
+                      `ifdef SVT_CHI_MAX_NUM_SNS_22
+                        `SVT_CHI_VALID_IDX_NUM_SNS_22
+                        `define SVT_CHI_MAX_NUM_SNS 22
+                      `else
+                       `ifdef SVT_CHI_MAX_NUM_SNS_23
+                         `SVT_CHI_VALID_IDX_NUM_SNS_23
+                         `define SVT_CHI_MAX_NUM_SNS 23
+                       `else
+                        `ifdef SVT_CHI_MAX_NUM_SNS_24
+                          `SVT_CHI_VALID_IDX_NUM_SNS_24
+                          `define SVT_CHI_MAX_NUM_SNS 24
+                        `else
+                         `ifdef SVT_CHI_MAX_NUM_SNS_25
+                           `SVT_CHI_VALID_IDX_NUM_SNS_25
+                           `define SVT_CHI_MAX_NUM_SNS 25
+                         `else
+                          `ifdef SVT_CHI_MAX_NUM_SNS_26
+                            `SVT_CHI_VALID_IDX_NUM_SNS_26
+                            `define SVT_CHI_MAX_NUM_SNS 26
+                          `else
+                           `ifdef SVT_CHI_MAX_NUM_SNS_27
+                             `SVT_CHI_VALID_IDX_NUM_SNS_27
+                             `define SVT_CHI_MAX_NUM_SNS 27
+                           `else
+                            `ifdef SVT_CHI_MAX_NUM_SNS_28
+                              `SVT_CHI_VALID_IDX_NUM_SNS_28
+                              `define SVT_CHI_MAX_NUM_SNS 28
+                            `else
+                             `ifdef SVT_CHI_MAX_NUM_SNS_29
+                               `SVT_CHI_VALID_IDX_NUM_SNS_29
+                               `define SVT_CHI_MAX_NUM_SNS 29
+                             `else
+                              `ifdef SVT_CHI_MAX_NUM_SNS_30
+                                `SVT_CHI_VALID_IDX_NUM_SNS_30
+                                `define SVT_CHI_MAX_NUM_SNS 30
+                              `else
+                               `ifdef SVT_CHI_MAX_NUM_SNS_31
+                                 `SVT_CHI_VALID_IDX_NUM_SNS_31
+                                 `define SVT_CHI_MAX_NUM_SNS 31
+                               `else
+                                `ifdef SVT_CHI_MAX_NUM_SNS_32
+                                  `SVT_CHI_VALID_IDX_NUM_SNS_32
+                                  `define SVT_CHI_MAX_NUM_SNS 32
+                                `else
+                                 `ifdef SVT_CHI_MAX_NUM_SNS_33
+                                   `SVT_CHI_VALID_IDX_NUM_SNS_33
+                                   `define SVT_CHI_MAX_NUM_SNS 33
+                                 `else
+                                  `ifdef SVT_CHI_MAX_NUM_SNS_34
+                                    `SVT_CHI_VALID_IDX_NUM_SNS_34
+                                    `define SVT_CHI_MAX_NUM_SNS 34
+                                  `else
+                                   `ifdef SVT_CHI_MAX_NUM_SNS_35
+                                     `SVT_CHI_VALID_IDX_NUM_SNS_35
+                                     `define SVT_CHI_MAX_NUM_SNS 35
+                                   `else
+                                    `ifdef SVT_CHI_MAX_NUM_SNS_36
+                                      `SVT_CHI_VALID_IDX_NUM_SNS_36
+                                      `define SVT_CHI_MAX_NUM_SNS 36
+                                    `else
+                                     `ifdef SVT_CHI_MAX_NUM_SNS_37
+                                       `SVT_CHI_VALID_IDX_NUM_SNS_37
+                                       `define SVT_CHI_MAX_NUM_SNS 37
+                                     `else
+                                      `ifdef SVT_CHI_MAX_NUM_SNS_38
+                                        `SVT_CHI_VALID_IDX_NUM_SNS_38
+                                        `define SVT_CHI_MAX_NUM_SNS 38
+                                      `else
+                                       `ifdef SVT_CHI_MAX_NUM_SNS_39
+                                         `SVT_CHI_VALID_IDX_NUM_SNS_39
+                                         `define SVT_CHI_MAX_NUM_SNS 39                                
+                                       `else
+                                        `ifdef SVT_CHI_MAX_NUM_SNS_40
+                                          `SVT_CHI_VALID_IDX_NUM_SNS_40
+                                          `define SVT_CHI_MAX_NUM_SNS 40
+                                        `else
+                                         `ifdef SVT_CHI_MAX_NUM_SNS_41
+                                           `SVT_CHI_VALID_IDX_NUM_SNS_41
+                                           `define SVT_CHI_MAX_NUM_SNS 41
+                                         `else
+                                          `ifdef SVT_CHI_MAX_NUM_SNS_42
+                                            `SVT_CHI_VALID_IDX_NUM_SNS_42
+                                            `define SVT_CHI_MAX_NUM_SNS 42
+                                          `else
+                                           `ifdef SVT_CHI_MAX_NUM_SNS_43
+                                             `SVT_CHI_VALID_IDX_NUM_SNS_43
+                                             `define SVT_CHI_MAX_NUM_SNS 43
+                                           `else
+                                            `ifdef SVT_CHI_MAX_NUM_SNS_44
+                                              `SVT_CHI_VALID_IDX_NUM_SNS_44
+                                              `define SVT_CHI_MAX_NUM_SNS 44
+                                            `else
+                                             `ifdef SVT_CHI_MAX_NUM_SNS_45
+                                               `SVT_CHI_VALID_IDX_NUM_SNS_45
+                                               `define SVT_CHI_MAX_NUM_SNS 45
+                                             `else
+                                              `ifdef SVT_CHI_MAX_NUM_SNS_46
+                                                `SVT_CHI_VALID_IDX_NUM_SNS_46
+                                                `define SVT_CHI_MAX_NUM_SNS 46
+                                              `else
+                                               `ifdef SVT_CHI_MAX_NUM_SNS_47
+                                                 `SVT_CHI_VALID_IDX_NUM_SNS_47
+                                                 `define SVT_CHI_MAX_NUM_SNS 47
+                                               `else
+                                                `ifdef SVT_CHI_MAX_NUM_SNS_48
+                                                  `SVT_CHI_VALID_IDX_NUM_SNS_48
+                                                  `define SVT_CHI_MAX_NUM_SNS 48
+                                                `else
+                                                 `ifdef SVT_CHI_MAX_NUM_SNS_49
+                                                   `SVT_CHI_VALID_IDX_NUM_SNS_49
+                                                   `define SVT_CHI_MAX_NUM_SNS 49           
+                                                 `else
+                                                  `ifdef SVT_CHI_MAX_NUM_SNS_50
+                                                    `SVT_CHI_VALID_IDX_NUM_SNS_50
+                                                    `define SVT_CHI_MAX_NUM_SNS 50
+                                                  `else
+                                                   `ifdef SVT_CHI_MAX_NUM_SNS_51
+                                                     `SVT_CHI_VALID_IDX_NUM_SNS_51
+                                                     `define SVT_CHI_MAX_NUM_SNS 51
+                                                   `else
+                                                    `ifdef SVT_CHI_MAX_NUM_SNS_52
+                                                      `SVT_CHI_VALID_IDX_NUM_SNS_52
+                                                      `define SVT_CHI_MAX_NUM_SNS 52
+                                                    `else
+                                                     `ifdef SVT_CHI_MAX_NUM_SNS_53
+                                                       `SVT_CHI_VALID_IDX_NUM_SNS_53
+                                                       `define SVT_CHI_MAX_NUM_SNS 53
+                                                     `else
+                                                      `ifdef SVT_CHI_MAX_NUM_SNS_54
+                                                        `SVT_CHI_VALID_IDX_NUM_SNS_54
+                                                        `define SVT_CHI_MAX_NUM_SNS 54
+                                                      `else
+                                                       `ifdef SVT_CHI_MAX_NUM_SNS_55
+                                                         `SVT_CHI_VALID_IDX_NUM_SNS_55
+                                                         `define SVT_CHI_MAX_NUM_SNS 55
+                                                       `else
+                                                        `ifdef SVT_CHI_MAX_NUM_SNS_56
+                                                          `SVT_CHI_VALID_IDX_NUM_SNS_56
+                                                          `define SVT_CHI_MAX_NUM_SNS 56
+                                                        `else
+                                                         `ifdef SVT_CHI_MAX_NUM_SNS_57
+                                                           `SVT_CHI_VALID_IDX_NUM_SNS_57
+                                                           `define SVT_CHI_MAX_NUM_SNS 57
+                                                         `else
+                                                          `ifdef SVT_CHI_MAX_NUM_SNS_58
+                                                            `SVT_CHI_VALID_IDX_NUM_SNS_58
+                                                            `define SVT_CHI_MAX_NUM_SNS 58
+                                                          `else
+                                                           `ifdef SVT_CHI_MAX_NUM_SNS_59
+                                                             `SVT_CHI_VALID_IDX_NUM_SNS_59
+                                                             `define SVT_CHI_MAX_NUM_SNS 59 
+                                                           `else
+                                                            `ifdef SVT_CHI_MAX_NUM_SNS_60
+                                                              `SVT_CHI_VALID_IDX_NUM_SNS_60
+                                                              `define SVT_CHI_MAX_NUM_SNS 60
+                                                            `else
+                                                             `ifdef SVT_CHI_MAX_NUM_SNS_61
+                                                               `SVT_CHI_VALID_IDX_NUM_SNS_61
+                                                               `define SVT_CHI_MAX_NUM_SNS 61
+                                                             `else
+                                                              `ifdef SVT_CHI_MAX_NUM_SNS_62
+                                                                `SVT_CHI_VALID_IDX_NUM_SNS_62
+                                                                `define SVT_CHI_MAX_NUM_SNS 62
+                                                              `else
+                                                               `ifdef SVT_CHI_MAX_NUM_SNS_63
+                                                                 `SVT_CHI_VALID_IDX_NUM_SNS_63
+                                                                 `define SVT_CHI_MAX_NUM_SNS 63
+                                                               `else
+                                                                `ifdef SVT_CHI_MAX_NUM_SNS_64
+                                                                  `SVT_CHI_VALID_IDX_NUM_SNS_64
+                                                                  `define SVT_CHI_MAX_NUM_SNS 64
+                                                                `else
+                                                                 `ifdef SVT_CHI_MAX_NUM_SNS_65
+                                                                   `SVT_CHI_VALID_IDX_NUM_SNS_65
+                                                                   `define SVT_CHI_MAX_NUM_SNS 65
+                                                                 `else
+                                                                  `ifdef SVT_CHI_MAX_NUM_SNS_66
+                                                                    `SVT_CHI_VALID_IDX_NUM_SNS_66
+                                                                    `define SVT_CHI_MAX_NUM_SNS 66
+                                                                  `else
+                                                                   `ifdef SVT_CHI_MAX_NUM_SNS_67
+                                                                     `SVT_CHI_VALID_IDX_NUM_SNS_67
+                                                                     `define SVT_CHI_MAX_NUM_SNS 67
+                                                                   `else
+                                                                    `ifdef SVT_CHI_MAX_NUM_SNS_68
+                                                                      `SVT_CHI_VALID_IDX_NUM_SNS_68
+                                                                      `define SVT_CHI_MAX_NUM_SNS 68
+                                                                    `else
+                                                                     `ifdef SVT_CHI_MAX_NUM_SNS_69
+                                                                       `SVT_CHI_VALID_IDX_NUM_SNS_69
+                                                                       `define SVT_CHI_MAX_NUM_SNS 69 
+                                                                     `else
+                                                                      `ifdef SVT_CHI_MAX_NUM_SNS_70
+                                                                        `SVT_CHI_VALID_IDX_NUM_SNS_70
+                                                                        `define SVT_CHI_MAX_NUM_SNS 70
+                                                                      `else
+                                                                       `ifdef SVT_CHI_MAX_NUM_SNS_71
+                                                                         `SVT_CHI_VALID_IDX_NUM_SNS_71
+                                                                         `define SVT_CHI_MAX_NUM_SNS 71
+                                                                       `else
+                                                                        `ifdef SVT_CHI_MAX_NUM_SNS_72
+                                                                          `SVT_CHI_VALID_IDX_NUM_SNS_72
+                                                                          `define SVT_CHI_MAX_NUM_SNS 72
+                                                                        `else
+                                                                         `ifdef SVT_CHI_MAX_NUM_SNS_73
+                                                                           `SVT_CHI_VALID_IDX_NUM_SNS_73
+                                                                           `define SVT_CHI_MAX_NUM_SNS 73
+                                                                         `else
+                                                                          `ifdef SVT_CHI_MAX_NUM_SNS_74
+                                                                            `SVT_CHI_VALID_IDX_NUM_SNS_74
+                                                                            `define SVT_CHI_MAX_NUM_SNS 74
+                                                                          `else
+                                                                           `ifdef SVT_CHI_MAX_NUM_SNS_75
+                                                                             `SVT_CHI_VALID_IDX_NUM_SNS_75
+                                                                             `define SVT_CHI_MAX_NUM_SNS 75
+                                                                           `else
+                                                                            `ifdef SVT_CHI_MAX_NUM_SNS_76
+                                                                              `SVT_CHI_VALID_IDX_NUM_SNS_76
+                                                                              `define SVT_CHI_MAX_NUM_SNS 76
+                                                                            `else
+                                                                             `ifdef SVT_CHI_MAX_NUM_SNS_77
+                                                                               `SVT_CHI_VALID_IDX_NUM_SNS_77
+                                                                               `define SVT_CHI_MAX_NUM_SNS 77
+                                                                             `else
+                                                                              `ifdef SVT_CHI_MAX_NUM_SNS_78
+                                                                                `SVT_CHI_VALID_IDX_NUM_SNS_78
+                                                                                `define SVT_CHI_MAX_NUM_SNS 78
+                                                                              `else
+                                                                               `ifdef SVT_CHI_MAX_NUM_SNS_79
+                                                                                 `SVT_CHI_VALID_IDX_NUM_SNS_79
+                                                                                 `define SVT_CHI_MAX_NUM_SNS 79 
+                                                                               `else
+                                                                                `ifdef SVT_CHI_MAX_NUM_SNS_80
+                                                                                  `SVT_CHI_VALID_IDX_NUM_SNS_80
+                                                                                  `define SVT_CHI_MAX_NUM_SNS 80
+                                                                                `else
+                                                                                 `ifdef SVT_CHI_MAX_NUM_SNS_81
+                                                                                   `SVT_CHI_VALID_IDX_NUM_SNS_81
+                                                                                   `define SVT_CHI_MAX_NUM_SNS 81
+                                                                                 `else
+                                                                                  `ifdef SVT_CHI_MAX_NUM_SNS_82
+                                                                                    `SVT_CHI_VALID_IDX_NUM_SNS_82
+                                                                                    `define SVT_CHI_MAX_NUM_SNS 82
+                                                                                  `else
+                                                                                   `ifdef SVT_CHI_MAX_NUM_SNS_83
+                                                                                     `SVT_CHI_VALID_IDX_NUM_SNS_83
+                                                                                     `define SVT_CHI_MAX_NUM_SNS 83
+                                                                                   `else
+                                                                                    `ifdef SVT_CHI_MAX_NUM_SNS_84
+                                                                                      `SVT_CHI_VALID_IDX_NUM_SNS_84
+                                                                                      `define SVT_CHI_MAX_NUM_SNS 84
+                                                                                    `else
+                                                                                     `ifdef SVT_CHI_MAX_NUM_SNS_85
+                                                                                       `SVT_CHI_VALID_IDX_NUM_SNS_85
+                                                                                       `define SVT_CHI_MAX_NUM_SNS 85
+                                                                                     `else
+                                                                                      `ifdef SVT_CHI_MAX_NUM_SNS_86
+                                                                                        `SVT_CHI_VALID_IDX_NUM_SNS_86
+                                                                                        `define SVT_CHI_MAX_NUM_SNS 86
+                                                                                      `else
+                                                                                       `ifdef SVT_CHI_MAX_NUM_SNS_87
+                                                                                         `SVT_CHI_VALID_IDX_NUM_SNS_87
+                                                                                         `define SVT_CHI_MAX_NUM_SNS 87
+                                                                                       `else
+                                                                                        `ifdef SVT_CHI_MAX_NUM_SNS_88
+                                                                                          `SVT_CHI_VALID_IDX_NUM_SNS_88
+                                                                                          `define SVT_CHI_MAX_NUM_SNS 88
+                                                                                        `else
+                                                                                         `ifdef SVT_CHI_MAX_NUM_SNS_89
+                                                                                           `SVT_CHI_VALID_IDX_NUM_SNS_89
+                                                                                           `define SVT_CHI_MAX_NUM_SNS 89 
+                                                                                         `else
+                                                                                          `ifdef SVT_CHI_MAX_NUM_SNS_90
+                                                                                            `SVT_CHI_VALID_IDX_NUM_SNS_90
+                                                                                            `define SVT_CHI_MAX_NUM_SNS 90
+                                                                                          `else
+                                                                                           `ifdef SVT_CHI_MAX_NUM_SNS_91
+                                                                                             `SVT_CHI_VALID_IDX_NUM_SNS_91
+                                                                                             `define SVT_CHI_MAX_NUM_SNS 91
+                                                                                           `else
+                                                                                            `ifdef SVT_CHI_MAX_NUM_SNS_92
+                                                                                              `SVT_CHI_VALID_IDX_NUM_SNS_92
+                                                                                              `define SVT_CHI_MAX_NUM_SNS 92
+                                                                                            `else
+                                                                                             `ifdef SVT_CHI_MAX_NUM_SNS_93
+                                                                                               `SVT_CHI_VALID_IDX_NUM_SNS_93
+                                                                                               `define SVT_CHI_MAX_NUM_SNS 93
+                                                                                             `else
+                                                                                              `ifdef SVT_CHI_MAX_NUM_SNS_94
+                                                                                                `SVT_CHI_VALID_IDX_NUM_SNS_94
+                                                                                                `define SVT_CHI_MAX_NUM_SNS 94
+                                                                                              `else
+                                                                                               `ifdef SVT_CHI_MAX_NUM_SNS_95
+                                                                                                 `SVT_CHI_VALID_IDX_NUM_SNS_95
+                                                                                                 `define SVT_CHI_MAX_NUM_SNS 95
+                                                                                               `else
+                                                                                                `ifdef SVT_CHI_MAX_NUM_SNS_96
+                                                                                                  `SVT_CHI_VALID_IDX_NUM_SNS_96
+                                                                                                  `define SVT_CHI_MAX_NUM_SNS 96
+                                                                                                `else
+                                                                                                 `ifdef SVT_CHI_MAX_NUM_SNS_97
+                                                                                                   `SVT_CHI_VALID_IDX_NUM_SNS_97
+                                                                                                   `define SVT_CHI_MAX_NUM_SNS 97
+                                                                                                 `else
+                                                                                                  `ifdef SVT_CHI_MAX_NUM_SNS_98
+                                                                                                    `SVT_CHI_VALID_IDX_NUM_SNS_98
+                                                                                                    `define SVT_CHI_MAX_NUM_SNS 98
+                                                                                                  `else
+                                                                                                   `ifdef SVT_CHI_MAX_NUM_SNS_99
+                                                                                                     `SVT_CHI_VALID_IDX_NUM_SNS_99
+                                                                                                     `define SVT_CHI_MAX_NUM_SNS 99 
+                                                                                                   `else
+                                                                                                    `ifdef SVT_CHI_MAX_NUM_SNS_100
+                                                                                                      `SVT_CHI_VALID_IDX_NUM_SNS_100
+                                                                                                      `define SVT_CHI_MAX_NUM_SNS 100
+                                                                                                    `else
+                                                                                                     `ifdef SVT_CHI_MAX_NUM_SNS_101
+                                                                                                       `SVT_CHI_VALID_IDX_NUM_SNS_101
+                                                                                                       `define SVT_CHI_MAX_NUM_SNS 101
+                                                                                                     `else
+                                                                                                      `ifdef SVT_CHI_MAX_NUM_SNS_102
+                                                                                                        `SVT_CHI_VALID_IDX_NUM_SNS_102
+                                                                                                        `define SVT_CHI_MAX_NUM_SNS 102
+                                                                                                      `else
+                                                                                                       `ifdef SVT_CHI_MAX_NUM_SNS_103
+                                                                                                         `SVT_CHI_VALID_IDX_NUM_SNS_103
+                                                                                                         `define SVT_CHI_MAX_NUM_SNS 103
+                                                                                                       `else
+                                                                                                        `ifdef SVT_CHI_MAX_NUM_SNS_104
+                                                                                                          `SVT_CHI_VALID_IDX_NUM_SNS_104
+                                                                                                          `define SVT_CHI_MAX_NUM_SNS 104
+                                                                                                        `else
+                                                                                                         `ifdef SVT_CHI_MAX_NUM_SNS_105
+                                                                                                           `SVT_CHI_VALID_IDX_NUM_SNS_105
+                                                                                                           `define SVT_CHI_MAX_NUM_SNS 105
+                                                                                                         `else
+                                                                                                          `ifdef SVT_CHI_MAX_NUM_SNS_106
+                                                                                                            `SVT_CHI_VALID_IDX_NUM_SNS_106
+                                                                                                            `define SVT_CHI_MAX_NUM_SNS 106
+                                                                                                          `else
+                                                                                                           `ifdef SVT_CHI_MAX_NUM_SNS_107
+                                                                                                             `SVT_CHI_VALID_IDX_NUM_SNS_107
+                                                                                                             `define SVT_CHI_MAX_NUM_SNS 107
+                                                                                                           `else
+                                                                                                            `ifdef SVT_CHI_MAX_NUM_SNS_108
+                                                                                                              `SVT_CHI_VALID_IDX_NUM_SNS_108
+                                                                                                              `define SVT_CHI_MAX_NUM_SNS 108
+                                                                                                            `else
+                                                                                                             `ifdef SVT_CHI_MAX_NUM_SNS_109
+                                                                                                               `SVT_CHI_VALID_IDX_NUM_SNS_109
+                                                                                                               `define SVT_CHI_MAX_NUM_SNS 109 
+                                                                                                             `else
+                                                                                                              `ifdef SVT_CHI_MAX_NUM_SNS_110
+                                                                                                                `SVT_CHI_VALID_IDX_NUM_SNS_110
+                                                                                                                `define SVT_CHI_MAX_NUM_SNS 110
+                                                                                                              `else
+                                                                                                               `ifdef SVT_CHI_MAX_NUM_SNS_111
+                                                                                                                 `SVT_CHI_VALID_IDX_NUM_SNS_111
+                                                                                                                 `define SVT_CHI_MAX_NUM_SNS 111
+                                                                                                               `else
+                                                                                                                `ifdef SVT_CHI_MAX_NUM_SNS_112
+                                                                                                                  `SVT_CHI_VALID_IDX_NUM_SNS_112
+                                                                                                                  `define SVT_CHI_MAX_NUM_SNS 112
+                                                                                                                `else
+                                                                                                                 `ifdef SVT_CHI_MAX_NUM_SNS_113
+                                                                                                                   `SVT_CHI_VALID_IDX_NUM_SNS_113
+                                                                                                                   `define SVT_CHI_MAX_NUM_SNS 113
+                                                                                                                 `else
+                                                                                                                  `ifdef SVT_CHI_MAX_NUM_SNS_114
+                                                                                                                    `SVT_CHI_VALID_IDX_NUM_SNS_114
+                                                                                                                    `define SVT_CHI_MAX_NUM_SNS 114
+                                                                                                                  `else
+                                                                                                                   `ifdef SVT_CHI_MAX_NUM_SNS_115
+                                                                                                                     `SVT_CHI_VALID_IDX_NUM_SNS_115
+                                                                                                                     `define SVT_CHI_MAX_NUM_SNS 115
+                                                                                                                   `else
+                                                                                                                    `ifdef SVT_CHI_MAX_NUM_SNS_116
+                                                                                                                      `SVT_CHI_VALID_IDX_NUM_SNS_116
+                                                                                                                      `define SVT_CHI_MAX_NUM_SNS 116
+                                                                                                                    `else
+                                                                                                                     `ifdef SVT_CHI_MAX_NUM_SNS_117
+                                                                                                                       `SVT_CHI_VALID_IDX_NUM_SNS_117
+                                                                                                                       `define SVT_CHI_MAX_NUM_SNS 117
+                                                                                                                     `else
+                                                                                                                      `ifdef SVT_CHI_MAX_NUM_SNS_118
+                                                                                                                        `SVT_CHI_VALID_IDX_NUM_SNS_118
+                                                                                                                        `define SVT_CHI_MAX_NUM_SNS 118
+                                                                                                                      `else
+                                                                                                                       `ifdef SVT_CHI_MAX_NUM_SNS_119
+                                                                                                                         `SVT_CHI_VALID_IDX_NUM_SNS_119
+                                                                                                                         `define SVT_CHI_MAX_NUM_SNS 119 
+                                                                                                                       `else
+                                                                                                                        `ifdef SVT_CHI_MAX_NUM_SNS_120
+                                                                                                                          `SVT_CHI_VALID_IDX_NUM_SNS_120
+                                                                                                                          `define SVT_CHI_MAX_NUM_SNS 120
+                                                                                                                        `else
+                                                                                                                         `ifdef SVT_CHI_MAX_NUM_SNS_121
+                                                                                                                           `SVT_CHI_VALID_IDX_NUM_SNS_121
+                                                                                                                           `define SVT_CHI_MAX_NUM_SNS 121
+                                                                                                                         `else
+                                                                                                                          `ifdef SVT_CHI_MAX_NUM_SNS_122
+                                                                                                                            `SVT_CHI_VALID_IDX_NUM_SNS_122
+                                                                                                                            `define SVT_CHI_MAX_NUM_SNS 122
+                                                                                                                          `else
+                                                                                                                           `ifdef SVT_CHI_MAX_NUM_SNS_123
+                                                                                                                             `SVT_CHI_VALID_IDX_NUM_SNS_123
+                                                                                                                             `define SVT_CHI_MAX_NUM_SNS 123
+                                                                                                                           `else
+                                                                                                                            `ifdef SVT_CHI_MAX_NUM_SNS_124
+                                                                                                                              `SVT_CHI_VALID_IDX_NUM_SNS_124
+                                                                                                                              `define SVT_CHI_MAX_NUM_SNS 124
+                                                                                                                            `else
+                                                                                                                             `ifdef SVT_CHI_MAX_NUM_SNS_125
+                                                                                                                               `SVT_CHI_VALID_IDX_NUM_SNS_125
+                                                                                                                               `define SVT_CHI_MAX_NUM_SNS 125
+                                                                                                                             `else
+                                                                                                                              `ifdef SVT_CHI_MAX_NUM_SNS_126
+                                                                                                                                `SVT_CHI_VALID_IDX_NUM_SNS_126
+                                                                                                                                `define SVT_CHI_MAX_NUM_SNS 126
+                                                                                                                              `else
+                                                                                                                               `ifdef SVT_CHI_MAX_NUM_SNS_127
+                                                                                                                                 `SVT_CHI_VALID_IDX_NUM_SNS_127
+                                                                                                                                 `define SVT_CHI_MAX_NUM_SNS 127
+                                                                                                                               `else
+                                                                                                                                `ifdef SVT_CHI_MAX_NUM_SNS_128
+                                                                                                                                  `SVT_CHI_VALID_IDX_NUM_SNS_128
+                                                                                                                                  `define SVT_CHI_MAX_NUM_SNS 128
+                                                                                                                                `else
+                                                                                                                                 // default value
+                                                                                                                                 `SVT_CHI_VALID_IDX_NUM_SNS_16
+                                                                                                                                 `define SVT_CHI_MAX_NUM_SNS 16
+                                                                                                                                `endif
+                                                                                                                               `endif
+                                                                                                                              `endif
+                                                                                                                             `endif
+                                                                                                                            `endif
+                                                                                                                           `endif
+                                                                                                                          `endif
+                                                                                                                         `endif
+                                                                                                                        `endif
+                                                                                                                       `endif
+                                                                                                                      `endif
+                                                                                                                     `endif
+                                                                                                                    `endif
+                                                                                                                   `endif
+                                                                                                                  `endif
+                                                                                                                 `endif
+                                                                                                                `endif
+                                                                                                               `endif
+                                                                                                              `endif
+                                                                                                             `endif
+                                                                                                            `endif
+                                                                                                           `endif
+                                                                                                          `endif
+                                                                                                         `endif
+                                                                                                        `endif
+                                                                                                       `endif
+                                                                                                      `endif
+                                                                                                     `endif
+                                                                                                    `endif
+                                                                                                   `endif
+                                                                                                  `endif
+                                                                                                 `endif
+                                                                                                `endif
+                                                                                               `endif
+                                                                                              `endif
+                                                                                             `endif
+                                                                                            `endif
+                                                                                           `endif
+                                                                                          `endif
+                                                                                         `endif
+                                                                                        `endif
+                                                                                       `endif
+                                                                                      `endif
+                                                                                     `endif
+                                                                                    `endif
+                                                                                   `endif
+                                                                                  `endif
+                                                                                 `endif
+                                                                                `endif
+                                                                               `endif
+                                                                              `endif
+                                                                             `endif
+                                                                            `endif
+                                                                           `endif
+                                                                          `endif
+                                                                         `endif
+                                                                        `endif
+                                                                       `endif
+                                                                      `endif
+                                                                     `endif
+                                                                    `endif
+                                                                   `endif
+                                                                  `endif
+                                                                 `endif
+                                                                `endif
+                                                               `endif
+                                                              `endif
+                                                             `endif
+                                                            `endif
+                                                           `endif
+                                                          `endif
+                                                         `endif
+                                                        `endif
+                                                       `endif
+                                                      `endif
+                                                     `endif
+                                                    `endif
+                                                   `endif
+                                                  `endif
+                                                 `endif
+                                                `endif
+                                               `endif
+                                              `endif
+                                             `endif
+                                            `endif
+                                           `endif
+                                          `endif
+                                         `endif
+                                        `endif
+                                       `endif
+                                      `endif
+                                     `endif
+                                    `endif
+                                   `endif
+                                  `endif
+                                 `endif
+                                `endif
+                               `endif
+                              `endif
+                             `endif
+                            `endif
+                           `endif
+                          `endif
+                         `endif
+                        `endif
+                       `endif
+                      `endif
+                     `endif
+                    `endif
+                   `endif
+                  `endif
+                 `endif
+                `endif
+               `endif
+              `endif
+             `endif
+            `endif
+           `endif
+          `endif
+         `endif
+        `endif
+       `endif
+      `endif
+     `endif
+    `endif
+   `endif
+  `endif
+ `endif
+`endif
+
+`endif // GUARD_SVT_CHI_PORT_DEFINES_SVI

@@ -1,0 +1,15 @@
+
+`ifndef GUARD_SVT_ATB_COMPONENT_SOURCE_SVI
+`define GUARD_SVT_ATB_COMPONENT_SOURCE_SVI
+
+`ifndef DESIGNWARE_INCDIR
+  `include "svt_source.svi"
+`endif
+
+`include "svt_atb_source.svi"
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_atb_checker)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_atb_common)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_atb_slave_sequencer)
+
+`endif // GUARD_SVT_ATB_COMPONENT_SOURCE_SVI

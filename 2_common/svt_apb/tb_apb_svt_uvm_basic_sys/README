@@ -1,0 +1,268 @@
+
+**************************************************************************
+Basic UVM Testbench Example for APB SVT VIP
+*************************************************************************
+
+CONTENTS:
+A. Introduction
+B. Running the Example Testbench
+C. Files in the Example
+D. SystemVerilog Testbench Description
+E. DVE Configuration File
+F. UVM Verification Environment 
+G. How to Contact Support
+
+-------------------------------------------------------------------------
+A. Introduction
+-------------------------------------------------------------------------
+
+This example shows how to implement a basic functioning UVM testbench using APB
+Verification IP. 
+    
+The example consists of the following:
+
+- A top-level testbench in SystemVerilog
+- A dummy DUT in the testbench, which has 2 APB interfaces
+- UVM verification environment
+- APB System ENV instantiated in the UVM verification environment
+- Three test files illustrating 
+  i.   A base test that performs common functions for all tests
+  ii.  Directed transaction generation
+  iii. Random transaction generation
+
+The UVM APB VIP transactors are connected in the following manner:
+
+                              (APB Basic ENV)
+   =====================================================================
+  ||    (APB Master ENV)                          (APB Slave ENV)      ||
+  ||                           =============                           ||
+  ||   -------------------    |             |    -------------------   ||
+  ||  | ------   -------  |   |             |   |  -----   -------  |  ||
+  ||  ||Master| |Monitor| |   |    -----    |   | |Slave| |Monitor| |  ||
+  ||  | ------   -------  |~=====>| DUT |<=====~|  -----   -------  |  ||
+  ||  |  *Active Mode*    |   |    -----    |   |   *Active Mode*   |  ||
+  ||   \_________________/    |             |    \_________________/   ||
+  ||   -------------------    |             |    -------------------   ||
+  ||  | ------   -------  |   |             |   | ------   -------  |  ||
+  ||  ||Slave | |Monitor| |   |             |   ||Master| |Monitor| |  ||
+  ||  | ------   -------  |   |             |   | ------   -------  |  ||
+  ||  |  *Passive Mode*   |   |             |   |  *Passive Mode*   |  ||
+  ||   \_________________/    |             |    \_________________/   ||
+   ============================             =============================
+
+
+In the remainder of this description, <design_dir> refers to the directory where
+the example was installed using script dw_vip_setup. The example source files
+would then exist at two locations:
+
+- "$DESIGNWARE_HOME/vip/svt/amba_svt/latest/examples/sverilog/tb_apb_svt_uvm_basic_sys"
+- "<design_dir>/examples/sverilog/amba_svt/tb_apb_svt_uvm_basic_sys"
+
+Complete class reference HTML documentation of APB SVT UVM Verification 
+IP is available at:
+  
+$DESIGNWARE_HOME/vip/svt/amba_svt/latest/doc/apb_svt_uvm_class_reference/html/index.html
+
+------------------------------------------------------------------------
+B. Running the Example Testbench
+------------------------------------------------------------------------
+
+1. Install the example using the following command line:
+
+   % cd <location where example is to be installed>
+   % mkdir design_dir <provide any name of your choice>
+   % $DESIGNWARE_HOME/bin/dw_vip_setup -path ./design_dir  -e amba_svt/tb_apb_svt_uvm_basic_sys -svtb
+
+2. Use either one of the following to run the testbench:
+
+   a) Use the Makefile:
+
+      Three tests are provided in the "tests" directory.
+      The tests are: 
+      1. ts.base_test.sv 
+      2. ts.directed_test.sv 
+      3. ts.random_wr_rd_test.sv 
+
+      For example, to run test ts.directed_test.sv, do following:
+      
+      gmake USE_SIMULATOR=vcsvlog directed_test WAVES=1
+
+      Invoke "gmake help" to show more options.
+   
+   b) Use the sim script:
+
+     For example, to run test ts.random_wr_rd_test.sv, do following:
+
+     ./run_apb_svt_uvm_basic_sys -w random_wr_rd_test vcsvlog
+
+      Invoke "./run_apb_svt_uvm_basic_sys -help" to show more options.
+
+
+-------------------------------------------------------------------------
+C. Files in the Example
+-------------------------------------------------------------------------
+
+The following lists all the code files in this example.
+
+<top_directory>
+      |
+      |
+      |-> hdl_interconnect
+      |     -> apb_dut.v
+      |     -> apb_dut_sv_wrapper.sv
+      |-> top.sv
+      |-> env
+      |     -> apb_basic_env.sv
+      |     -> apb_reset_if.svi
+      |     -> apb_shared_cfg.sv
+      |     -> apb_virtual_sequencer.sv
+      |     -> cust_svt_apb_master_transaction.sv
+      |     -> apb_master_random_discrete_sequence.sv
+      |     -> apb_master_directed_sequence.sv
+      |     -> apb_master_wr_rd_sequence.sv
+      |     -> apb_slave_random_response_sequence.sv
+      |     -> apb_master_random_discrete_virtual_sequence.sv
+      |     -> apb_null_virtual_sequence.sv
+      |     -> apb_simple_reset_sequence.sv
+      |-> tests
+      |     -> ts.base_test.sv
+      |     -> ts.directed_test.sv
+      |     -> ts.random_wr_rd_test.sv
+      |-> top.sv
+      |-> top_test.sv
+      |-> sim_build_options
+      |-> sim_run_options
+      |-> waves.rc
+      |-> README 
+ 
+The APB VIP interface definition file is located at:
+ 
+ Top level interface   : $DESIGNWARE_HOME/vip/svt/amba_svt/latest/sverilog/include/svt_apb_if.svi
+ Slave Port interface  : $DESIGNWARE_HOME/vip/svt/amba_svt/latest/sverilog/include/svt_apb_slave_if.svi
+ 
+When you run dw_vip_setup (above), the interfaces file will be installed at:
+
+  ./design_dir/include/sverilog/svt_apb_if.svi
+  ./design_dir/include/sverilog/svt_apb_slave_if.svi
+
+-------------------------------------------------------------------------
+D. SystemVerilog Testbench Description
+-------------------------------------------------------------------------
+
+The  top-level testbench is written in SystemVerilog. The APB interfaces are
+represented as instances of 'interface' objects. The DUT is represented as a
+module with 'interface' connections as its ports. The UVM verification
+environment is designed as a class that extends uvm_env named
+apb_basic_env. All tests extend uvm_test.
+
+The file containing the top-level testbench in the example is "top.sv".
+SystemVerilog interfaces are instantiated in this module and are passed
+into the UVM environment using calls to uvm_config_db::set().  In addition
+to the VIP interfaces, an additional interface named apb_reset_if is
+instantiated in this module and passed into the UVM environment.  This
+reset interface provides the access needed to create reset sequences to
+drive the reset pin.
+
+All test files are included in the top_test.sv file.
+
+The DUT used in the example is defined as a Verilog module within a SystemVerilog
+wrapper. The intent is to demonstrate how a legacy core may be integrated into a
+SystemVerilog testbench. The example DUT has one APB System level interface
+instantiated.  System interface has two APB protocol interface connections: APB
+Slave interface and APB Master interface. The behavior of the example DUT is to
+simply connect the inputs of one interface, to the outputs of the other. As a
+result, it requires two APB (Master & Slave) interfaces to be configured
+identically. 
+
+The SystemVerilog wrapper for the DUT defines a module that takes 'interface'
+references as its port connections. The DUT SystemVerilog wrapper instantiates
+the Verilog DUT module, and connects the wires from the interfaces to the
+wire-level ports of the Verilog DUT module.
+
+The example DUT is found in the file apb_dut.v. The SystemVerilog DUT wrapper is
+found in the file apb_dut_sv_wrapper.sv.
+
+The structural elements of the UVM test environment are encapsulated in
+apb_basic_env.sv, which is instantiated in the the base test.  The tests
+get included by top.sv by including top_test.sv.
+
+-------------------------------------------------------------------------
+E. DVE Configuration File
+-------------------------------------------------------------------------
+
+The VCS simulator includes a GUI for debugging, and waveform viewing.  This GUI
+is named DVE (Discovery Visual Environment). To support the ability to quickly
+see the results of running the example, the example supplies a configuration
+file for DVE. The file is:
+
+"<design_dir>/examples/sverilog/amba_svt/tb_apb_svt_uvm_basic_sys/waves.tcl"
+
+Using "WAVES=1" with  Makefile invocation, or the -w switch for the sim run
+script run_apb_svt_uvm_basic_sys causes the SystemVerilog example testbench to
+produce a variable 'dump' file named "verilog.dump". The DVE configuration file
+loads this dump file, and sets up the waveform display.  The waveform display
+groups the signals by APB channels.
+
+-------------------------------------------------------------------------
+F. UVM Verification Environment Description
+-------------------------------------------------------------------------
+
+A complete description of the UVM environment (ENV) is beyond the scope of
+this README. Please refer to the UVM manual for details of a UVM environment.
+
+Following is a summary of the files used by the ENV:
+
+  - apb_basic_env.sv
+    This file serves as environment class. The top-level environment is
+    implemented by extending uvm_env base class. This class instantiates a 
+    virtual sequencer and two APB System ENV components for master_env and slave_env.
+    Master ENV is configured to contain one ACTIVE master and a PASSIVE slave.
+    Likewise, slave ENV consists of an ACTIVE slave and a PASSIVE master. 
+
+  - apb_shared_cfg.sv
+    This file extends uvm_object base class. System configuration 
+    (svt_apb_system_configuration) objects are instantiated for master ENV and 
+    slave ENV respectively. System configuration consists configuration settings 
+    for master and instances of slave configurations. All the necessary 
+    configuration parameters are set up for the environment in this class.
+
+  - cust_svt_apb_master_transaction.sv
+    This file extends the master transaction (svt_apb_master_transaction).
+    Customized constraints are defined by this class.
+
+  - apb_simple_reset_sequence.sv
+    This file shows a virtual sequence that generates a simple sequence
+    to drive the reset pins.  This sequence is registered with the TB
+    virtual sequencer as the default sequence for the reset phase.
+
+  - apb_master_random_discrete_virtual_sequence.sv
+    This file implements a virtual sequence executes an
+    apb_master_random_discrete_sequence on the master.  This sequence is
+    registered with the APB System ENV virtual sequencer as the default
+    sequence for the main phase.
+
+  - apb_null_virtual_sequence.sv
+    This file implements a virtual sequence with an empty body method.  This
+    sequence can be used by extended tests to disable the default sequence.
+
+  - apb_master_random_discrete_sequence.sv
+    This file shows a sequence (extending from svt_apb_master_base_sequence)
+    that generates unconstrained random master transactions.  This is the
+    default sequence that set up by the base test.
+
+  - apb_master_directed_sequence.sv
+    This file shows a sequence (extending from svt_apb_master_base_sequence)
+    that generates a series of directed transactions.
+
+  - apb_master_random_wr_rd_sequence.sv
+    This file shows a sequence (extending from svt_apb_master_base_sequence)
+    that generates a random WRITE followed by a READ sequence.
+
+  - apb_slave_random_response_sequence.sv
+    This response sequence is used by the random_wr_rd_test. This sequence
+    generates a constrained random slave response.
+
+--------------------------------------------------------------------------
+G. Contacting Customer Support
+--------------------------------------------------------------------------
+Please contact Synopsys Support Center or local CAE for support.

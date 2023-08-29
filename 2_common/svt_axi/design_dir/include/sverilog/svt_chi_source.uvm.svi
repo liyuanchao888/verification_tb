@@ -1,0 +1,189 @@
+//--------------------------------------------------------------------------
+// COPYRIGHT (C) 2013-2020 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//--------------------------------------------------------------------------
+
+`ifndef GUARD_SVT_CHI_SOURCE_UVM_SVI
+`define GUARD_SVT_CHI_SOURCE_UVM_SVI
+
+`ifdef __SVDOC__
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_cache_line)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_cache)
+`endif
+
+`ifndef SVT_AMBA_VCAP_ENABLE
+`ifndef SVT_EXCLUDE_VCAP
+`define SVT_EXCLUDE_VCAP
+`endif
+`endif
+
+`ifndef SVT_AMBA_EXCLUDE_AXI_IN_CHI_SYS_ENV
+`include "svt_axi_source.uvm.svi"
+`else
+  `ifndef SVT_AMBA_AXI_TO_CHI_MAP_ENABLE
+    /** @cond HIDE_AXI_IN_CHI */
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_port_configuration)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_lp_port_configuration)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_interconnect_configuration)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_system_configuration)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_transaction)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_transaction_exception)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_transaction_exception_list)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_snoop_transaction)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_snoop_transaction_exception)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_snoop_transaction_exception_list)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_master_transaction)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_slave_transaction)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_ic_slave_transaction)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_barrier_pair_transaction)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_cache_line)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_cache)
+    /** @endcond */
+  `endif
+`endif
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_link_status)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_protocol_status)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_status)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_hn_addr_range)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_domain_item)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_address_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_node_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_hn_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_interconnect_configuration)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_protocol_service)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_link_service)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_common_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_common_transaction_exception)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_common_transaction_exception_list)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_base_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_base_transaction_exception)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_base_transaction_exception_list)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_snoop_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_snoop_transaction_exception)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_snoop_transaction_exception_list)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_snoop_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_snoop_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_transaction_exception)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_transaction_exception_list)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_flit)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_flit_exception)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_flit_exception_list)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_transaction_exception)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_transaction_exception_list)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_exclusive_monitor)
+/** @cond HIDE_AXI_IN_CHI */
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_transaction)
+/** @endcond */
+`ifndef SVT_EXCLUDE_VCAP
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_traffic_profile_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_traffic_profile_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_fifo_rate_control)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_traffic_profile_callback)
+`endif
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_pv_response)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_pv_extension)
+
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_transaction_exception)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_transaction_exception_list)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_sn_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_rn_transaction)
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_hn_status)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_hn_status)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_status)
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_transaction)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_callback_data)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_monitor_callback_data)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_monitor_end_of_simulation_callback_data)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_monitor_l1_icn_to_l2_icn_rn_transaction_activity_callback_data)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_monitor_l2_icn_to_l1_icn_snoop_transaction_activity_callback_data)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_monitor_exclusive_sequence_transaction_activity_callback_data)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_memory)
+
+`ifndef SVT_AMBA_OPTIMIZED_COMPILE
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_transaction_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_transaction_sequencer_callback)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_transaction_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_sn_transaction_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_snoop_transaction_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_sn_snoop_transaction_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_virtual_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_rn_virtual_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_virtual_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_sn_virtual_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_transaction_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_snoop_transaction_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_snoop_transaction_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_virtual_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_transaction_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_ic_sn_transaction_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_flit_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_protocol_service_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_link_service_sequence_collection)
+`endif
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_err_check)
+`ifdef SVT_AMBA_MULTI_CHIP_SYSTEM_MONITOR_INTERNAL_ENABLE
+`ifdef __SVDOC__
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_amba_multi_chip_system_err_check)
+`endif
+`endif
+
+`ifndef SVT_AMBA_EXCLUDE_AXI_IN_CHI_SYS_ENV
+//Must pull in the AXI sequencer infrastructure because the AXI source loaders don't do
+//this automatically
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_master_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_master_snoop_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_master_sequencer_callback)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_slave_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_slave_snoop_sequencer)
+`else
+  `ifdef SVT_AMBA_AXI_TO_CHI_MAP_ENABLE
+  //Must pull in the AXI sequencer infrastructure because the AXI source loaders don't do
+  //this automatically
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_master_sequencer)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_master_snoop_sequencer)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_master_sequencer_callback)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_slave_sequencer)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_slave_snoop_sequencer)
+  `endif
+`endif // !`ifndef SVT_AMBA_EXCLUDE_AXI_IN_CHI_SYS_ENV
+
+`ifndef SVT_AMBA_OPTIMIZED_COMPILE
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_virtual_sequencer)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_rn_virtual_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_system_virtual_sequence_collection)
+
+`ifndef SVT_AMBA_EXCLUDE_AXI_IN_CHI_SYS_ENV
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_xact_to_axi_master_xact_sequence)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_slave_xact_to_chi_rn_xact_sequence)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_snp_xact_to_chi_snp_xact_sequence)
+`else
+  `ifdef SVT_AMBA_AXI_TO_CHI_MAP_ENABLE
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_sn_xact_to_axi_master_xact_sequence)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_slave_xact_to_chi_rn_xact_sequence)
+    `include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_axi_snp_xact_to_chi_snp_xact_sequence)
+  `endif
+`endif
+`endif
+
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_scenario_pattern_sequence_collection)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_scenario_coverage_database)
+`include `SVT_SOURCE_MAP_SUITE_MODULE(amba_svt,R-2020.12,svt_chi_scenario_coverage)
+
+`endif // GUARD_SVT_CHI_SOURCE_UVM_SVI

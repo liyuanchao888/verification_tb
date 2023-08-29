@@ -1,0 +1,632 @@
+
+`ifndef GUARD_SVT_AXI_MASTER_PARAM_IF_SVI
+`define GUARD_SVT_AXI_MASTER_PARAM_IF_SVI
+
+`include "svt_axi_defines.svi"
+
+/**
+ * <b>General description:</b><p>
+ * The master parameterized interface svt_axi_master_param_if defines the AXI
+ * signals appropriate for a single port. Master parameterized interface
+ * connects AXI Master VIP to DUT. The width of signals within the parameterized
+ * interface can be parameterized to match signal widths of DUT. The default
+ * value of all the parameters are same as the Max signal widths defined in
+ * svt_axi_port_defines.svi. Master parameterized interface works in conjunction
+ * with top level interface svt_axi_if.  
+ *
+ * <b>Clock signal description:</b><br>
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Signal Name </b></th><th bgcolor="#dddddd"> Signal Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> aclk </b></td><td> If all AXI interfaces in the system are expected to run on a different clock, user can use the aclk signal in the port interfaces. Set the configuration parameter svt_axi_system_configuration::common_clock_mode to 0. In this case, connect the aclk signal in each port interface to the appropriate port specific clock in the testbench.</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>Parameter description:</b><br>
+ * The signal width of master parameterized interface can be parameterized to
+ * match DUT signal widths. The default value of all the parameters are same as
+ * the Max signal widths defined in svt_axi_port_defines.svi. The parameter
+ * values should not exceed the Max signal width values defined in
+ * svt_axi_port_defines.svi, or redefined by user in svt_axi_user_defines.svi.
+ *  
+ * <table border="1" cellpadding="1" cellspacing="1"">
+ *   <thead>
+ *    <tr><th bgcolor="#dddddd"><b>Parameter Name </b></th><th bgcolor="#dddddd"> Parameter Description </th></tr>
+ *   </thead>
+ *   <tbody>
+ *    <tr><td><b> SVT_AXI_ADDR_WIDTH_PARAM </b></td><td> Write and Read Address Channel address width (AxADDR).</b></td><tr>
+ *    <tr><td><b> SVT_AXI_BURST_LENGTH_WIDTH_PARAM </b></td><td> Write and Read Address Channel Burst Length signal (AxLEN) width.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_DATA_WIDTH_PARAM </b></td><td> Write and Read Data channel's data width.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_ID_WIDTH_PARAM </b></td><td> ID width for AWID, ARID, WID, RID, BID.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_ADDR_USER_WIDTH_PARAM </b></td><td> Write and Read Address channel user signal width AxUSER.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_DATA_USER_WIDTH_PARAM </b></td><td> Write and Read Data channel user signal width WUSER, RUSER.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_BRESP_USER_WIDTH_PARAM </b></td><td> Write response channel user signal width, BUSER.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_ACE_SNOOP_ADDR_WIDTH_PARAM </b></td><td> Snoop Address Channel address width, ACADDR.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_ACE_SNOOP_DATA_WIDTH_PARAM </b></td><td> Snoop Data Channel data width, CDDATA.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_TDATA_WIDTH_PARAM </b></td><td> Stream interface data width.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_TDEST_WIDTH_PARAM </b></td><td> Stream interface TDEST width.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_TID_WIDTH_PARAM </b></td><td> Stream Channel ID signal width.</b></td><tr>
+ *    <tr><td><b> SVT_AXI_TUSER_WIDTH_PARAM </b></td><td> Stream Channel user signal width.</b></td><tr>
+ *   </tbody>
+ *  </table>
+ *
+ * <b>AXI signal description:</b><br>
+ * This sub-interface supports signals for AXI3, AXI4, ACE and AXI4 Stream
+ * protocols. The names of the signals match the names specified in the AXI
+ * specification. Please refer to the AXI specification for specific description
+ * of any of the signals.
+ * </p>
+ */
+
+interface svt_axi_master_param_if #(is_active=1, int SVT_AXI_ADDR_WIDTH_PARAM           = `SVT_AXI_MAX_ADDR_WIDTH,
+				    int SVT_AXI_BURST_LENGTH_WIDTH_PARAM   = `SVT_AXI_MAX_BURST_LENGTH_WIDTH,
+				    int SVT_AXI_DATA_WIDTH_PARAM           = `SVT_AXI_MAX_DATA_WIDTH,
+				    int SVT_AXI_ID_WIDTH_PARAM             = `SVT_AXI_MAX_ID_WIDTH,
+				    int SVT_AXI_ADDR_USER_WIDTH_PARAM      = `SVT_AXI_MAX_ADDR_USER_WIDTH,
+				    int SVT_AXI_DATA_USER_WIDTH_PARAM      = `SVT_AXI_MAX_DATA_USER_WIDTH,
+				    int SVT_AXI_BRESP_USER_WIDTH_PARAM     = `SVT_AXI_MAX_BRESP_USER_WIDTH,
+				    int SVT_AXI_ADDR_USERCHK_WIDTH_PARAM   = `CEIL(`SVT_AXI_MAX_ADDR_USER_WIDTH,8),
+				    int SVT_AXI_DATA_USERCHK_WIDTH_PARAM   = `CEIL(`SVT_AXI_MAX_DATA_USER_WIDTH,8),
+				    int SVT_AXI_BRESP_USERCHK_WIDTH_PARAM  = `CEIL(`SVT_AXI_MAX_BRESP_USER_WIDTH,8),
+				    int SVT_AXI_ACE_SNOOP_ADDR_WIDTH_PARAM = `SVT_AXI_ACE_SNOOP_ADDR_WIDTH,
+				    int SVT_AXI_ACE_SNOOP_DATA_WIDTH_PARAM = `SVT_AXI_ACE_SNOOP_DATA_WIDTH,
+				    int SVT_AXI_TDATA_WIDTH_PARAM          = `SVT_AXI_MAX_TDATA_WIDTH,
+				    int SVT_AXI_TDEST_WIDTH_PARAM          = `SVT_AXI_MAX_TDEST_WIDTH,
+				    int SVT_AXI_TID_WIDTH_PARAM            = `SVT_AXI_MAX_TID_WIDTH,
+				    int SVT_AXI_TUSER_WIDTH_PARAM          = `SVT_AXI_MAX_TUSER_WIDTH
+				    ) (svt_axi_master_if master_if);
+
+
+
+   logic 				          aclk;
+   logic 					   aresetn;
+
+   //-----------------------------------------------------------------------
+   // AXI3 Interface Write Address Channel Signals
+   //-----------------------------------------------------------------------
+   logic 					   awvalid;
+   logic [SVT_AXI_ADDR_WIDTH_PARAM-1:0] 	   awaddr;
+   logic [SVT_AXI_BURST_LENGTH_WIDTH_PARAM-1:0]    awlen; 
+   logic [`SVT_AXI_SIZE_WIDTH-1:0] 		   awsize;
+   logic [`SVT_AXI_BURST_WIDTH-1:0] 		   awburst;
+   logic [`SVT_AXI_LOCK_WIDTH-1:0] 		   awlock;
+   logic [`SVT_AXI_CACHE_WIDTH-1:0] 		   awcache;
+   logic [`SVT_AXI_PROT_WIDTH-1:0] 		   awprot;
+   logic [SVT_AXI_ID_WIDTH_PARAM-1:0] 		   awid; 
+   logic 					   awready;
+
+   // AXI ACE Extension of Write Address Channel Signals
+   logic [`SVT_AXI_ACE_DOMAIN_WIDTH-1:0] 	   awdomain;	
+   logic [`SVT_AXI_ACE_WSNOOP_WIDTH-1:0] 	   awsnoop;	
+   logic [`SVT_AXI_ACE_BARRIER_WIDTH-1:0] 	   awbar;
+   logic                                           awunique;
+   logic 					   awidunq;
+   logic [`SVT_AXI_MAX_MPAM_WIDTH-1:0]             awmpam;
+   
+
+   //AXI ACE Parity Check Signals
+   logic                                           awvalidchk;
+   logic                                           awreadychk;   
+   logic [(`CEIL(`SVT_AXI_MAX_ID_WIDTH,8))-1:0]    awidchk;
+   logic [(`CEIL(`SVT_AXI_MAX_ADDR_WIDTH,8))-1:0]  awaddrchk;
+   logic                                           awlenchk;
+   logic                                           awctlchk0;
+   logic                                           awctlchk1;
+   logic                                           awctlchk2;
+   
+   //-----------------------------------------------------------------------
+   // AXI Interface Read Address Channel Signals
+   //-----------------------------------------------------------------------
+   logic 					   arvalid;
+   logic [SVT_AXI_ADDR_WIDTH_PARAM-1:0] 	   araddr; 
+   logic [SVT_AXI_BURST_LENGTH_WIDTH_PARAM-1:0]    arlen; 
+   logic [`SVT_AXI_SIZE_WIDTH-1:0] 		   arsize;
+   logic [`SVT_AXI_BURST_WIDTH-1:0] 		   arburst;
+   logic [`SVT_AXI_LOCK_WIDTH-1:0] 		   arlock;
+   logic [`SVT_AXI_CACHE_WIDTH-1:0] 		   arcache;
+   logic [`SVT_AXI_PROT_WIDTH-1:0] 		   arprot;
+   logic [SVT_AXI_ID_WIDTH_PARAM-1:0] 		   arid; 
+   logic 					   arready;
+
+   // AXI ACE Extension of Read Address Channel 
+   logic [`SVT_AXI_ACE_DOMAIN_WIDTH-1:0] 	   ardomain;	
+   logic [`SVT_AXI_ACE_RSNOOP_WIDTH-1:0] 	   arsnoop;	
+   logic [`SVT_AXI_ACE_BARRIER_WIDTH-1:0] 	   arbar;
+   logic 					   aridunq;
+   logic [`SVT_AXI_MAX_MPAM_WIDTH-1:0]             armpam;
+
+   //AXI ACE Parity Check Signals
+   logic                                           arvalidchk;
+   logic                                           arreadychk;
+   logic [(`CEIL(`SVT_AXI_MAX_ID_WIDTH,8))-1:0]    aridchk;
+   logic [(`CEIL(`SVT_AXI_MAX_ADDR_WIDTH,8))-1:0]  araddrchk;
+   logic                                           arlenchk;
+   logic                                           arctlchk0;
+   logic                                           arctlchk1;
+   logic                                           arctlchk2;
+   logic                                           arctlchk3;
+
+   //-----------------------------------------------------------------------
+   // AXI Interface Read Channel Signals
+   //-----------------------------------------------------------------------
+   logic 					   rvalid;
+   logic 					   rlast;
+   logic [SVT_AXI_DATA_WIDTH_PARAM-1:0] 	   rdata; 
+   logic [(SVT_AXI_DATA_WIDTH_PARAM/8)-1:0]        rdatachk;
+   logic [`SVT_AXI_RESP_WIDTH-1:0] 		   rresp;
+   logic [SVT_AXI_ID_WIDTH_PARAM-1:0] 		   rid; 
+   logic 					   rready;
+
+   // AXI ACE Extension of Read Data Channel
+   logic 					   rack;
+   logic 					   ridunq;
+   logic 					   rackchk;
+   logic                                           rvalidchk;
+   logic                                           rreadychk;
+   logic [(`CEIL(`SVT_AXI_MAX_ID_WIDTH,8))-1:0]    ridchk;
+   logic                                           rrespchk;
+   logic                                           rlastchk;
+
+   //-----------------------------------------------------------------------
+   // AXI Interface Write Channel Signals
+   //-----------------------------------------------------------------------
+   logic 					   wvalid;
+   logic 					   wlast;
+   logic [SVT_AXI_DATA_WIDTH_PARAM-1:0] 	   wdata; 
+   logic [(SVT_AXI_DATA_WIDTH_PARAM/8)-1:0]        wdatachk;
+   logic [SVT_AXI_DATA_WIDTH_PARAM/8-1:0] 	   wstrb; 
+   logic [SVT_AXI_ID_WIDTH_PARAM-1:0] 		   wid; 
+   logic 					   wready;
+   
+   //AXI ACE Parity Check Signals
+   logic                                           wvalidchk;
+   logic                                           wreadychk;
+   logic [(`CEIL(`SVT_AXI_MAX_DATA_WIDTH,64))-1:0] wstrbchk;
+   logic                                           wlastchk;
+ 
+   //-----------------------------------------------------------------------
+   // AXI Interface Write Response Channel Signals
+   //-----------------------------------------------------------------------
+   logic 					   bvalid;
+   logic [`SVT_AXI_RESP_WIDTH-1:0] 		   bresp;
+   logic [SVT_AXI_ID_WIDTH_PARAM-1:0] 		   bid; 
+   logic 					   bready;
+
+   // AXI ACE Extension of Write Response Channel
+   logic 					   wack;
+   logic 					   bidunq;
+   logic					   wackchk;
+   logic                                           bvalidchk;
+   logic                                           breadychk;
+   logic [(`CEIL(`SVT_AXI_MAX_ID_WIDTH,8))-1:0]    bidchk;
+   logic                                           brespchk;
+
+   //-----------------------------------------------------------------------
+   // AXI4 Interface Signals
+   //-----------------------------------------------------------------------
+   logic [`SVT_AXI_REGION_WIDTH-1:0] 		   awregion;
+   logic [`SVT_AXI_QOS_WIDTH-1:0] 		   awqos;
+   logic [SVT_AXI_ADDR_USER_WIDTH_PARAM-1:0] 	   awuser; 
+   
+   logic [`SVT_AXI_REGION_WIDTH-1:0] 		   arregion;
+   logic [`SVT_AXI_QOS_WIDTH-1:0] 		   arqos;
+   logic [SVT_AXI_ADDR_USER_WIDTH_PARAM-1:0] 	   aruser; 
+
+   logic [SVT_AXI_DATA_USER_WIDTH_PARAM-1:0] 	   wuser; 
+   logic [SVT_AXI_DATA_USER_WIDTH_PARAM-1:0] 	   ruser; 
+   logic [SVT_AXI_BRESP_USER_WIDTH_PARAM-1:0] 	   buser; 
+
+   logic [SVT_AXI_ADDR_USERCHK_WIDTH_PARAM-1:0]    awuserchk; 
+   logic [SVT_AXI_ADDR_USERCHK_WIDTH_PARAM-1:0]    aruserchk; 
+   logic [SVT_AXI_DATA_USERCHK_WIDTH_PARAM-1:0]    wuserchk; 
+   logic [SVT_AXI_DATA_USERCHK_WIDTH_PARAM-1:0]    ruserchk; 
+   logic [SVT_AXI_BRESP_USERCHK_WIDTH_PARAM-1:0]   buserchk; 
+   //-----------------------------------------------------------------------
+   // AXI ACE Interface SNOOP Address Channel Signals 
+   //-----------------------------------------------------------------------
+   logic 					   acvalid;	
+   logic 					   acready;	
+   logic [SVT_AXI_ACE_SNOOP_ADDR_WIDTH_PARAM-1:0]  acaddr;	        
+   logic [`SVT_AXI_ACE_SNOOP_TYPE_WIDTH-1:0] 	   acsnoop;	
+   logic [`SVT_AXI_ACE_SNOOP_PROT_WIDTH-1:0] 	   acprot;		
+   // logic					   acbar;  // doesn't appear to be used in spec
+   
+   //AXI ACE Parity Check Signals
+   logic 					   acvalidchk;	
+   logic        				   acreadychk;	
+   logic [(`CEIL(`SVT_AXI_ACE_SNOOP_ADDR_WIDTH,8))-1:0]  acaddrchk;	        
+   logic        				   acctlchk;	
+   //-----------------------------------------------------------------------
+   // AXI ACE Interface SNOOP Response Channel Signals
+   //-----------------------------------------------------------------------
+   logic 					   crvalid;	
+   logic 					   crready;	
+   logic [`SVT_AXI_ACE_SNOOP_RESP_WIDTH-1:0] 	   crresp;		
+   
+   //AXI ACE Parity Check Signals
+   logic        			       	   crreadychk;	
+   logic 				       	   crvalidchk;	
+   logic                                       	   crrespchk;	
+   //-----------------------------------------------------------------------
+   // AXI ACE Interface Data Channel Signals
+   //-----------------------------------------------------------------------
+   logic 					   cdvalid;	
+   logic 					   cdready;	
+   logic [SVT_AXI_ACE_SNOOP_DATA_WIDTH_PARAM-1:0]  cddata;		
+   logic [(SVT_AXI_ACE_SNOOP_DATA_WIDTH_PARAM/8)-1:0]   cddatachk;
+   logic 					   cdlast;
+   
+   //AXI ACE Parity Check Signals
+   logic        		                   cdreadychk;	
+   logic 					   cdvalidchk;	
+   logic        				   cdlastchk;
+
+   //-----------------------------------------------------------------------
+   // AXI4 STREAM Interface Signals
+   //-----------------------------------------------------------------------
+   logic 					   tvalid;
+   logic 					   tready;
+   logic [SVT_AXI_TDATA_WIDTH_PARAM-1:0] 	   tdata; 
+   logic [`SVT_AXI_TSTRB_WIDTH-1:0] 		   tstrb;
+   logic [SVT_AXI_TDEST_WIDTH_PARAM-1:0] 	   tdest; 
+   logic [`SVT_AXI_TKEEP_WIDTH-1:0] 		   tkeep;
+   logic 					   tlast;
+   logic [SVT_AXI_TID_WIDTH_PARAM-1:0] 		   tid; 
+   logic [SVT_AXI_TUSER_WIDTH_PARAM-1:0] 	   tuser; 
+
+  //----------------------------------------------------------------------
+  // AXI G Read Data Chunking Interface Siganal
+  //----------------------------------------------------------------------
+  logic                                         archunken;
+  logic                                         rchunkv;
+  logic[`SVT_AXI_MAX_CHUNK_NUM_WIDTH-1:0]       rchunknum;
+  logic[`SVT_AXI_MAX_CHUNK_STROBE_WIDTH-1:0]    rchunkstrb;
+
+`ifndef __SVDOC__ 
+
+
+`ifdef QUESTA
+   always @(*) master_if.aclk     = aclk;
+   always@(*) master_if.aresetn   = aresetn;
+`else
+   assign master_if.aclk      = aclk;
+   assign master_if.aresetn   = aresetn;
+`endif
+   
+   ////////////////////////////////////////////////////////////////
+   //master BFM will be drivin master_if (svt_axi_master_if)
+   //////////////////////// START OF CONNECTION ///////////////////
+`ifdef SVT_MULTI_SIM_PROCEDURAL_COMBINATORIAL_DRIVE
+
+  always @(*) 
+  begin
+  // Inputs
+    master_if.awready    = awready;
+    master_if.awreadychk = awreadychk;
+    master_if.arready    = arready;
+    master_if.arreadychk = arreadychk;
+    master_if.rvalid     = rvalid;
+    master_if.rvalidchk  = rvalidchk;
+    master_if.rlast      = rlast;
+    master_if.rlastchk   = rlastchk;
+    master_if.rdata      = rdata;
+    master_if.rdatachk   = rdatachk;
+    master_if.rresp      = rresp;
+    master_if.rrespchk   = rrespchk;
+    master_if.rid        = rid;
+    master_if.ridchk     = ridchk;
+    master_if.wready     = wready;
+    master_if.wreadychk  = wreadychk;
+    master_if.bvalid     = bvalid;
+    master_if.bvalidchk  = bvalidchk;
+    master_if.bresp      = bresp;
+    master_if.brespchk   = brespchk;
+    master_if.bid        = bid;
+    master_if.bidchk     = bidchk;
+    master_if.ruser      = ruser;
+    master_if.ruserchk   = ruserchk;
+    master_if.buser      = buser;
+    master_if.buserchk   = buserchk;
+    master_if.acvalid    = acvalid;
+    master_if.acvalidchk = acvalidchk;
+    master_if.acaddr     = acaddr;
+    master_if.acaddrchk  = acaddrchk;
+    master_if.acsnoop    = acsnoop;
+    master_if.acctlchk   = acctlchk;
+    master_if.acprot     = acprot;
+    master_if.crready    = crready;
+    master_if.crreadychk = crreadychk;
+    master_if.cdready    = cdready;
+    master_if.cdreadychk = cdreadychk;
+    master_if.tready     = tready;  
+    master_if.rchunkv    = rchunkv;  
+    master_if.rchunknum  = rchunknum;  
+    master_if.rchunkstrb = rchunkstrb;  
+    master_if.ridunq     = ridunq;  
+    master_if.bidunq     = bidunq;
+  end
+`else
+  // Inputs
+  assign master_if.awready    = awready;
+  assign master_if.awreadychk = awreadychk;
+  assign master_if.arready    = arready;
+  assign master_if.arreadychk = arreadychk;
+  assign master_if.rvalid     = rvalid;
+  assign master_if.rvalidchk  = rvalidchk;
+  assign master_if.rlast      = rlast;
+  assign master_if.rlastchk   = rlastchk;
+  assign master_if.rdata      = rdata;
+  assign master_if.rdatachk   = rdatachk;
+  assign master_if.rresp      = rresp;
+  assign master_if.rrespchk   = rrespchk;
+  assign master_if.rid        = rid;
+  assign master_if.ridchk     = ridchk;
+  assign master_if.wready     = wready;
+  assign master_if.wreadychk  = wreadychk;
+  assign master_if.bvalid     = bvalid;
+  assign master_if.bvalidchk  = bvalidchk;
+  assign master_if.bresp      = bresp;
+  assign master_if.brespchk   = brespchk;
+  assign master_if.bid        = bid;
+  assign master_if.bidchk     = bidchk;
+  assign master_if.ruser      = ruser;
+  assign master_if.ruserchk   = ruserchk;
+  assign master_if.buser      = buser;
+  assign master_if.buserchk   = buserchk;
+  assign master_if.acvalid    = acvalid;
+  assign master_if.acvalidchk = acvalidchk;
+  assign master_if.acaddr     = acaddr;
+  assign master_if.acaddrchk  = acaddrchk;
+  assign master_if.acsnoop    = acsnoop;
+  assign master_if.acctlchk   = acctlchk;
+  assign master_if.acprot     = acprot;
+  assign master_if.crready    = crready;
+  assign master_if.crreadychk = crreadychk;
+  assign master_if.cdready    = cdready;
+  assign master_if.cdreadychk = cdreadychk;
+  assign master_if.tready     = tready;  
+  assign master_if.rchunkv    = rchunkv;  
+  assign master_if.rchunknum  = rchunknum;  
+  assign master_if.rchunkstrb = rchunkstrb;  
+  assign master_if.ridunq     = ridunq;  
+  assign master_if.bidunq     = bidunq; 
+  
+`endif 
+
+generate
+  if(is_active == 1) begin: isactive
+  // inouts
+  // If master is Active
+  assign awvalid    = master_if.awvalid;
+  assign awvalidchk = master_if.awvalidchk;
+  assign awaddr     = master_if.awaddr;
+  assign awaddrchk  = master_if.awaddrchk;
+  assign awlen      = master_if.awlen;
+  assign awlenchk   = master_if.awlenchk;
+  assign awsize     = master_if.awsize;
+  assign awctlchk0  = master_if.awctlchk0;
+  assign awctlchk1  = master_if.awctlchk1;
+  assign awctlchk2  = master_if.awctlchk2;
+  assign awburst    = master_if.awburst;
+  assign awlock     = master_if.awlock;
+  assign awcache    = master_if.awcache;
+  assign awprot     = master_if.awprot;
+  assign awid       = master_if.awid;
+  assign awidchk    = master_if.awidchk;
+  assign awdomain   = master_if.awdomain;
+  assign awsnoop    = master_if.awsnoop;
+  assign awbar      = master_if.awbar;
+  assign awunique   = master_if.awunique;
+  assign arvalid    = master_if.arvalid;
+  assign arvalidchk = master_if.arvalidchk;
+  assign araddr     = master_if.araddr;
+  assign araddrchk  = master_if.araddrchk;
+  assign arlen      = master_if.arlen;
+  assign arlenchk   = master_if.arlenchk;
+  assign arsize     = master_if.arsize;
+  assign arctlchk0  = master_if.arctlchk0;
+  assign arctlchk1  = master_if.arctlchk1;
+  assign arctlchk2  = master_if.arctlchk2;
+  assign arctlchk3  = master_if.arctlchk3;
+  assign arburst    = master_if.arburst;
+  assign arlock     = master_if.arlock;
+  assign arcache    = master_if.arcache;
+  assign arprot     = master_if.arprot;
+  assign arid       = master_if.arid;
+  assign aridchk    = master_if.aridchk;
+  assign ardomain   = master_if.ardomain;
+  assign arsnoop    = master_if.arsnoop;
+  assign arbar      = master_if.arbar;
+  assign rready     = master_if.rready;
+  assign rreadychk  = master_if.rreadychk;
+  assign rack       = master_if.rack;
+  assign rackchk    = master_if.rackchk;
+  assign wvalid     = master_if.wvalid;
+  assign wvalidchk  = master_if.wvalidchk;
+  assign wlast      = master_if.wlast;
+  assign wlastchk   = master_if.wlastchk;
+  assign wdata      = master_if.wdata;
+  assign wdatachk   = master_if.wdatachk;
+  assign wstrb      = master_if.wstrb;
+  assign wstrbchk   = master_if.wstrbchk;
+  assign wid        = master_if.wid;
+  assign bready     = master_if.bready;
+  assign breadychk  = master_if.breadychk;
+  assign wack       = master_if.wack;
+  assign wackchk    = master_if.wackchk;
+  assign awregion   = master_if.awregion;
+  assign awqos      = master_if.awqos;
+  assign awuser     = master_if.awuser;
+  assign awuserchk  = master_if.awuserchk;
+  assign arregion   = master_if.arregion;
+  assign arqos      = master_if.arqos;
+  assign aruser     = master_if.aruser;
+  assign aruserchk  = master_if.aruserchk;
+  assign wuser      = master_if.wuser;
+  assign wuserchk   = master_if.wuserchk;
+  assign acready    = master_if.acready;
+  assign acreadychk = master_if.acreadychk;
+  assign crvalid    = master_if.crvalid;
+  assign crvalidchk = master_if.crvalidchk;
+  assign crresp	    = master_if.crresp;
+  assign crrespchk  = master_if.crrespchk;
+  assign cdvalid    = master_if.cdvalid;
+  assign cdvalidchk = master_if.cdvalidchk;
+  assign cddata	    = master_if.cddata;
+  assign cddatachk  = master_if.cddatachk;
+  assign cdlast     = master_if.cdlast;
+  assign cdlastchk  = master_if.cdlastchk;
+  assign tvalid     = master_if.tvalid;
+  assign tdata      = master_if.tdata;
+  assign tstrb      = master_if.tstrb;
+  assign tdest      = master_if.tdest;
+  assign tkeep      = master_if.tkeep;
+  assign tlast      = master_if.tlast;
+  assign tid        = master_if.tid;
+  assign tuser      = master_if.tuser; 
+  assign archunken  = master_if.archunken; 
+  assign awidunq    = master_if.awidunq; 
+  assign aridunq    = master_if.aridunq;
+  assign armpam     = master_if.armpam; 
+  assign awmpam     = master_if.awmpam; 
+end
+else begin: isactive
+  always @(*) 
+    begin
+  // If master is Passive
+       master_if.awvalid    = awvalid;
+       master_if.awvalidchk = awvalidchk;
+       master_if.awaddr     = awaddr;
+       master_if.awaddrchk  = awaddrchk;
+       master_if.awlen      = awlen;
+       master_if.awlenchk   = awlenchk;
+       master_if.awsize     = awsize;
+       master_if.awctlchk0  = awctlchk0;
+       master_if.awctlchk1  = awctlchk1;
+       master_if.awctlchk2  = awctlchk2;
+       master_if.awburst    = awburst;
+       master_if.awlock     = awlock;
+       master_if.awcache    = awcache;
+       master_if.awprot     = awprot;
+       master_if.awid       = awid;
+       master_if.awidchk    = awidchk;
+       master_if.awdomain   = awdomain;
+       master_if.awsnoop    = awsnoop;
+       master_if.awbar      = awbar;
+       master_if.awunique   = awunique;
+       master_if.arvalid    = arvalid;
+       master_if.arvalidchk = arvalidchk;
+       master_if.araddr     = araddr;
+       master_if.araddrchk  = araddrchk;
+       master_if.arlen      = arlen;
+       master_if.arlenchk   = arlenchk;
+       master_if.arsize     = arsize;
+       master_if.arctlchk0  = arctlchk0;
+       master_if.arctlchk1  = arctlchk1;
+       master_if.arctlchk2  = arctlchk2;
+       master_if.arctlchk3  = arctlchk3;
+       master_if.arburst    = arburst;
+       master_if.arlock     = arlock;
+       master_if.arcache    = arcache;
+       master_if.arprot     = arprot;
+       master_if.arid       = arid;
+       master_if.aridchk    = aridchk;
+       master_if.ardomain   = ardomain;
+       master_if.arsnoop    = arsnoop;
+       master_if.arbar      = arbar;
+       master_if.rready     = rready;
+       master_if.rreadychk  = rreadychk;
+       master_if.rack       = rack;
+       master_if.rackchk    = rackchk;
+       master_if.wvalid     = wvalid;
+       master_if.wvalidchk  = wvalidchk;
+       master_if.wlast      = wlast;
+       master_if.wlastchk   = wlastchk;
+       master_if.wdata      = wdata;
+       master_if.wdatachk   = wdatachk;
+       master_if.wstrb      = wstrb;
+       master_if.wstrbchk   = wstrbchk;
+       master_if.wid        = wid;
+       master_if.bready     = bready;
+       master_if.breadychk  = breadychk;
+       master_if.wack       = wack;
+       master_if.wackchk    = wackchk;
+       master_if.awregion   = awregion;
+       master_if.awqos      = awqos;
+       master_if.awuser     = awuser;
+       master_if.awuserchk  = awuserchk;
+       master_if.arregion   = arregion;
+       master_if.arqos      = arqos;
+       master_if.aruser     = aruser;
+       master_if.aruserchk  = aruserchk;
+       master_if.wuser      = wuser;
+       master_if.wuserchk   = wuserchk;
+       master_if.acready    = acready;
+       master_if.acreadychk = acreadychk;
+       master_if.crvalid    = crvalid;
+       master_if.crvalidchk = crvalidchk;
+       master_if.crresp     = crresp;
+       master_if.crrespchk  = crrespchk;
+       master_if.cdvalid    = cdvalid;
+       master_if.cdvalidchk = cdvalidchk;
+       master_if.cddata     = cddata;
+       master_if.cddatachk  = cddatachk;
+       master_if.cdlast     = cdlast;
+       master_if.cdlastchk  = cdlastchk;
+       master_if.tvalid     = tvalid;
+       master_if.tdata      = tdata;
+       master_if.tstrb      = tstrb;
+       master_if.tdest      = tdest;
+       master_if.tkeep      = tkeep;
+       master_if.tlast      = tlast;
+       master_if.tid        = tid;
+       master_if.tuser      = tuser; 
+       master_if.archunken  = archunken;  
+       master_if.awidunq    = awidunq;  
+       master_if.aridunq    = aridunq; 
+       master_if.armpam     = armpam; 
+       master_if.awmpam     = awmpam; 
+       
+    end
+end
+endgenerate
+   ///////////////////////// END OF CONNECTION ////////////////////
+
+
+
+`protect
+   initial begin
+      master_if.param_check_flag = 13'd0;
+      
+      if( SVT_AXI_ADDR_WIDTH_PARAM           > `SVT_AXI_MAX_ADDR_WIDTH)         begin master_if.param_check_flag [0]  = 1'b1; end
+      if( SVT_AXI_BURST_LENGTH_WIDTH_PARAM   > `SVT_AXI_MAX_BURST_LENGTH_WIDTH) begin master_if.param_check_flag [1]  = 1'b1; end
+      if( SVT_AXI_DATA_WIDTH_PARAM           > `SVT_AXI_MAX_DATA_WIDTH)         begin master_if.param_check_flag [2]  = 1'b1; end
+      if( SVT_AXI_ID_WIDTH_PARAM             > `SVT_AXI_MAX_ID_WIDTH)           begin master_if.param_check_flag [3]  = 1'b1; end
+      if( SVT_AXI_ADDR_USER_WIDTH_PARAM      > `SVT_AXI_MAX_ADDR_USER_WIDTH)    begin master_if.param_check_flag [4]  = 1'b1; end
+      if( SVT_AXI_DATA_USER_WIDTH_PARAM      > `SVT_AXI_MAX_DATA_USER_WIDTH)    begin master_if.param_check_flag [5]  = 1'b1; end
+      if( SVT_AXI_BRESP_USER_WIDTH_PARAM     > `SVT_AXI_MAX_BRESP_USER_WIDTH)   begin master_if.param_check_flag [6]  = 1'b1; end
+      if( SVT_AXI_ACE_SNOOP_ADDR_WIDTH_PARAM > `SVT_AXI_ACE_SNOOP_ADDR_WIDTH)   begin master_if.param_check_flag [7]  = 1'b1; end
+      if( SVT_AXI_ACE_SNOOP_DATA_WIDTH_PARAM > `SVT_AXI_ACE_SNOOP_DATA_WIDTH)   begin master_if.param_check_flag [8]  = 1'b1; end
+      if( SVT_AXI_TDATA_WIDTH_PARAM          > `SVT_AXI_MAX_TDATA_WIDTH)        begin master_if.param_check_flag [9]  = 1'b1; end
+      if( SVT_AXI_TDEST_WIDTH_PARAM          > `SVT_AXI_MAX_TDEST_WIDTH)        begin master_if.param_check_flag [10] = 1'b1; end
+      if( SVT_AXI_TID_WIDTH_PARAM            > `SVT_AXI_MAX_TID_WIDTH)          begin master_if.param_check_flag [11] = 1'b1; end
+      if( SVT_AXI_TUSER_WIDTH_PARAM          > `SVT_AXI_MAX_TUSER_WIDTH)        begin master_if.param_check_flag [12] = 1'b1; end
+      if( SVT_AXI_TUSER_WIDTH_PARAM          > `SVT_AXI_MAX_TUSER_WIDTH)        begin master_if.param_check_flag [12] = 1'b1; end
+      if( SVT_AXI_TUSER_WIDTH_PARAM          > `SVT_AXI_MAX_TUSER_WIDTH)        begin master_if.param_check_flag [12] = 1'b1; end
+
+      
+      master_if.svt_axi_addr_width_val 		 = SVT_AXI_ADDR_WIDTH_PARAM;
+      master_if.svt_axi_data_width_val 		 = SVT_AXI_DATA_WIDTH_PARAM;
+      master_if.svt_axi_id_width_val   		 = SVT_AXI_ID_WIDTH_PARAM;
+      master_if.svt_axi_ace_snoop_addr_width_val = SVT_AXI_ACE_SNOOP_ADDR_WIDTH_PARAM;
+      master_if.svt_axi_ace_snoop_data_width_val = SVT_AXI_ACE_SNOOP_DATA_WIDTH_PARAM;
+   end
+`endprotect
+   
+`endif
+   
+endinterface: svt_axi_master_param_if
+
+`endif // GUARD_SVT_AXI_MASTER_PARAM_IF_SVI
