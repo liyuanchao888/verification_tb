@@ -2,31 +2,36 @@
  ## TB function:
     verification testbench for chip
 
- ## run TB example
+ ## get help in TB example
     
-	#cd 7_run/1_script
-	#make
+	#cd xt_demo/7_run/1_script
+	#make 
+ ## run testcase
+	#make run
+        
      
  ## operate:  
  **There are three steps need to be operated as follows:**
     
    1. DUT folder
-
+```
     put RTL code and filelist in 1_dut
     #cd 1_dut
-	#git clone rtl_xx
-    
-   2. new ut/it/st testbench enviroment fellow the directory structure of the xt_demo folder
-    
-	#cp -r xt_demo it_ddr
+    #git clone rtl_xx
+```
 
+   2. new ut/it/st testbench enviroment fellow the directory structure of the xt_demo folder
+```
+    #cp -r xt_demo it_ddr
+```
 
    3. modify the new testbench to verify the dut
-
+```
     #vim 7_run/1_script/README.md
-
+```
 
 ## TB目录结构
+```
 	1_dut（含RTL/门级filelist）
 	2_common
 		公用文件 : 特定的VIP（cr interface vip)
@@ -34,7 +39,7 @@
 			snps_axi_vip
 				axi.list/env.sv/readme
 				c_agt_axi.sv/c_drv_axi.sv/c_mon_axi.sv
-c_seq_axi.sv/c_sqr_axi.sv/c_cfg_axi.sv/c_trans_axi.sv
+                 c_seq_axi.sv/c_sqr_axi.sv/c_cfg_axi.sv/c_trans_axi.sv
 			credit_vip
 			sif_vip
 		公用文件 : 转换接口 apb2ahb
@@ -45,8 +50,7 @@ c_seq_axi.sv/c_sqr_axi.sv/c_cfg_axi.sv/c_trans_axi.sv
 		reg_model
 		soc_gen_reg
 	5_model
-	xt_demo
-（UT/IT/ST使用此目录结构）
+	xt_demo（UT/IT/ST使用此目录结构）
 		1_stimu
 			1_transaction
 			2_reg_model
@@ -77,8 +81,7 @@ c_seq_axi.sv/c_sqr_axi.sv/c_cfg_axi.sv/c_trans_axi.sv
 			1_script
 			2_work(default)
 			xx_work
-		8_reuse
-（向上集成时使用）
+		8_reuse（向上集成时使用）
 			1.file_list: include file/import pkg （含instantiation:  declare/build file）
 			2_cfg
 				ini（集成相关的配置）
@@ -90,11 +93,10 @@ c_seq_axi.sv/c_sqr_axi.sv/c_cfg_axi.sv/c_trans_axi.sv
 	it_xxx(来源于xt_demo)
 	it_yyy(来源于xt_demo)
 	st_soc(来源于xt_demo)
-
 	xt_demo    : apb2ahb  + uvm env
 	ut_axi     : axi      + uvm axi(M+S)  
-	ut_noc_sv  : axi_xbar + sv  axi(M+S)  ( axi_xbar initial tc for test address )
+	ut_noc_sv  : axi_xbar + sv  axi(M+S)  ( axi_xbar initial tc for    test address )
 	ut_noc     : axi_xbar + svt_axi_uvm(M+S)
-    ut_ddr3_sv : ddr3     + sv cpu_wr/rd (initial )
-    ut_ddr3    : ddr3+axi + svt_axi_uvm(M) 
-
+        ut_ddr3_sv : ddr3     + sv cpu_wr/rd (initial )
+        ut_ddr3    : ddr3+axi + svt_axi_uvm(M) 
+```
