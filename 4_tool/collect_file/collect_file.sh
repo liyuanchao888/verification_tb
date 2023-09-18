@@ -1,7 +1,7 @@
 #########################################################################
 # File Name: collect_file.sh
 # Author: lyc_17
-# mail: yuanchao.li@corerain.com
+# mail: yuanchao.li
 # Created Time: Thu 20 Dec 2018 10:26:47 PM EST
 #########################################################################
 #!/bin/bash
