@@ -8,12 +8,7 @@
 
 ../../4_scb/ahb_apb_bridge_scoreboard.sv
 ../../5_env/ahb_apb_bridge_environment.sv
-../../6_top/2_tc/ahb_apb_bridge_base_test.sv
-../../6_top/2_tc/ahb_apb_bridge_burst_write_test.sv
-../../6_top/2_tc/ahb_apb_bridge_single_write_test.sv
-../../6_top/2_tc/ahb_apb_bridge_single_read_test.sv
-../../6_top/2_tc/ahb_apb_bridge_burst_read_test.sv
-../../6_top/2_tc/ahb_apb_bridge_random_test.sv
+
 ../../6_top/1_tb_top/cr_top_interface.sv
 ../../6_top/1_tb_top/tb_top.sv
 #../../6_top/1_tb_top/dut_top.sv
