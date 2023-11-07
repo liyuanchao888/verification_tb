@@ -6,7 +6,7 @@ else
 	echo " ${PROJ_WORK_PATH}/${tc} is exist "
 fi
 
-SIM_OPT="${PROJ_WORK_PATH}/output/simv \
+SIM_OPT="${SIMV_FILE} \
 	#{SIM_CMD_REPLACE_TAG} \
     "
 #------- option from command line ---------
@@ -22,9 +22,9 @@ fi
 if [ ${wave} = on ]; then
     SIM_OPT="${SIM_OPT} +fsdbfile=${PROJ_WORK_PATH}/${tc}/${tc}_${seed}.fsdb +vcs+flush+all "
 	if [ ${wave_cfg} = on ]; then
-        SIM_OPT="${SIM_OPT} -ucli -i wave.tcl "
+        SIM_OPT="${SIM_OPT} -ucli -i ${CFG_FILE_PATH}/ucli.tcl "
 	elif [ ${wave_cfg} != off ]; then
-        SIM_OPT="${SIM_OPT} -ucli -i ${wave_cfg} "
+        SIM_OPT="${SIM_OPT} -ucli -i ${CFG_FILE_PATH}/${wave_cfg} "
     fi
 fi
 
@@ -52,6 +52,10 @@ elif [ ${xprop} = xmerge ]; then
 elif [ ${xprop} != off ]; then
     SIM_OPT="${SIM_OPT} -xprop=${xprop}"
 fi
+
+#---- init reg  -----
+[ ${reg_ini} != off ] && SIM_OPT="${SIM_OPT} \
+	+vcs+initreg+config+${HIER_INIT_REG_FILE} "
 
 #====== ADD part 2: self-define parameter to sim_command  =======
 if [ -n "${opt}" ]; then

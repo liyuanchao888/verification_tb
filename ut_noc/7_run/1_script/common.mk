@@ -18,6 +18,14 @@ comp:
 sim:
 	@bash ${RUN_SIM_FILE}
 
+ifeq (${gcs},s)
+run:sim
+else ifeq (${gcs},cs)
+run:comp sim
+else 
+run:gen_run comp sim
+endif
+
 wave:
 	@bash ${RUN_WAVE_FILE}
 
@@ -30,13 +38,9 @@ report:
 cov:
 	@bash coverage.sh ${opt} ${report}
 
-tc:
-	@find ${TB_PATH}/6_top/2_tc -name "*.sv" -o -name "*.v"
-
 clean:
 	@bash clean.sh ${opt}
 
-run:gen_run comp sim
-
-
+tc:
+	@find ${TB_PATH}/6_top/2_tc -name "*.sv" -o -name "*.v"
 

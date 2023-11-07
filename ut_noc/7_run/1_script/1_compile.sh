@@ -30,6 +30,7 @@ fi
 [ ${coverage} = on ] && CMP_OPT="${CMP_OPT} \
 	-cm line+cond+fsm+tgl+branch+assert \
 	-cm_tgl mda -cm_line contassign \
+	-cm_hier ${HIER_COVER_FILE} \
 	-cm_dir ${PROJ_WORK_PATH}/cov/simv.vdb \
 	+define+COVER_ON "
 
@@ -39,24 +40,41 @@ fi
 
 #---- xprop  -----
 [ ${xprop} != off ] && CMP_OPT="${CMP_OPT} \
-	-xprop "
+	-xprop=${HIER_XPROP_FILE} "
 
 #---- g++  -----
-[ ${c_cmp} = on ] && CMP_OPT="${CMP_OPT} \
+[ ${c_comp} = on ] && CMP_OPT="${CMP_OPT} \
 	-cpp g++ -cc gcc -sysc +define+SYSTEMC_MODEL +define+DEBUG_MODE "
+
+#---- partcompile  -----
+[ ${partcomp} = off ] && CMP_OPT="${CMP_OPT} \
+	-pcmakeprof -j4 "
+
+if [ ${partcomp} = on ];then
+    CMP_OPT=`echo ${CMP_OPT} | sed 's#-top '${tb_top}'# #g'`
+	CMP_OPT="${CMP_OPT} -partcomp -fastpartcomp=j4 -top topcfg_partcomp ${PROJ_WORK_PATH}/../1_script/0_config/topcfg_partcomp.v -pcmakeprof -partcomp_dir=${OUTPUT_PATH}/pc_dir "
+fi
+
+
 
 #---- specify output dir  -----
 if [ ${output_dir} = on ];then
-    mkdir -p ${PROJ_WORK_PATH}/output
+    mkdir -p ${OUTPUT_PATH}
 fi
 [ ${output_dir} = on ] && CMP_OPT="${CMP_OPT} \
-	-o ${PROJ_WORK_PATH}/output/simv \
-	-Mdir=${PROJ_WORK_PATH}/output/csrc "
+	-o ${SIMV_FILE} \
+	-Mdir=${OUTPUT_PATH}/csrc "
 
 #---- init mem  -----
 [ ${mem_ini} = one ] && CMP_OPT="${CMP_OPT} +vcs+inimem+random "
 [ ${mem_ini} = zero ] && CMP_OPT="${CMP_OPT} +vcs+inimem+random "
 [ ${mem_ini} = random ] && CMP_OPT="${CMP_OPT} +vcs+inimem+random "
+
+#---- init reg  -----
+[ ${reg_ini} != off ] && CMP_OPT="${CMP_OPT} \
+	+vcs+initreg+config+${HIER_INIT_REG_FILE} "
+
+
 
 #---- use lib when post simulation  -----
 if [ ${cell} = on ]; then

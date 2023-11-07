@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 #========== compile dut to simv ======
-if [[ $comp == on ]]; then
+if [ ! -f "${SIMV_FILE}" ] || [ ${recomp} == on ];then
 #    bash ${GET_FILELIST}
 	bash ${RUN_COMPILE_FILE}
 fi

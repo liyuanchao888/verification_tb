@@ -10,7 +10,7 @@ fi
 
 echo "#!/usr/bin/bash" >${PROJ_WORK_PATH}/report_tmp.sh
 #find ../ -name "test_cfg.txt">report_tc_list
-find ${PROJ_WORK_PATH} -maxdepth 2 -name "*.log" ! -name "compile.log" ! -path "${PROJ_WORK_PATH}/cov/*" > ${PROJ_WORK_PATH}/report_tc_list
+find ${PROJ_WORK_PATH} -maxdepth 2 -name "*.log" ! -name "compile.log" ! -path "${PROJ_WORK_PATH}/cov/*" ! -path "${OUTPUT_PATH}/*" > ${PROJ_WORK_PATH}/report_tc_list
 
 while read line
 do
@@ -22,8 +22,8 @@ do
 done < ${PROJ_WORK_PATH}/report_tc_list
 
 sh ${PROJ_WORK_PATH}/report_tmp.sh
-#rm ${PROJ_WORK_PATH}/report_tc_list
 echo -e "report_tc_list :${PROJ_WORK_PATH}/report_tc_list "
 rm ${PROJ_WORK_PATH}/report_tmp.sh
+rm ${PROJ_WORK_PATH}/report_tc_list
 
 firefox ${PROJ_WORK_PATH}/report.html
